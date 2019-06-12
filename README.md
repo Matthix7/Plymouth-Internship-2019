@@ -8,6 +8,6 @@ Monohull, Catamaran &amp; Trimaran
 3) Dans Plymouth-Internship-2019/src, travailler dans le répertoire qui vous concerne.
 
 ## Infos Utiles
-Ne pas faire de bêtises sous git: https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git
-Travail des années précédentes: https://github.com/Plymouth-Sailboat.
-Coder en python avec ROS: http://wiki.ros.org/rospy_tutorials/Tutorials/Makefile.
+Ne pas faire de bêtises sous git: https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git.    
+Travail des années précédentes: https://github.com/Plymouth-Sailboat.  
+Coder en python avec ROS: http://wiki.ros.org/rospy_tutorials/Tutorials/Makefile.  
