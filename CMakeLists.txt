@@ -164,7 +164,7 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-catkin_install_python(PROGRAMS bin/dataTX.py bin/dataRX.py
+catkin_install_python(PROGRAMS bin/dataTX bin/dataRX
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 

@@ -6,10 +6,10 @@ import time
 
 def run():
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
-    msg = ''
+    msg = 0
 
-    while msg != 'fin':
-      msg = input()
-      ser.write((msg+'\n').encode())
+    while msg != '10\n':
+      msg += 1
+      ser.write((str(msg)+'\n').encode())
 
       time.sleep(1)

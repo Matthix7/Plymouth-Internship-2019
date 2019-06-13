@@ -8,7 +8,7 @@ def run():
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
     line = ''
 
-    while line != 'fin\n':
+    while line != '10\n':
       time.sleep(0.5)
 
       line = ser.readline()   # read a '\n' terminated line
