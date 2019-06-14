@@ -1,15 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import rospy
+from std_msgs.msg import String
+
 import serial
 import time
+import cv2
+import numpy as np
+
+
+ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
+
+
+
+
+def callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    ser.write((data.data+'\n').encode())
+
+
 
 def run():
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
-    msg = 0
+    rospy.init_node('dataTX', anonymous=True)
+    rospy.Subscriber("data", String, callback)
 
-    while msg != 10:
-      msg += 1
-      ser.write((str(msg)+'\n').encode())
+    rospy.loginfo(rospy.get_caller_id() + "\nHello")
 
-      time.sleep(1)
+    rospy.spin()
+
+
+
+
+
+
+
