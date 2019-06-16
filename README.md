@@ -1,12 +1,16 @@
 # Plymouth-Internship-2019
-Monohull, Catamaran &amp; Trimaran
+Monohull, Catamaran &amp; Trimaran  
+The goal of this project is to make three sailboats (size ≈ 1m for each) able to sail autonomously in one of various sailing modes that an operator can choose amongst waypoints path following, platooning, ...  
 
 
-## Utilisation du package
-1) Créer un workspace ROS (mkdir -p workspaceRos/src/, cd workspaceRos, catkin_make).
-2) Dans un terminal sous workspaceRos/src, taper git clone https://github.com/Matthix7/Plymouth-Internship-2019. 
-3) Sous workspaceRos/, taper catkin_make puis . devel/setup.bash .
-4) Sous Plymouth-Internship-2019/src, travailler dans le répertoire qui vous concerne.
+## Quick overview
+![alt text](![alt text](https://github.com/Matthix7/plymouth_internship_2019/tree/master/Visuels/"Vue d'ensemble 1.png")
+
+## Practical use of the package
+1) Create a ROS workspace `mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`).
+2) In a terminal under `workspaceRos/src`, type `git clone https://github.com/Matthix7/Plymouth-Internship-2019`.
+3) Under `workspaceRos/`, type `catkin_make` then `. devel/setup.bash`.
+4) You now have the package installed in `workspaceRos/src/Plymouth-Internship-2019`. You will find the scripts relative to the different parts of the project in the folders of `Plymouth-Internship-2019/src`.
 
 ## Infos Utiles
 Ne pas faire de bêtises sous git: https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git.    
