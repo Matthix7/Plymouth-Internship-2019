@@ -3,46 +3,36 @@
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+
+from numpy import sign, pi
 import cv2
 
-def run():
-    cv2.namedWindow('Keyboard Control', cv2.WINDOW_NORMAL)
 
-    rospy.init_node('keyboardController', anonymous=True)
+def callback(data):
+    global servo1, servo2, sensibilite1, sensibilite2, pub
+
+    servo1 += sensibilite1 * sign(data.linear.x)
+    servo2 += sensibilite2 * sign(data.angular.z)
+
+    msg = String()
+    msg.data = 'Servo1_'+str(servo1)+'_Servo2_'+str(servo2)+'\n'
+
+    pub.publish(msg)
+
+
+def run():
+    global servo1, servo2, sensibilite1, sensibilite2, pub
+    servo1 = 0
+    servo2 = 80
+    sensibilite1 = pi/10
+    sensibilite2 = 3
     pub = rospy.Publisher('dataToSend', String, queue_size = 10)
 
-    rate = rospy.Rate(3) # hz
+    rospy.init_node('keyboardController', anonymous=True)
+    rospy.Subscriber("keyboardControl", Twist, callback)
 
-
-    servo1 = 0
-    servo2 = 0
-    sensibilite = 3
-
-    while True and not rospy.is_shutdown():
-
-        key = cv2.waitKey(1) & 0xFF
-
-        if key == ord('q'):
-            servo1 = servo1 - sensibilite
-
-        if key == ord('d'):
-            servo1 = servo1 + sensibilite
-
-        if key == ord('z'):
-            servo2 = servo2 + sensibilite
-
-        if key == ord('s'):
-            servo2 = servo2 - sensibilite
-
-        if key == 27:
-            break
-
-        msg = String()
-        msg.data = 'Servo1_'+str(servo1)+'_Servo2_'+str(servo2)+'\n'
-
-        pub.publish(msg)
-        rate.sleep()
-
+    rospy.spin()
 
 
 

@@ -15,8 +15,15 @@ ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
 
 
 def callback(data):
-    rospy.loginfo("I heard and transmit %s", data.data)
+    rospy.loginfo("I heard and transmit |%s|", data.data)
     ser.write((data.data+'\n').encode())
+
+    line = ser.readline()
+
+    if line != '' and line[-1] == '\n':
+        line = line[0:-1]   # read a '\n' terminated line
+
+        rospy.loginfo(line)
 
 
 
@@ -26,8 +33,6 @@ def run():
 
     rospy.loginfo(rospy.get_caller_id() + "\nHello")
 
-    line = ser.readline()[0:-1]   # read a '\n' terminated line
-    rospy.loginfo(line)
 
     rospy.spin()
 

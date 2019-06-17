@@ -4,35 +4,53 @@
 import rospy
 
 import serial
-from plymouth_internship_2019.msg import KeyboardServoCommand
+from std_msgs.msg import Float32
 
 
 def run():
     rospy.init_node('dataRX', anonymous=True)
-    pub = rospy.Publisher('dataReceived', KeyboardServoCommand, queue_size = 10)
+    pub1 = rospy.Publisher('servo1', Float32, queue_size = 10)
+    pub2 = rospy.Publisher('servo2', Float32, queue_size = 10)
 
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(150)
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
 
     line = ''
 
     while not rospy.is_shutdown():
-      line = ser.readline()[0:-1]   # read a '\n' terminated line
+      line = ser.readline()   # read a '\n' terminated line
       line = line.decode()
-      rospy.loginfo("I heard %s", line)
-
       data = line.split('_')
-      servo1 = int(data[1])
-      servo2 = int(data[3])
 
-      servoCommand = KeyboardServoCommand()
-      servoCommand.servo_command_1 = servo1
-      servoCommand.servo_command_2 = servo2
+      if line != '' and line[-1] == '\n' and len(data) == 4:
+          rospy.loginfo("I heard %s", line[0:-1])
 
-      pub.publish(servoCommand)
+          try :
+              servo1 = Float32(data[1])
+              servo2 = Float32(data[3])
 
+              pub1.publish(servo1)
+              pub2.publish(servo2)
 
-      ser.write("Boat heard "+str(servo1)+str(servo2)+'\n')
+#              ser.write("Boat heard "+str(servo1.data)+'  '+str(servo2.data)+'\n')
+
+          except:
+              pass
 
       rate.sleep()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
