@@ -9,8 +9,8 @@ from std_msgs.msg import Float32
 
 def run():
     rospy.init_node('dataRX', anonymous=True)
-    pub1 = rospy.Publisher('servo1', Float32, queue_size = 10)
-    pub2 = rospy.Publisher('servo2', Float32, queue_size = 10)
+    pub1 = rospy.Publisher('cmdRudder', Float32, queue_size = 10)
+    pub2 = rospy.Publisher('cmdSail', Float32, queue_size = 10)
 
     rate = rospy.Rate(150)
 
@@ -27,9 +27,10 @@ def run():
           rospy.loginfo("I heard %s", line[0:-1])
 
           try :
-              servo1 = Float32(data[1])
-              servo2 = Float32(data[3])
-
+              servo1 = Float32()
+	      servo1.data = eval(data[1])
+              servo2 = Float32()
+	      servo2.data = eval(data[3])
               pub1.publish(servo1)
               pub2.publish(servo2)
 
@@ -37,7 +38,7 @@ def run():
 
           except:
               pass
-
+      
       rate.sleep()
 
 
