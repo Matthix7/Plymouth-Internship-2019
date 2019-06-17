@@ -17,6 +17,7 @@ def run():
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
 
     line = ''
+    cnt = 0
 
     while not rospy.is_shutdown():
       line = ser.readline()   # read a '\n' terminated line
@@ -34,12 +35,16 @@ def run():
               pub1.publish(servo1)
               pub2.publish(servo2)
 
+              cnt += 1
 #              ser.write("Boat heard "+str(servo1.data)+'  '+str(servo2.data)+'\n')
 
           except:
               pass
       
       rate.sleep()
+
+    ser.write("Boat heard "+str(cnt) +'commands \n')
+
 
 
 
