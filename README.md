@@ -4,7 +4,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 
 
 ## Quick overview
-![alt text](https://github.com/Matthix7/plymouth_internship_2019/blob/master/Visuels/"Vue%20d'ensemble%201.png")
+![alt text](https://github.com/Matthix7/plymouth_internship_2019/blob/master/Visuels/Vue%20d'ensemble%201.png "Overview")
 
 ## Practical use of the package
 1) Create a ROS workspace `mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`).
