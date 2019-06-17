@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 
-ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
+ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
 
 
 
@@ -25,6 +25,9 @@ def run():
     rospy.Subscriber("dataToSend", String, callback)
 
     rospy.loginfo(rospy.get_caller_id() + "\nHello")
+
+    line = ser.readline()[0:-1]   # read a '\n' terminated line
+    rospy.loginfo(line)
 
     rospy.spin()
 

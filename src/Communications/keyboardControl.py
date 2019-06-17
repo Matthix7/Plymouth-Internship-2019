@@ -37,7 +37,8 @@ def run():
         if key == 27:
             break
 
-        msg = 'Servo1_'+str(servo1)+'_Servo2_'+str(servo2)+'\n'
+        msg = String()
+        msg.data = 'Servo1_'+str(servo1)+'_Servo2_'+str(servo2)+'\n'
 
         pub.publish(msg)
         rate.sleep()

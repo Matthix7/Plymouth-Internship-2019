@@ -4,16 +4,16 @@
 import rospy
 
 import serial
-from std_msgs.msg import Float64
+from plymouth_internship_2019.msg import KeyboardServoCommand
 
 
 def run():
     rospy.init_node('dataRX', anonymous=True)
-    pub = rospy.Publisher('dataReceived', Float64, queue_size = 10)
+    pub = rospy.Publisher('dataReceived', KeyboardServoCommand, queue_size = 10)
 
     rate = rospy.Rate(10) # 10hz
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600)
+    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
 
     line = ''
 
@@ -25,5 +25,14 @@ def run():
       data = line.split('_')
       servo1 = int(data[1])
       servo2 = int(data[3])
+
+      servoCommand = KeyboardServoCommand()
+      servoCommand.servo_command_1 = servo1
+      servoCommand.servo_command_2 = servo2
+
+      pub.publish(servoCommand)
+
+
+      ser.write("Boat heard "+str(servo1)+str(servo2)+'\n')
 
       rate.sleep()
