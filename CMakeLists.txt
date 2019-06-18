@@ -169,6 +169,7 @@ include_directories(
 # )
 
 catkin_install_python(PROGRAMS bin/dataTX bin/dataRX bin/keyboardControl
+    bin/coordinator bin/sailboat
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
