@@ -43,7 +43,7 @@ def run():
       
       rate.sleep()
 
-    ser.write("Boat heard "+str(cnt) +'commands \n')
+    rospy.loginfo("Boat heard "+str(cnt) +'commands \n')
 
 
 
