@@ -3,20 +3,25 @@
 
 
 import rospy
-from std_msgs.msg import String
 
 import serial
-import time
-import cv2
-import numpy as np
 
 
 
 
 def run():
+
+###################################################################
+#    Initialisation
+###################################################################
+
     rospy.init_node('endPoint', anonymous=True)
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
+
+###################################################################
+#    Get local XBee ID and send it to coordinator
+###################################################################
 
     # Enter XBee command mode
     ser.write('+++')
@@ -30,8 +35,17 @@ def run():
     ID = eval(ans.split('\r')[0])
     ser.write('ATCN\r')
 
-    rospy.sleep(ID*0.5)
-    ser.write("\nHello,\nI am Boat " + str(ID)+'\n')
+
+###################################################################
+#   Wait until all boats are connected
+###################################################################
+
+    while not rospy.is_shutdown() and ser.readline() != 'OK\n':
+        rospy.sleep(ID*0.2)
+        ser.write("Hello, I am Boat " + str(ID)+'\n')
+
+    rospy.loginfo("Connected to Coordinator")
+
 
 
 
