@@ -8,7 +8,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 
 ## Practical use of the package
 1) Create a ROS workspace `mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`).
-2) In a terminal under `workspaceRos/src`, type `git clone https://github.com/Matthix7/Plymouth-Internship-2019`.
+2) In a terminal under `workspaceRos/src`, type `git clone https://github.com/Matthix7/plymouth_internship_2019`.
 3) Under `workspaceRos/`, type `catkin_make` then `. devel/setup.bash`.
 4) You now have the package installed in `workspaceRos/src/Plymouth-Internship-2019`. You will find the scripts relative to the different parts of the project in the folders of `Plymouth-Internship-2019/src`.
 
