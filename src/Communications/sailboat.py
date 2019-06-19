@@ -47,8 +47,22 @@ def run():
     rospy.loginfo("Connected to Coordinator")
 
 
+    line = 'init'
 
+    while not rospy.is_shutdown() and line not in '**********\n':
+        line = ser.readline()
 
+        if line != '' and line[-1] == '\n' and line[0] == '#' and line[-2] == '=':
+            line = line[0:-1]
+            line = line.replace('#','')
+            line = line.replace('=','')
+
+            data = line.split('_')
+            rospy.loginfo(line)
+            ser.write('##### Boat '+str(ID)+' did hear.=====\n')
+
+        if line == '':
+            line = 'error'
 
 
 

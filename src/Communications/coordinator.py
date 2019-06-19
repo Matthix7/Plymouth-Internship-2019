@@ -4,13 +4,30 @@
 
 import rospy
 
+from std_msgs.msg import String
+
 import serial
 
 
+###################################################################
+#    To execute when a message to transmit is received
+###################################################################
+
+def callback(data):
+    global ser
+#    rospy.loginfo("I heard and transmit |%s|", data.data)
+    ser.write(('#####'+data.data+'_'+'testString 1'+'=====\n'))
+
+
+
+
+###################################################################
+#    Main
+###################################################################
 
 
 def run():
-
+    global ser
 ###################################################################
 #    Initialisation
 ###################################################################
@@ -62,9 +79,23 @@ def run():
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
 
+###################################################################
+#   Transmit useful data for control
+###################################################################
+    rospy.Subscriber("dataToSend", String, callback)
+
+    while not rospy.is_shutdown():
+        line = ser.readline()
+
+        if line != '' and line[-1] == '\n' and line[0] == '#' and line[-2] == '=====':
+            line = line[0:-1]
+            line = line.replace('#','')
+            line = line.replace('=','')
+
+            rospy.loginfo(line)
 
 
-
+    ser.write('**********\n')
 
 
 
