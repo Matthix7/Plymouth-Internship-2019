@@ -169,7 +169,7 @@ include_directories(
 # )
 
 catkin_install_python(PROGRAMS bin/dataTX bin/dataRX bin/keyboardControl
-    bin/coordinator bin/sailboat
+    bin/coordinator bin/sailboat bin/testCoordinator bin/testSailboat
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 

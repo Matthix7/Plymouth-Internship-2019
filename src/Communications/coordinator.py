@@ -4,7 +4,9 @@
 
 import rospy
 
-from std_msgs.msg import String
+from std_msgs.msg import Float32, String
+from geometry_msgs.msg import Pose2D
+from sensor_msgs.msg import Imu
 
 import serial
 
@@ -13,28 +15,46 @@ import serial
 #    To execute when a message to transmit is received
 ###################################################################
 
-def callback(data):
-    global ser
-#    rospy.loginfo("I heard and transmit |%s|", data.data)
-    ser.write(('#####'+data.data+'_'+'testString 1'+'=====\n'))
+
+def targetTransmission(data):
+    global targetString
+    targetString = str(data.x)+','+str(data.y)+','+str(data.theta)
+
+def modeTransmission(data):
+    global modeString
+    modeString = data.data
+
+
+
+###################################################################
+#    Check message validity
+###################################################################
+
+def is_valid(line):
+    return len(line) > 2 and line[0] == '#' and line[-2] == '='
 
 
 
 
+###################################################################
 ###################################################################
 #    Main
 ###################################################################
+###################################################################
+
 
 
 def run():
-    global ser
+
 ###################################################################
 #    Initialisation
 ###################################################################
+    global targetString, modeString
+    targetString, modeString = 'init', 'init'
+
     rospy.init_node('coordinator', anonymous=True)
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
-
 
 
 ###################################################################
@@ -67,13 +87,18 @@ def run():
     while not rospy.is_shutdown() and len(connected) < expected:
         line = ser.readline()
 
-        if line != '' and line[-1] == '\n':
+        if is_valid(line):
+            line = line[0:-1]
+            line = line[0:-1]
+            line = line.replace('#','')
+            line = line.replace('=','')
+
             words = line.split()
 
             ID = int(words[-1])
             if ID not in connected:
                 connected.append(ID)
-                rospy.loginfo('|'+line[0:-1]+'|')
+                rospy.loginfo('|'+line+'|')
 
     ser.write('OK\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
@@ -81,21 +106,72 @@ def run():
 
 ###################################################################
 #   Transmit useful data for control
+# Frame emitted:
+# "#####ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
 ###################################################################
-    rospy.Subscriber("dataToSend", String, callback)
+
+#    Receives the data relative to the target point
+#    (depends on controlMode, common to all boats)
+    rospy.Subscriber('poseTarget', Pose2D, targetTransmission)
+
+#    Receives the string indicator of the control mode
+    rospy.Subscriber('controlMode', String, modeTransmission)
+
+
+
+
+
+###################################################################
+#   Receive useful data from the boats
+# Frame received:
+# "#####ID_GPSstring_poseString=====\n"
+###################################################################
+
+    received = ['init']*len(connected)
+    emission = 0
 
     while not rospy.is_shutdown():
+        emission += 1
         line = ser.readline()
 
-        if line != '' and line[-1] == '\n' and line[0] == '#' and line[-2] == '=====':
+        if is_valid(line):
             line = line[0:-1]
             line = line.replace('#','')
             line = line.replace('=','')
 
-            rospy.loginfo(line)
+            ID = line.split('_')[0]
+
+            received[ID] = line
+
+        if emission%3 == 0:
+            receivedLines = ''
+            for line in received:
+                receivedLines += line+'_'
+            ser.write("#####"+receivedLines+targetString+'_'+modeString+"=====\n")
 
 
-    ser.write('**********\n')
+
+
+
+
+
+
+
+
+
+
+
+
+
+###################################################################
+#   Deconnection signal
+###################################################################
+    rospy.loginfo("End mission, disconnection of all connected boats\n")
+    ser.write('#####**********=====\n')
+    ser.write('#####**********=====\n')
+    ser.write('#####**********=====\n')
+    ser.write('#####**********=====\n')
+    ser.write('#####**********=====\n')
 
 
 

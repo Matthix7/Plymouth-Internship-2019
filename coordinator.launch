@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="coordinator" pkg="plymouth_internship_2019" type="coordinator" output='screen'/>
+
+</launch>

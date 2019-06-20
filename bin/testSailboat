@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import Communications.testSailboat
+
+
+if __name__ == '__main__':
+    Communications.testSailboat.run()
