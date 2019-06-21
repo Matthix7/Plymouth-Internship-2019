@@ -75,7 +75,7 @@ def run():
 #    Initialisation
 ###################################################################
     global GPSstring, poseString
-    compteur = 0
+
     GPSstring, poseString = 'init', 'init'
     targetString, modeString = 'init', 'init'
 
@@ -83,8 +83,7 @@ def run():
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
-    rate = rospy.Rate(50)
-
+    rate = rospy.Rate(10)
 
 ###################################################################
 #    Get local XBee ID and send it to coordinator
@@ -152,6 +151,7 @@ def run():
 
 
     compteur = 0
+    emission = 0
 
     while not rospy.is_shutdown() and line not in '**********':
         c = ''
@@ -175,7 +175,8 @@ def run():
         elif not check:
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
-        compteur += 1
+
+        rospy.sleep(ID*0.02)
 
         msg = str(ID)+'_'+GPSstring+'_'+poseString+'_'+str(compteur)
         size = str(len(msg)+4)
@@ -184,6 +185,8 @@ def run():
 
         msg = "#####"+size+'_'+msg+"=====\n"
         ser.write(msg)
+        emission += 1
+        rospy.loginfo("Emission "+str(emission))
 
         line = line.replace('#','')
         line = line.replace('=','')

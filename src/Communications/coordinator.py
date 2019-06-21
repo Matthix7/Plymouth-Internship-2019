@@ -9,6 +9,7 @@ from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import Imu
 
 import serial
+from time import time
 
 
 ###################################################################
@@ -80,7 +81,7 @@ def run():
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
-    rate = rospy.Rate(50)
+    rate = rospy.Rate(10)
 
     compteur = 0
 
@@ -156,12 +157,15 @@ def run():
 
     while not rospy.is_shutdown():
         emission += 1
+
         line = ser.readline()
 
+#        rospy.loginfo(line)
         check, msgReceived = is_valid(line)
 
         if check:
             rospy.loginfo(msgReceived)
+            compteur += 1
 
             try:
                 IDboat = int(msgReceived.split('_')[0])
@@ -171,16 +175,15 @@ def run():
                 pass
 
         if not check:
-            rospy.loginfo("Could not read")
+            rospy.loginfo("Could not read\n"+line)
 
 
         if emission%3 == 0:
-            compteur += 1
             receivedLines = ''
             for line in received:
                 receivedLines += line+'_'
 
-            msg = receivedLines+targetString+'_'+modeString+str(compteur)
+            msg = receivedLines+targetString+'_'+modeString+str(emission//3)
 
             size = str(len(msg)+4)
             for i in range(len(size),3):
@@ -215,7 +218,7 @@ def run():
     ser.write('#####**********=====\n')
     ser.write('#####**********=====\n')
 
-
+    rospy.loginfo("Received"+str(compteur-2))
 
 
 
