@@ -32,8 +32,32 @@ def poseTransmission(data):
 ###################################################################
 
 def is_valid(line):
-    return len(line) > 2 and line[0] == '#' and line[-2] == '='
+    a = (len(line) > 2)
+    if a:
+        b = (line[0] == '#')
+        c = (line[-1] == '=')
 
+        if b and c:
+            msg = line[0:-1]
+            msg = msg.replace('#','')
+            msg = msg.replace('=','')
+
+            try :
+                size = int(msg.split('_')[0])
+
+                if size == len(msg):
+                    msg = msg[4:]
+                    return True, msg
+                else:
+                    return False, ''
+
+            except:
+                return False, ''
+
+        else:
+            return False, ''
+    else:
+        return False, ''
 
 
 
@@ -51,14 +75,15 @@ def run():
 #    Initialisation
 ###################################################################
     global GPSstring, poseString
+    compteur = 0
     GPSstring, poseString = 'init', 'init'
     targetString, modeString = 'init', 'init'
 
     rospy.init_node('endPoint', anonymous=True)
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
+    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
-
+    rate = rospy.Rate(50)
 
 
 ###################################################################
@@ -86,7 +111,14 @@ def run():
 
     while not rospy.is_shutdown() and ser.readline() != 'OK\n':
         rospy.sleep(ID*0.2)
-        ser.write("'#####Hello, I am Boat " + str(ID)+'=====\n')
+        msg = "Hello, I am Boat " + str(ID)
+
+        size = str(len(msg)+4)
+        for i in range(len(size),3):
+            size = '0'+size
+
+        msg = "#####"+size+'_'+msg+"=====\n"
+        ser.write(msg)
 
     rospy.loginfo("Connected to Coordinator")
 
@@ -96,9 +128,9 @@ def run():
 
 
 ###################################################################
-#   Transmit useful data to broadcast
+#   Transmit useful data to broadcast (max 999 char)
 # Frame emitted:
-# "#####ID_GPSstring_poseString=====\n"
+# "#####msgSize_ID_GPSstring_poseString=====\n"
 ###################################################################
 
 #    Receives a GPS standard frame
@@ -115,24 +147,48 @@ def run():
 ########################################################################################################################
 #   Receive useful data from the coordinator
 # Frame received:
-# "#####ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
+# "#####msgSize_ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
 ########################################################################################################################
 
 
-
+    compteur = 0
 
     while not rospy.is_shutdown() and line not in '**********':
-        line = ser.readline()
-
-        if is_valid(line):
-            line = line[0:-1]
-            line = line.replace('#','')
-            line = line.replace('=','')
-
-            rospy.loginfo(line)
+        c = ''
+        line = ''
 
 
+        while c != '#' and not rospy.is_shutdown():
+            c = ser.read(1)
+        while c != '=' and not rospy.is_shutdown():
+            line += c
+            c = ser.read(1)
+        line += c
 
+
+        check, msgReceived = is_valid(line)
+
+        if check:
+            rospy.loginfo("Read\n"+msgReceived+'\n')
+            compteur += 1
+
+        elif not check:
+            rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
+
+        compteur += 1
+
+        msg = str(ID)+'_'+GPSstring+'_'+poseString+'_'+str(compteur)
+        size = str(len(msg)+4)
+        for i in range(len(size),3):
+            size = '0'+size
+
+        msg = "#####"+size+'_'+msg+"=====\n"
+        ser.write(msg)
+
+        line = line.replace('#','')
+        line = line.replace('=','')
+
+        rate.sleep()
 
 
 
@@ -148,6 +204,7 @@ def run():
             line = 'error'
 
     rospy.loginfo("End mission\n")
+    rospy.loginfo("Received"+str(compteur))
 
 
 

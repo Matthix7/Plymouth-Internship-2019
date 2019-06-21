@@ -35,7 +35,7 @@ def run():
 #    Test area
 ###################################################################
 
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(20)
 
     dataTarget = Pose2D(x = 100.5, y = 100.5, theta = 0.)
 
@@ -43,6 +43,7 @@ def run():
 
 
     while not rospy.is_shutdown():
+        dataTarget.theta += 1
 
         pubTarget.publish(dataTarget)
 

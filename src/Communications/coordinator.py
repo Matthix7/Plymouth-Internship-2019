@@ -31,8 +31,32 @@ def modeTransmission(data):
 ###################################################################
 
 def is_valid(line):
-    return len(line) > 2 and line[0] == '#' and line[-2] == '='
+    a = (len(line) > 2)
+    if a:
+        b = (line[0] == '#')
+        c = (line[-2] == '=')
 
+        if b and c:
+            msg = line[0:-1]
+            msg = msg.replace('#','')
+            msg = msg.replace('=','')
+
+            try :
+                size = int(msg.split('_')[0])
+
+                if size == len(msg):
+                    msg = msg[4:]
+                    return True, msg
+                else:
+                    return False, ''
+
+            except:
+                return False, ''
+
+        else:
+            return False, ''
+    else:
+        return False, ''
 
 
 
@@ -54,8 +78,11 @@ def run():
 
     rospy.init_node('coordinator', anonymous=True)
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0)
+    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
+    rate = rospy.Rate(50)
+
+    compteur = 0
 
 ###################################################################
 #    Get local XBee ID
@@ -87,27 +114,24 @@ def run():
     while not rospy.is_shutdown() and len(connected) < expected:
         line = ser.readline()
 
-        if is_valid(line):
-            line = line[0:-1]
-            line = line[0:-1]
-            line = line.replace('#','')
-            line = line.replace('=','')
+        check, msgReceived = is_valid(line)
 
-            words = line.split()
+        if check:
+            words = msgReceived.split()
+            IDboat = int(words[-1])
 
-            ID = int(words[-1])
-            if ID not in connected:
-                connected.append(ID)
-                rospy.loginfo('|'+line+'|')
+            if IDboat not in connected:
+                connected.append(IDboat)
+                rospy.loginfo('|'+msgReceived+'|')
 
     ser.write('OK\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
 
 ###################################################################
-#   Transmit useful data for control
+#   Transmit useful data for control (max 999 char)
 # Frame emitted:
-# "#####ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
+# "#####msgSize_ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
 ###################################################################
 
 #    Receives the data relative to the target point
@@ -124,34 +148,51 @@ def run():
 ###################################################################
 #   Receive useful data from the boats
 # Frame received:
-# "#####ID_GPSstring_poseString=====\n"
+# "#####msgSize_ID_GPSstring_poseString=====\n"
 ###################################################################
 
-    received = ['init']*len(connected)
+    received = ['NODATA']*3
     emission = 0
 
     while not rospy.is_shutdown():
         emission += 1
         line = ser.readline()
 
-        if is_valid(line):
-            line = line[0:-1]
-            line = line.replace('#','')
-            line = line.replace('=','')
+        check, msgReceived = is_valid(line)
 
-            ID = line.split('_')[0]
+        if check:
+            rospy.loginfo(msgReceived)
 
-            received[ID] = line
+            try:
+                IDboat = int(msgReceived.split('_')[0])
+
+                received[IDboat-1] = msgReceived
+            except:
+                pass
+
+        if not check:
+            rospy.loginfo("Could not read")
+
 
         if emission%3 == 0:
+            compteur += 1
             receivedLines = ''
             for line in received:
                 receivedLines += line+'_'
-            ser.write("#####"+receivedLines+targetString+'_'+modeString+"=====\n")
+
+            msg = receivedLines+targetString+'_'+modeString+str(compteur)
+
+            size = str(len(msg)+4)
+            for i in range(len(size),3):
+                size = '0'+size
+
+            msg = "#####"+size+'_'+msg+"=====\n"
+            ser.write(msg)
+
+            rospy.loginfo("Emission " + str(emission//3))
 
 
-
-
+        rate.sleep()
 
 
 
@@ -169,6 +210,7 @@ def run():
     rospy.loginfo("End mission, disconnection of all connected boats\n")
     ser.write('#####**********=====\n')
     ser.write('#####**********=====\n')
+    rospy.sleep(1.)
     ser.write('#####**********=====\n')
     ser.write('#####**********=====\n')
     ser.write('#####**********=====\n')
