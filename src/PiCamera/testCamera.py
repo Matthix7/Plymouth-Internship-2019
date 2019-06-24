@@ -40,14 +40,6 @@ def run():
         # and occupied/unoccupied text
         image = frame.array
 
-        # show the frame
-        cv2.imshow("Webcam", image)
-
-
-        # clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
-
-
         # Convert BGR to HSV
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -78,6 +70,10 @@ def run():
             cv2.circle(image,center1,5,(255,0,0),2)
 
         image = cv2.flip(image, 1 )
+
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
+        #show the frame
         cv2.imshow('Webcam',image)
 
         key = cv2.waitKey(1) & 0xFF
