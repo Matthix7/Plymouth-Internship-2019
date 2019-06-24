@@ -9,18 +9,20 @@ from picamera import PiCamera
 import time
 import cv2
 
-# initialize the camera and grab a reference to the raw camera capture
-camera = PiCamera()
-rawCapture = PiRGBArray(camera)
+def run():
 
-# allow the camera to warmup
-time.sleep(0.1)
+    # initialize the camera and grab a reference to the raw camera capture
+    camera = PiCamera()
+    rawCapture = PiRGBArray(camera)
 
-# grab an image from the camera
-camera.capture(rawCapture, format="bgr")
-image = rawCapture.array
+    # allow the camera to warmup
+    time.sleep(0.1)
 
-# display the image on screen and wait for a keypress
-cv2.imshow("Image", image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    # grab an image from the camera
+    camera.capture(rawCapture, format="bgr")
+    image = rawCapture.array
+
+    # display the image on screen and wait for a keypress
+    cv2.imshow("Image", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
