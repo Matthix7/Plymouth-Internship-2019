@@ -23,16 +23,8 @@ def run():
     # to track
     initBB = None
 
-    # if a video path was not supplied, grab the reference to the web cam
-    if not args.get("video", False):
-            print("[INFO] starting video stream...")
-            vs = VideoStream(src=0).start()
-            time.sleep(1.0)
-
-
-    # otherwise, grab a reference to the video file
-    else:
-            vs = cv2.VideoCapture(args["video"])
+    # grab a reference to the video file
+    vs = cv2.VideoCapture("bouee.mp4")
 
     # initialize the FPS throughput estimator
     fps = None
