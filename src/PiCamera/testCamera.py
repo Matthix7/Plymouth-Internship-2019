@@ -69,7 +69,7 @@ def run():
             cv2.circle(image,center1,radius1,(255,0,0),2)
             cv2.circle(image,center1,5,(255,0,0),2)
 
-        image = cv2.flip(image, -1)
+        image = cv2.flip(image, 0)
 
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
