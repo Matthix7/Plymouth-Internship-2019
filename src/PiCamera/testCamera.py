@@ -71,11 +71,11 @@ def run():
             cnt1 = max(contours1, key = cv2.contourArea)
 
             (x1,y1),radius1 = cv2.minEnclosingCircle(cnt1)
-            self.center1 = (int(x1),int(y1))
+            center1 = (int(x1),int(y1))
             radius1 = int(radius1)
 
-            cv2.circle(image,self.center1,radius1,(255,0,0),2)
-            cv2.circle(image,self.center1,5,(255,0,0),2)
+            cv2.circle(image,center1,radius1,(255,0,0),2)
+            cv2.circle(image,center1,5,(255,0,0),2)
 
         cv2.imshow('Webcam',image)
 
