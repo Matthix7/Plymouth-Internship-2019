@@ -16,17 +16,8 @@ import cv2
 
 def run():
 
-    # construct the argument parser and parse the arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-v", "--video", type=str,
-            help="path to input video file")
-    ap.add_argument("-t", "--tracker", type=str, default="kcf",
-            help="OpenCV object tracker type")
-    args = vars(ap.parse_args())
-
-    # if we are using OpenCV 3.2 OR BEFORE, we can use a special factory
     # function to create our object tracker
-    tracker = cv2.Tracker_create(args["tracker"].upper())
+    tracker = cv2.TrackerKCF_create()
 
     # initialize the bounding box coordinates of the object we are going
     # to track
