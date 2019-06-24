@@ -22,6 +22,9 @@ def run():
     # allow the camera to warmup
     time.sleep(0.1)
 
+    #picture counter
+    c=0
+
     # define range of blue color in HSV
     # voir https://www.google.com/search?client=firefox-b&q=%23D9E80F
     # convertir valeur dans [0,179], [0,255], [0,255]
