@@ -76,7 +76,7 @@ def run():
             cv2.circle(image,self.center1,radius1,(255,0,0),2)
             cv2.circle(image,self.center1,5,(255,0,0),2)
 
-        cv2.imshow('Webcam',frame
+        cv2.imshow('Webcam',frame)
 
         key = cv2.waitKey(1) & 0xFF
         # if the `q` key was pressed, break from the loop
