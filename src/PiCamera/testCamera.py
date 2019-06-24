@@ -17,7 +17,7 @@ def run():
     camera.resolution = (640, 480)
     camera.framerate = 32
     rawCapture = PiRGBArray(camera, size=(640, 480))
-    cv2.namedWindow('Webcam', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Webcam', cv2.WINDOW_AUTOSIZE)
 
     # allow the camera to warmup
     time.sleep(0.1)
