@@ -57,7 +57,7 @@ def run():
         upper_blue = np.array([int(teinte_max/2),int(sat_max*255/100),int(val_max*255/100)])
 
         # Threshold the HSV image to get only yellow/green colors
-        mask1 = cv2.inRange(hsv, lower_yellow, upper_yellow)
+        mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
         mask1 = cv2.medianBlur(mask1, 5)
 
 
