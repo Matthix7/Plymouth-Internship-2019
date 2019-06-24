@@ -79,10 +79,10 @@ def run():
 
     rospy.init_node('coordinator', anonymous=True)
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
-
-    emission_freq = 5
+    emission_freq = 6
     rate = rospy.Rate(3*emission_freq)
+
+    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 1/(2.5*emission_freq))
 
     compteur = 0
 ###################################################################
