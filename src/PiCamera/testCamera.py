@@ -62,7 +62,7 @@ def run():
 
 
         # Bitwise-AND mask and original image
-        res = cv2.bitwise_and(frame,frame, mask= mask1)
+        res = cv2.bitwise_and(image,image, mask= mask1)
 
         ret1,thresh1 = cv2.threshold(mask1,127,255,0)
         im2,contours1,hierarchy1 = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, 2)
@@ -77,7 +77,7 @@ def run():
             cv2.circle(image,self.center1,radius1,(255,0,0),2)
             cv2.circle(image,self.center1,5,(255,0,0),2)
 
-        cv2.imshow('Webcam',frame)
+        cv2.imshow('Webcam',image)
 
         key = cv2.waitKey(1) & 0xFF
         # if the `q` key was pressed, break from the loop
@@ -87,7 +87,7 @@ def run():
         # if the SPACE key was pressed, take a picture
         elif key == 32:
             c += 1
-            cv2.imwrite('fra%i.png'%c,frame)
+            cv2.imwrite('fra%i.png'%c,image)
             print("Picture saved")
 
     cv2.destroyAllWindows()
