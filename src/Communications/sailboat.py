@@ -83,7 +83,8 @@ def run():
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
-    rate = rospy.Rate(10)
+    receiving_freq = 5 #Equal to coordinator emission_freq
+    rate = rospy.Rate(receiving_freq)
 
 ###################################################################
 #    Get local XBee ID and send it to coordinator
@@ -176,7 +177,7 @@ def run():
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
 
-        rospy.sleep(ID*0.02)
+        rospy.sleep((ID-1)/receiving_freq)
 
         msg = str(ID)+'_'+GPSstring+'_'+poseString+'_'+str(compteur)
         size = str(len(msg)+4)

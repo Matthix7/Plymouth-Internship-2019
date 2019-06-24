@@ -81,10 +81,10 @@ def run():
 
     ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
-    rate = rospy.Rate(10)
+    emission_freq = 5
+    rate = rospy.Rate(3*emission_freq)
 
     compteur = 0
-
 ###################################################################
 #    Get local XBee ID
 #(especially important for sailboats, not coordinator)
