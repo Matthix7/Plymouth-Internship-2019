@@ -77,6 +77,7 @@ def run():
             cv2.circle(image,center1,radius1,(255,0,0),2)
             cv2.circle(image,center1,5,(255,0,0),2)
 
+        image = cv2.flip(image, 1 )
         cv2.imshow('Webcam',image)
 
         key = cv2.waitKey(1) & 0xFF
