@@ -5,8 +5,10 @@ import rospy
 from picamera import PiCamera
 from time import sleep
 
-camera = PiCamera()
+def run():
 
-camera.start_preview()
-sleep(10)
-camera.stop_preview()
+    camera = PiCamera()
+
+    camera.start_preview()
+    sleep(10)
+    camera.stop_preview()
