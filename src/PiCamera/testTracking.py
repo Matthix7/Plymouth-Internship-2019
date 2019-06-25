@@ -16,7 +16,7 @@ import cv2
 
 def run():
 
-    rospy.loginfo("Version : ", cv2.__version__)
+    rospy.loginfo("Version : " + str(cv2.__version__))
 
 #    # function to create our object tracker
 #    tracker = cv2.TrackerKCF_create()
