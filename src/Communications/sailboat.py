@@ -265,7 +265,7 @@ def run():
 
         processTime = time() - loopTime
         #Sleep while others are talking
-        rospy.sleep( ID/4. * ((1./receiving_freq) - processTime)
+        rospy.sleep( ID/4. * ((1./receiving_freq) - processTime))
 
         ser.write(msg)
         emission += 1
