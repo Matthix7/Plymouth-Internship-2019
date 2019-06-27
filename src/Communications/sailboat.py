@@ -199,9 +199,9 @@ def run():
                     ID1 = data[1]
                     GPSstring1 = String(data = data[2])
                     poseData1 = data[3].split(',')
-                    pose1.x = poseData1[0]
-                    pose1.y = poseData1[1]
-                    pose1.theta = poseData1[2]
+                    pose1.x = eval(poseData1[0])
+                    pose1.y = eval(poseData1[1])
+                    pose1.theta = eval(poseData1[2])
                     cursor += 3
                 else:
                     cursor += 1
@@ -210,9 +210,9 @@ def run():
                     ID2 = data[cursor]
                     GPSstring2 = String(data = data[cursor+1])
                     poseData2 = data[cursor+2].split(',')
-                    pose2.x = poseData2[0]
-                    pose2.y = poseData2[1]
-                    pose2.theta = poseData2[2]
+                    pose2.x = eval(poseData2[0])
+                    pose2.y = eval(poseData2[1])
+                    pose2.theta = eval(poseData2[2])
                     cursor += 3
                 else:
                     cursor += 1
