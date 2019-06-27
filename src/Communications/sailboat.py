@@ -9,7 +9,7 @@ from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import Imu
 
 import serial
-
+from time import time
 
 
 ###################################################################
@@ -172,6 +172,7 @@ def run():
     while not rospy.is_shutdown() and line not in '**********':
         c = ''
         line = ''
+        loopTime = time()
 
 
         while c != '#' and not rospy.is_shutdown():
@@ -254,7 +255,6 @@ def run():
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
 
-        rospy.sleep(float(ID)/(5*receiving_freq))
 
         msg = str(ID)+'_'+GPSstring+'_'+poseString+str(compteur)
         size = str(len(msg)+4)
@@ -262,6 +262,11 @@ def run():
             size = '0'+size
 
         msg = "#####"+size+'_'+msg+"=====\n"
+
+        processTime = time() - loopTime
+        #Sleep while others are talking
+        rospy.sleep( ID/4. * ((1./receiving_freq) - processTime)
+
         ser.write(msg)
         emission += 1
         rospy.loginfo("Emission "+str(emission))
@@ -269,7 +274,6 @@ def run():
         line = line.replace('#','')
         line = line.replace('=','')
 
-        rate.sleep()
 
 
 
@@ -285,7 +289,7 @@ def run():
             line = 'error'
 
     rospy.loginfo("End mission\n")
-    rospy.loginfo("Received"+str(compteur))
+    rospy.loginfo("Received "+str(compteur))
 
 
 
