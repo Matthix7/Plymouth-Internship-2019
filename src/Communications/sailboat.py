@@ -144,6 +144,22 @@ def run():
     rospy.Subscriber('poseBoat', Pose2D, poseTransmission)
 
 
+###################################################################
+#   Transmit data from the other boats to the boat's controller (max 999 char)
+###################################################################
+#    Publishes the string indicator of the control mode
+    pubControlMode = rospy.Publisher('controlMode', String, queue_size = 2)
+
+#    Publishes the data relative to the target point
+#    (depends on controlMode, common to all boats)
+    pubTarget = rospy.Publisher('poseTarget', Pose2D, queue_size = 2)
+
+#    Publishes the data relative to each boat
+    pubBoat1 = rospy.Publisher('Boat1', String, queue_size = 2)
+    pubBoat2 = rospy.Publisher('Boat2', String, queue_size = 2)
+    pubBoat3 = rospy.Publisher('Boat3', String, queue_size = 2)
+
+
 ########################################################################################################################
 #   Receive useful data from the coordinator
 # Frame received:
@@ -173,11 +189,57 @@ def run():
             rospy.loginfo("Read\n"+msgReceived+'\n')
             compteur += 1
 
+            try:
+
+                data = msgReceived.split('_')
+
+                ID1 = data[1]
+                GPSstring1 = String(data = data[2])
+                poseData1 = data[3].split(',')
+                pose1 = Pose2D()
+                pose1.x = poseData1[0]
+                pose1.y = poseData1[1]
+                pose1.theta = poseData1[2]
+
+                ID2 = data[4]
+                GPSstring2 = String(data = data[5])
+                poseData2 = data[6].split(',')
+                pose2 = Pose2D()
+                pose2.x = poseData2[0]
+                pose2.y = poseData2[1]
+                pose2.theta = poseData2[2]
+
+                ID3 = data[7]
+                GPSstring3 = String(data = data[8])
+                poseData3 = data[9].split(',')
+                pose3 = Pose2D()
+                pose3.x = poseData3[0]
+                pose3.y = poseData3[1]
+                pose3.theta = poseData3[2]
+
+                targetString = String(data = data[10])
+
+                modeString = String(data = data[11])
+
+
+                pubControlMode.publish(modeString)
+                pubTarget.publish(targetString)
+                pubBoat1.publish(poseData1)
+                pubBoat2.publish(poseData2)
+                pubBoat3.publish(poseData3)
+
+
+            except:
+                pass
+
+
+
+
         elif not check:
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
 
-        rospy.sleep(ID/receiving_freq)
+        rospy.sleep(float(ID)/receiving_freq)
 
         msg = str(ID)+'_'+GPSstring+'_'+poseString+'_'+str(compteur)
         size = str(len(msg)+4)
@@ -201,7 +263,7 @@ def run():
 
 
 ###################################################################
-#   Error treatment and deconnection signal reception
+#   Treatment error and deconnection signal reception
 ###################################################################
 
         if line == '':
