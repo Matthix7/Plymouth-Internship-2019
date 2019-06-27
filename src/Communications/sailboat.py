@@ -77,7 +77,6 @@ def run():
     global GPSstring, poseString
 
     GPSstring, poseString = 'init', 'init'
-    targetString, modeString = 'init', 'init'
 
     rospy.init_node('endPoint', anonymous=True)
 
@@ -152,12 +151,12 @@ def run():
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pubTarget = rospy.Publisher('poseTarget', Pose2D, queue_size = 2)
+    pubTarget = rospy.Publisher('poseTarget', String, queue_size = 2)
 
 #    Publishes the data relative to each boat
-    pubBoat1 = rospy.Publisher('Boat1', String, queue_size = 2)
-    pubBoat2 = rospy.Publisher('Boat2', String, queue_size = 2)
-    pubBoat3 = rospy.Publisher('Boat3', String, queue_size = 2)
+    pubBoat1 = rospy.Publisher('Boat1', Pose2D, queue_size = 2)
+    pubBoat2 = rospy.Publisher('Boat2', Pose2D, queue_size = 2)
+    pubBoat3 = rospy.Publisher('Boat3', Pose2D, queue_size = 2)
 
 
 ########################################################################################################################
@@ -188,45 +187,61 @@ def run():
         if check:
             rospy.loginfo("Read\n"+msgReceived+'\n')
             compteur += 1
+            cursor = 0
+
+            pose1, pose2, pose3 = Pose2D(), Pose2D(), Pose2D()
+            targetString, modeString = String(), String()
 
             try:
-
                 data = msgReceived.split('_')
 
-                ID1 = data[1]
-                GPSstring1 = String(data = data[2])
-                poseData1 = data[3].split(',')
-                pose1 = Pose2D()
-                pose1.x = poseData1[0]
-                pose1.y = poseData1[1]
-                pose1.theta = poseData1[2]
+                if data[cursor] != "NODATA":
+                    ID1 = data[1]
+                    GPSstring1 = String(data = data[2])
+                    poseData1 = data[3].split(',')
+                    pose1.x = poseData1[0]
+                    pose1.y = poseData1[1]
+                    pose1.theta = poseData1[2]
+                    cursor += 3
+                else:
+                    cursor += 1
 
-                ID2 = data[4]
-                GPSstring2 = String(data = data[5])
-                poseData2 = data[6].split(',')
-                pose2 = Pose2D()
-                pose2.x = poseData2[0]
-                pose2.y = poseData2[1]
-                pose2.theta = poseData2[2]
+                if data[cursor] != "NODATA":
+                    ID2 = data[cursor]
+                    GPSstring2 = String(data = data[cursor+1])
+                    poseData2 = data[cursor+2].split(',')
+                    pose2.x = poseData2[0]
+                    pose2.y = poseData2[1]
+                    pose2.theta = poseData2[2]
+                    cursor += 3
+                else:
+                    cursor += 1
 
-                ID3 = data[7]
-                GPSstring3 = String(data = data[8])
-                poseData3 = data[9].split(',')
-                pose3 = Pose2D()
-                pose3.x = poseData3[0]
-                pose3.y = poseData3[1]
-                pose3.theta = poseData3[2]
+                if data[cursor] != "NODATA":
+                    ID3 = data[cursor]
+                    GPSstring3 = String(data = data[cursor+1])
+                    poseData3 = data[cursor+2].split(',')
+                    pose3.x = eval(poseData3[0])
+                    pose3.y = eval(poseData3[1])
+                    pose3.theta = eval(poseData3[2])
+                    cursor += 3
+                else:
+                    cursor += 1
 
-                targetString = String(data = data[10])
 
-                modeString = String(data = data[11])
+                targetString.data = data[cursor]
+
+                modeString.data = data[cursor+1]
 
 
                 pubControlMode.publish(modeString)
                 pubTarget.publish(targetString)
-                pubBoat1.publish(poseData1)
-                pubBoat2.publish(poseData2)
-                pubBoat3.publish(poseData3)
+
+                pubBoat1.publish(pose1)
+                pubBoat2.publish(pose2)
+                pubBoat3.publish(pose3)
+
+
 
 
             except:
@@ -239,9 +254,9 @@ def run():
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
 
-        rospy.sleep(float(ID)/receiving_freq)
+        rospy.sleep(float(ID)/(5*receiving_freq))
 
-        msg = str(ID)+'_'+GPSstring+'_'+poseString+'_'+str(compteur)
+        msg = str(ID)+'_'+GPSstring+'_'+poseString+str(compteur)
         size = str(len(msg)+4)
         for i in range(len(size),3):
             size = '0'+size
