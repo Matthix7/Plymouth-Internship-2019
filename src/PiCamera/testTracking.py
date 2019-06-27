@@ -1,123 +1,123 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# TRACKING USING KCF ALGORITHM (objective) FOR OPENCV 3.2 ONLY
-
-import rospy
+##import rospy
 
 # import the necessary packages
-from imutils.video import VideoStream
-from imutils.video import FPS
-import argparse
-import imutils
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import time
 import cv2
-
+import numpy as np
 
 def run():
 
-    print("Version : " + str(cv2.__version__))
+    # Fill in the shape of the object to be detected and localised, in meters
+    targetMaxDim = 0.11   
+    targetMinDim = 0.068
 
-#    # function to create our object tracker
-#    tracker = cv2.TrackerKCF_create()
+    Sp = 0.11/49.5   #Camera scale factor
 
-#    # initialize the bounding box coordinates of the object we are going
-#    # to track
-#    initBB = None
+    # initialize the camera and grab a reference to the raw camera capture
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 32
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+    cv2.namedWindow('Webcam', cv2.WINDOW_AUTOSIZE)
 
-#    # grab a reference to the video file
-#    vs = cv2.VideoCapture("bouee.mp4")
+    # allow the camera to warmup
+    time.sleep(0.1)
 
-#    # initialize the FPS throughput estimator
-#    fps = None
+    #picture counter
+    c=0
 
-#    # loop over frames from the video stream
-#    while  not rospy.is_shutdown():
+    # define range of blue color in HSV
+    # voir https://www.google.com/search?client=firefox-b&q=%23D9E80F
 
-#        # grab the current frame, then handle if we are using a
-#        # VideoStream or VideoCapture object
-#        frame = vs.read()
-#        frame = frame[1] if args.get("video", False) else frame
+    teinte_min = 160
+    teinte_max = 207
+    sat_min = 50
+    sat_max = 100
+    val_min = 51
+    val_max = 100
 
-#        # check to see if we have reached the end of the stream
-#        if frame is None:
-#                break
+    init = True
+##    W, H = [], []
 
-#        # resize the frame (so we can process it faster) and grab the
-#        # frame dimensions
-#        frame = imutils.resize(frame, width=500)
-#        (H, W) = frame.shape[:2]
+    # capture frames from the camera
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
-
-#        # check to see if we are currently tracking an object
-#        if initBB is not None:
-#            # grab the new bounding box coordinates of the object
-#            (success, box) = tracker.update(frame)
-
-#            # check to see if the tracking was a success
-#            if success:
-#                (x, y, w, h) = [int(v) for v in box]
-#                cv2.rectangle(frame, (x, y), (x + w, y + h),
-#                        (0, 255, 0), 2)
-
-#            # update the FPS counter
-#            fps.update()
-#            fps.stop()
-
-#            # initialize the set of information we'll be displaying on
-#            # the frame
-#            info = [
-#                    ("Tracker", args["tracker"]),
-#                    ("Success", "Yes" if success else "No"),
-#                    ("FPS", "{:.2f}".format(fps.fps())),
-#            ]
-
-#            # loop over the info tuples and draw them on our frame
-#            for (i, (k, v)) in enumerate(info):
-#                text = "{}: {}".format(k, v)
-#                cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
-#                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+        # grab the raw NumPy array representing the image, then initialize the timestamp
+        # and occupied/unoccupied text
+        image = frame.array
 
 
-#        # show the output frame
-#        cv2.imshow("Frame", frame)
-#        key = cv2.waitKey(1) & 0xFF
-
-#        # if the 's' key is selected, we are going to "select" a bounding
-#        # box to track
-#        if key == ord("s"):
-#                # select the bounding box of the object we want to track (make
-#                # sure you press ENTER or SPACE after selecting the ROI)
-#                initBB = cv2.selectROI("Frame", frame, fromCenter=False,
-#                        showCrosshair=True)
-
-#                # start OpenCV object tracker using the supplied bounding box
-#                # coordinates, then start the FPS throughput estimator as well
-#                tracker.init(frame, initBB)
-#                fps = FPS().start()
-
-
-#        # if the `q` key was pressed, break from the loop
-#        elif key == ord("q"):
-#                break
+        # Convert BGR to HSV
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
 
 
-#    # if we are using a webcam, release the pointer
-#    if not args.get("video", False):
-#            vs.stop()
+        lower_blue = np.array([int(teinte_min/2),int(sat_min*255/100),int(val_min*255/100)])
+        upper_blue = np.array([int(teinte_max/2),int(sat_max*255/100),int(val_max*255/100)])
 
-#    # otherwise, release the file pointer
-#    else:
-#            vs.release()
-
-#    # close all windows
-#    cv2.destroyAllWindows()
+        # Threshold the HSV image to get only yellow/green colors
+        mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
+        mask1 = cv2.medianBlur(mask1, 5)
 
 
+        # Bitwise-AND mask and original image
+        res = cv2.bitwise_and(image,image, mask= mask1)
+
+        ret1,thresh1 = cv2.threshold(mask1,127,255,0)
+        im2,contours1,hierarchy1 = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, 2)
+
+        if len(contours1) > 0:
+            cnt1 = max(contours1, key = cv2.contourArea)
 
 
+            rect = cv2.minAreaRect(cnt1)
+            box = np.int0(cv2.boxPoints(rect))
+            cv2.drawContours(image, [box], 0, (0,0,255),2)
+
+            x,y = rect[0]
+            w,h = rect[1]
+            if w > h:
+                w,h = h,w
+            angle = rect[2]
+
+            dist1 = targetMaxDim/(h*Sp)
+            dist2 = targetMinDim/(w*Sp)
+            print("Width = ", w, "\nHeight = ", h)
+            print("dist1 = ", dist1, "\ndist2 = ", dist2)
+##            H.append(h)
+##            W.append(w)
+            
+
+        # TO BE MODIFIED displayed image
+        image = cv2.flip(image, 0)
+
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
+        #show the frame
+        cv2.imshow('Webcam',image)
+
+        key = cv2.waitKey(1) & 0xFF
+        # if the `q` key was pressed, break from the loop
+        if key == ord("q") or key == 27:
+            break
+
+        # if the SPACE key was pressed, take a picture
+        elif key == 32:
+            c += 1
+            cv2.imwrite('fra%i.png'%c,image)
+            print("Picture saved")
+
+    cv2.destroyAllWindows()
+##    H,W = np.asarray(H), np.asarray(W)
+##    print("Median (H,W) ", np.median(H), np.median(W))
 
 
+if __name__ == "__main__":
+    run()
 
 
