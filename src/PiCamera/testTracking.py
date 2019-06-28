@@ -10,6 +10,59 @@ import time
 import cv2
 import numpy as np
 
+def getCamDistortData(filename):
+    saveFile = open(filename, 'r')
+    lines = saveFile.readlines()
+    saveFile.close()
+
+    for i in range(len(lines)):
+        if lines[i] == '#mtx\n':
+            i+=1
+            mtxString = lines[i]+lines[i+1]+lines[i+2]
+            mtxList = mtxString.split()
+            mtx = np.zeros((3,3))
+            cnt = 0
+            
+            for part in mtxList:
+                               
+                try:
+                    while part[0] == '[':
+                        part = part[1:]
+
+                    while part[-1] == ']':
+                        part = part[:-1]
+                    
+                    mtx[cnt//3][cnt%3] = float(part)
+                    cnt+=1
+                except:
+                    pass
+
+        if lines[i] == '#dist\n':
+            i+=1
+            distString = lines[i]+lines[i+1]
+            distList = distString.split()
+            dist = np.zeros((1,5))
+            cnt = 0
+            
+            for part in distList:
+                               
+                try:
+                    while part[0] == '[':
+                        part = part[1:]
+
+                    while part[-1] == ']':
+                        part = part[:-1]
+                    
+                    dist[0][cnt] = float(part)
+                    cnt+=1
+                except:
+                    pass
+                      
+            return mtx, dist
+
+
+
+
 def run():
 
     # Fill in the shape of the object to be detected and localised, in meters
@@ -18,10 +71,17 @@ def run():
 
     Sp = 0.11/49.5   #Camera scale factor
 
+    # Read the camera matrix from calibration file
+    mtx, dist = getCamDistortData('calibration_data.txt')
+    
+
     # initialize the camera and grab a reference to the raw camera capture
     camera = PiCamera()
     camera.resolution = (640, 480)
     camera.framerate = 32
+
+    camera.exposure_mode = 'sports'
+    
     rawCapture = PiRGBArray(camera, size=(640, 480))
     cv2.namedWindow('Webcam', cv2.WINDOW_AUTOSIZE)
 
@@ -49,12 +109,12 @@ def run():
 
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
-        image = frame.array
+        image = cv2.undistort(frame.array, mtx, dist, None)
+##        image = frame.array
 
 
         # Convert BGR to HSV
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
 
 
         lower_blue = np.array([int(teinte_min/2),int(sat_min*255/100),int(val_min*255/100)])
@@ -64,9 +124,6 @@ def run():
         mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
         mask1 = cv2.medianBlur(mask1, 5)
 
-
-        # Bitwise-AND mask and original image
-        res = cv2.bitwise_and(image,image, mask= mask1)
 
         ret1,thresh1 = cv2.threshold(mask1,127,255,0)
         im2,contours1,hierarchy1 = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, 2)
@@ -85,13 +142,16 @@ def run():
                 w,h = h,w
             angle = rect[2]
 
-            dist1 = targetMaxDim/(h*Sp)
-            dist2 = targetMinDim/(w*Sp)
-            print("Width = ", w, "\nHeight = ", h)
-            print("dist1 = ", dist1, "\ndist2 = ", dist2)
-##            H.append(h)
-##            W.append(w)
-            
+            if h > 0 and w > 0:
+                dist1 = targetMaxDim/(h*Sp)
+                dist2 = targetMinDim/(w*Sp)
+                print("dist1 = ", dist1, "\ndist2 = ", dist2)
+
+
+
+
+
+
 
         # TO BE MODIFIED displayed image
         image = cv2.flip(image, 0)
@@ -100,6 +160,15 @@ def run():
         rawCapture.truncate(0)
         #show the frame
         cv2.imshow('Webcam',image)
+
+
+
+
+
+
+
+
+
 
         key = cv2.waitKey(1) & 0xFF
         # if the `q` key was pressed, break from the loop
@@ -112,12 +181,9 @@ def run():
             cv2.imwrite('fra%i.png'%c,image)
             print("Picture saved")
 
+
     cv2.destroyAllWindows()
-##    H,W = np.asarray(H), np.asarray(W)
-##    print("Median (H,W) ", np.median(H), np.median(W))
 
 
 if __name__ == "__main__":
     run()
-
-
