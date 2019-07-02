@@ -11,6 +11,62 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
+
+def run():
+
+    cap = cv2.VideoCapture('testImages/some_boat.mp4')
+    cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
+
+    while(cap.isOpened()):
+        # Capture frame-by-frame
+        ret, image = cap.read()
+
+        if ret:
+
+            image = cv2.resize(image, (640,480))
+
+            horizon, horizon_height = horizonArea(image)
+
+            masts = detectMast(horizon, horizon_height)
+
+
+            cv2.imshow('Result', masts)
+#            cv2.imshow('Origin', image)
+
+            time.sleep(0.1)
+            key = cv2.waitKey(1) & 0xFF
+            if key == 27 or key == ord('q'):
+                    break
+
+            if key == 32:
+                key = cv2.waitKey(1) & 0xFF
+                while key != 32:
+                    key = cv2.waitKey(1) & 0xFF
+
+            elif key == ord('c'):
+                cv2.imwrite('sample.png',masts)
+                print("Picture saved")
+
+        else:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+
+
+
+
+####################################################################################################################################
+####################################################################################################################################
+######################                           USEFUL FUNCTIONS                            #######################################
+####################################################################################################################################
+####################################################################################################################################
+
+
+
+
 def horizonArea(image):
 
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -22,31 +78,25 @@ def horizonArea(image):
 
     horizontalLines = cv2.HoughLines(bin_y,1,np.pi/180,100)
 
-    copie = image.copy()
-
-    try:
+    if horizontalLines is not None:
         for rho,theta in horizontalLines[0]:
 
             a = np.cos(theta)
             b = np.sin(theta)
             x0 = a*rho
             y0 = b*rho
-            x1 = int(x0 + 50*(-b))
-            y1 = int(y0 + 50*(a))
-            x2 = int(x0 - cols*(-b))
-            y2 = int(y0 - cols*(a))
 
             rotation = (theta-np.pi/2)*180/np.pi
-
-    except:
+    else:
         rotation = 0
         x0 = 0
         y0 = 0
 
 
+
     M = cv2.getRotationMatrix2D((x0, y0),rotation,1)
 
-    rotated = cv2.warpAffine(copie,M,(cols,rows))
+    rotated = cv2.warpAffine(image,M,(cols,rows))
 
     rows_rotated, cols_rotated = shape(rotated)[0], shape(rotated)[1]
 
@@ -61,78 +111,71 @@ def horizonArea(image):
         left = 1
         right = cols_rotated-1
 
-    cropped = rotated[int(horizon - 0.08*rows_rotated):int(horizon + 0.2*rows_rotated), left:right]
+    bottom_margin, top_margin = 0.08, 0.2
+    cropped = rotated[int(horizon - top_margin*rows_rotated):int(horizon + bottom_margin*rows_rotated), left:right]
 
-    return cropped
+    horizon_height = int(top_margin*rows_rotated)
 
-
-
-
-
-
-def run():
-
-    cap = cv2.VideoCapture('testImages/some_boats.mp4')
-    cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
-
-    while(cap.isOpened()):
-        # Capture frame-by-frame
-        ret, image = cap.read()
-
-        if ret:
-
-            image = cv2.resize(image, (640,480))
+    return cropped, horizon_height
 
 
-            horizon = horizonArea(image)
+####################################################################################################################################
+####################################################################################################################################
 
-            grad_x = cv2.Sobel(horizon, -1, 1, 0, ksize = 3)
+def detectMast(horizon, horizon_height):
 
-            ret, bin_x = cv2.threshold(grad_x,50,255,0)
+    grey = cv2.cvtColor(horizon, cv2.COLOR_BGR2GRAY)
+    grad_x = cv2.Sobel(grey, -1, 1, 0, ksize = 3)
 
-            verticalLines = cv2.HoughLines(bin_x,1,np.pi/180,100)
+    ret, bin_x = cv2.threshold(grad_x,50,255,0)
 
+    kernel = np.zeros((7,7), np.uint8)
+    kernel[:,3] = np.ones((7,), np.uint8)
 
+    bin_x = cv2.morphologyEx(bin_x, cv2.MORPH_OPEN, kernel)
 
-#            copie = horizon.copy()
+    verticalLines = cv2.HoughLines(bin_x,1,np.pi/180,0)
 
-#            try:
-#                for rho,theta in verticalLines[0]:
+    possible_masts = []
 
-#                    a = np.cos(theta)
-#                    b = np.sin(theta)
-#                    x0 = a*rho
-#                    y0 = b*rho
-#                    x1 = int(x0 + 50*(-b))
-#                    y1 = int(y0 + 50*(a))
-#                    x2 = int(x0 - cols*(-b))
-#                    y2 = int(y0 - cols*(a))
+    if verticalLines is not None:
+        for verticalLine in verticalLines:
+            print(verticalLine)
+            for rho,theta in verticalLine:
 
-#                    cv2.line(copie, (x1, y1), (x2, y2), (0,0,255), 2)
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 10000*(-b))
+                y1 = int(y0 + 10000*(a))
+                x2 = int(x0 - 10000*(-b))
+                y2 = int(y0 - 10000*(a))
 
-#            except:
-#                pass
+                xMast = x2 - ((x2-x1)*(y2-horizon_height))/(y2-y1)
+
+                if -pi/4 < theta and theta < pi/4 and newMast(xMast, possible_masts):
+                    possible_masts.append(xMast)
+                    cv2.line(horizon, (xMast, horizon_height-10), (xMast, horizon_height+10), (0,0,255), 2)
+                    cv2.line(horizon, (x1, y1), (x2, y2), (0,0,255), 1)
+
+    return horizon
 
 
 
-            cv2.imshow('Result', bin_x)
-            cv2.imshow('Origin', image)
+####################################################################################################################################
+####################################################################################################################################
 
 
-            key = cv2.waitKey(1) & 0xFF
-            if key == 27 or key == ord('q'):
-                    break
 
-            if key == 32:
-                key = cv2.waitKey(1) & 0xFF
-                while key != 32:
-                    key = cv2.waitKey(1) & 0xFF
 
-        else:
-            break
+def newMast(possibleNew, mastList):
+    check = True
+    for mast in mastList:
+        if abs(possibleNew - mast) < 30:
+            check = False
+    return check
 
-    cap.release()
-    cv2.destroyAllWindows()
 
 
 
