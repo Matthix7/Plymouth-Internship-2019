@@ -152,11 +152,11 @@ def run():
 # "#####msgSize_ID_GPSstring_poseString=====\n"
 ###################################################################
 
-    received = ['NODATA']*3
     emission = 0
 
     while not rospy.is_shutdown():
         emission += 1
+        received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
 
         line = ser.readline()
 

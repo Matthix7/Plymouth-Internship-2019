@@ -5,8 +5,7 @@
 import rospy
 
 from std_msgs.msg import Float32, String
-from geometry_msgs.msg import Pose2D
-from sensor_msgs.msg import Imu
+from geometry_msgs.msg import Pose2D, Vector3
 
 import serial
 from time import time
@@ -16,16 +15,25 @@ from time import time
 #    To execute when a message to transmit is received
 ###################################################################
 
+def sub_GPS(data):
+    global gpsString
+    gpsString = data.data
 
-def GPStransmission(data):
-    global GPSstring
-    GPSstring = data.data
+def sub_WIND_FORCE(data):
+    global windForceString
+    windForceString = str(data.data)
 
-def poseTransmission(data):
-    global poseString
-    poseString = str(data.x)+','+str(data.y)+','+str(data.theta)
+def sub_WIND_DIRECTION(data):
+    global windDirectionString
+    windDirectionString = str(data.data)
 
+def sub_EULER_ANGLES(data):
+    global eulerAnglesString
+    eulerAnglesString = str(data.x)+','+str(data.y)+','+str(data.z)
 
+def sub_POS(data):
+    global posString
+    posString = str(data.x)+','+str(data.y)+','+str(data.theta)
 
 ###################################################################
 #    Check message validity
@@ -74,7 +82,7 @@ def run():
 ###################################################################
 #    Initialisation
 ###################################################################
-    global GPSstring, poseString
+    global gpsString, windForceString, windDirectionString, eulerAnglesString, posString
 
     GPSstring, poseString = 'init', 'init'
 
@@ -84,6 +92,12 @@ def run():
 
     receiving_freq = 6 #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
+
+    force1, force2, force3             = Float32(), Float32(), Float32()
+    direction1, direction2, dircetion3 = Float32(), Float32(), Float32()
+    gps1, gps2, gps3                   = String(), String(),, String()
+    euler1, euler2, euler3             = Vector3(),Vector3(),Vector3()
+    pos1, pos2, pos3                   = Pose2D(), Pose2D(), Pose2D()
 
 ###################################################################
 #    Get local XBee ID and send it to coordinator
@@ -134,13 +148,20 @@ def run():
 
 #    Receives a GPS standard frame
 #    Contains xBoat, yBoat and others
-    rospy.Subscriber('GPS', String, GPStransmission)
+    rospy.Subscriber('gps', String, sub_GPS)
 
-#    Receives the rest of the data relative to the boat
-#    msg.x = headingBoat
-#    msg.y = headingWindBoat
-#    msg.z = speedWindBoat
-    rospy.Subscriber('poseBoat', Pose2D, poseTransmission)
+#    Receives the speed of the wind
+    rospy.Subscriber('wind_force', Float32, sub_WIND_FORCE)
+
+#    Receives the direction of the wind
+    rospy.Subscriber('wind_direction', Float32, sub_WIND_DIRECTION)
+
+#    Receives the direction of the wind
+    rospy.Subscriber('euler_angles', Vector3, sub_EULER_ANGLES)
+
+#    Receives the direction of the wind
+    rospy.Subscriber('pos', Pose2D, sub_POS)
+
 
 
 ###################################################################
@@ -162,9 +183,8 @@ def run():
 ########################################################################################################################
 #   Receive useful data from the coordinator
 # Frame received:
-# "#####msgSize_ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
+# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_posString1_ID2_windForceString2_windDirectionString2_gpsString2_eulerAnglesString2_posString2_ID3_windForceString3_windDirectionString3_gpsString3_eulerAnglesString3_posString3_targetString_modeString=====\n"
 ########################################################################################################################
-
 
     compteur = 0
     emission = 0
@@ -174,6 +194,10 @@ def run():
         line = ''
         loopTime = time()
 
+        windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "nothing", "nothing", "nothing", "nothing", "nothing"
+
+
+#    Read what is in the buffer, start and stop with specific signals.
 
         while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
@@ -182,58 +206,94 @@ def run():
             c = ser.read(1)
         line += c
 
-
+#    Check message syntax and checkSum
         check, msgReceived = is_valid(line)
 
         if check:
             rospy.loginfo("Read\n"+msgReceived+'\n')
             compteur += 1
-            cursor = 0
+            cursor = 1
 
-            pose1, pose2, pose3 = Pose2D(), Pose2D(), Pose2D()
-            targetString, modeString = String(), String()
 
             try:
                 data = msgReceived.split('_')
 
-                if data[cursor] != "NODATA":
-                    ID1 = data[1]
-                    GPSstring1 = String(data = data[2])
-                    poseData1 = data[3].split(',')
-                    pose1.x = eval(poseData1[0])
-                    pose1.y = eval(poseData1[1])
-                    pose1.theta = eval(poseData1[2])
-                    cursor += 3
-                else:
-                    cursor += 1
+#Collect the data from boat 1
 
-                if data[cursor] != "NODATA":
+                if data[cursor+1] != "nothing":
+                    ID1 = data[cursor]
+
+                    force1.data = float(data[cursor+1])
+
+                    direction1.data = float(data[cursor+2])
+
+                    gps1.data = data[cursor+3]
+
+                    tmpEuler = data[cursor+4].split(',')
+                    euler1.x = tmpEuler[0]
+                    euler1.y = tmpEuler[1]
+                    euler1.z = tmpEuler[2]
+
+                    tmpPos = data[cursor+5].split(',')
+                    pos1.x = tmpPos[0]
+                    pos1.y = tmpPos[1]
+                    pos1.theta = tmpPos[2]
+
+                cursor += 6
+
+#Collect the data from boat 2
+
+                if data[cursor+1] != "nothing":
                     ID2 = data[cursor]
-                    GPSstring2 = String(data = data[cursor+1])
-                    poseData2 = data[cursor+2].split(',')
-                    pose2.x = eval(poseData2[0])
-                    pose2.y = eval(poseData2[1])
-                    pose2.theta = eval(poseData2[2])
-                    cursor += 3
-                else:
-                    cursor += 1
 
-                if data[cursor] != "NODATA":
+                    force2.data = float(data[cursor+1])
+
+                    direction2.data = float(data[cursor+2])
+
+                    gps2.data = data[cursor+3]
+
+                    tmpEuler = data[cursor+4].split(',')
+                    euler2.x = tmpEuler[0]
+                    euler2.y = tmpEuler[1]
+                    euler2.z = tmpEuler[2]
+
+                    tmpPos = data[cursor+5].split(',')
+                    pos2.x = tmpPos[0]
+                    pos2.y = tmpPos[1]
+                    pos2.theta = tmpPos[2]
+
+                cursor += 6
+
+#Collect the data from boat 3
+
+                if data[cursor+1] != "nothing":
                     ID3 = data[cursor]
-                    GPSstring3 = String(data = data[cursor+1])
-                    poseData3 = data[cursor+2].split(',')
-                    pose3.x = eval(poseData3[0])
-                    pose3.y = eval(poseData3[1])
-                    pose3.theta = eval(poseData3[2])
-                    cursor += 3
-                else:
-                    cursor += 1
 
+                    force3.data = float(data[cursor+1])
+
+                    direction3.data = float(data[cursor+2])
+
+                    gps3.data = data[cursor+3]
+
+                    tmpEuler = data[cursor+4].split(',')
+                    euler3.x = tmpEuler[0]
+                    euler3.y = tmpEuler[1]
+                    euler3.z = tmpEuler[2]
+
+                    tmpPos = data[cursor+5].split(',')
+                    pos3.x = tmpPos[0]
+                    pos3.y = tmpPos[1]
+                    pos3.theta = tmpPos[2]
+
+                cursor += 6
+
+#Collect the data from the operator
 
                 targetString.data = data[cursor]
 
                 modeString.data = data[cursor+1]
 
+#Publish the data for internal use
 
                 pubControlMode.publish(modeString)
                 pubTarget.publish(targetString)
@@ -244,11 +304,9 @@ def run():
 
 
 
-
+#Despite message controls, some errors may still occur...
             except:
                 pass
-
-
 
 
         elif not check:
@@ -256,7 +314,10 @@ def run():
 
 
 
-        msg = str(ID)+'_'+GPSstring+'_'+poseString+str(compteur)
+#Creating the core message
+        msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+posString
+
+#Generating the checkSum message control
         size = str(len(msg)+4)
         for i in range(len(size),3):
             size = '0'+size
@@ -264,7 +325,7 @@ def run():
         msg = "#####"+size+'_'+msg+"=====\n"
 
         processTime = time() - loopTime
-        #Sleep while others are talking
+#Sleep while others are talking
         rospy.sleep( ID/4. * ((1./receiving_freq) - processTime))
 
         ser.write(msg)
