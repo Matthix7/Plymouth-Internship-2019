@@ -82,7 +82,7 @@ def run():
 ###################################################################
 #    Initialisation
 ###################################################################
-    global gpsString, windForceString, windDirectionString, eulerAnglesString, posString
+    global windForceString, windDirectionString, gpsString, eulerAnglesString, posString
 
     GPSstring, poseString = 'init', 'init'
 
@@ -94,10 +94,12 @@ def run():
     rate = rospy.Rate(receiving_freq)
 
     force1, force2, force3             = Float32(), Float32(), Float32()
-    direction1, direction2, dircetion3 = Float32(), Float32(), Float32()
-    gps1, gps2, gps3                   = String(), String(),, String()
+    direction1, direction2, direction3 = Float32(), Float32(), Float32()
+    gps1, gps2, gps3                   = String(), String(), String()
     euler1, euler2, euler3             = Vector3(),Vector3(),Vector3()
     pos1, pos2, pos3                   = Pose2D(), Pose2D(), Pose2D()
+
+    targetString, modeString = String(), String()
 
 ###################################################################
 #    Get local XBee ID and send it to coordinator
@@ -168,16 +170,33 @@ def run():
 #   Transmit data from the other boats to the boat's controller (max 999 char)
 ###################################################################
 #    Publishes the string indicator of the control mode
-    pubControlMode = rospy.Publisher('controlMode', String, queue_size = 2)
+    pub_send_control_mode = rospy.Publisher('controlMode', String, queue_size = 2)
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pubTarget = rospy.Publisher('poseTarget', String, queue_size = 2)
+    pub_send_target = rospy.Publisher('poseTarget', String, queue_size = 2)
 
 #    Publishes the data relative to each boat
-    pubBoat1 = rospy.Publisher('Boat1', Pose2D, queue_size = 2)
-    pubBoat2 = rospy.Publisher('Boat2', Pose2D, queue_size = 2)
-    pubBoat3 = rospy.Publisher('Boat3', Pose2D, queue_size = 2)
+    pub_send_wind_force_1 = rospy.Publisher('wind_force_1', Float32, queue_size = 2)
+    pub_send_wind_force_2 = rospy.Publisher('wind_force_2', Float32, queue_size = 2)
+    pub_send_wind_force_3 = rospy.Publisher('wind_force_3', Float32, queue_size = 2)
+
+    pub_send_wind_direction_1 = rospy.Publisher('wind_direction_1', Float32, queue_size = 2)
+    pub_send_wind_direction_2 = rospy.Publisher('wind_direction_2', Float32, queue_size = 2)
+    pub_send_wind_direction_3 = rospy.Publisher('wind_direction_3', Float32, queue_size = 2)
+
+    pub_send_gps_1 = rospy.Publisher('gps_1', String, queue_size = 2)
+    pub_send_gps_2 = rospy.Publisher('gps_2', String, queue_size = 2)
+    pub_send_gps_3 = rospy.Publisher('gps_3', String, queue_size = 2)
+
+    pub_send_euler_1 = rospy.Publisher('euler_1', Vector3, queue_size = 2)
+    pub_send_euler_2 = rospy.Publisher('euler_2', Vector3, queue_size = 2)
+    pub_send_euler_3 = rospy.Publisher('euler_3', Vector3, queue_size = 2)
+
+    pub_send_pos_1 = rospy.Publisher('pos_1', Pose2D, queue_size = 2)
+    pub_send_pos_2 = rospy.Publisher('pos_2', Pose2D, queue_size = 2)
+    pub_send_pos_3 = rospy.Publisher('pos_3', Pose2D, queue_size = 2)
+
 
 
 ########################################################################################################################
@@ -210,15 +229,14 @@ def run():
         check, msgReceived = is_valid(line)
 
         if check:
-            rospy.loginfo("Read\n"+msgReceived+'\n')
+
             compteur += 1
-            cursor = 1
-
-
+            cursor = 0
             try:
                 data = msgReceived.split('_')
+                rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))
 
-#Collect the data from boat 1
+    #Collect the data from boat 1
 
                 if data[cursor+1] != "nothing":
                     ID1 = data[cursor]
@@ -230,18 +248,18 @@ def run():
                     gps1.data = data[cursor+3]
 
                     tmpEuler = data[cursor+4].split(',')
-                    euler1.x = tmpEuler[0]
-                    euler1.y = tmpEuler[1]
-                    euler1.z = tmpEuler[2]
+                    euler1.x = float(tmpEuler[0])
+                    euler1.y = float(tmpEuler[1])
+                    euler1.z = float(tmpEuler[2])
 
                     tmpPos = data[cursor+5].split(',')
-                    pos1.x = tmpPos[0]
-                    pos1.y = tmpPos[1]
-                    pos1.theta = tmpPos[2]
+                    pos1.x = float(tmpPos[0])
+                    pos1.y = float(tmpPos[1])
+                    pos1.theta = float(tmpPos[2])
 
                 cursor += 6
 
-#Collect the data from boat 2
+    #Collect the data from boat 2
 
                 if data[cursor+1] != "nothing":
                     ID2 = data[cursor]
@@ -253,18 +271,18 @@ def run():
                     gps2.data = data[cursor+3]
 
                     tmpEuler = data[cursor+4].split(',')
-                    euler2.x = tmpEuler[0]
-                    euler2.y = tmpEuler[1]
-                    euler2.z = tmpEuler[2]
+                    euler2.x = float(tmpEuler[0])
+                    euler2.y = float(tmpEuler[1])
+                    euler2.z = float(tmpEuler[2])
 
                     tmpPos = data[cursor+5].split(',')
-                    pos2.x = tmpPos[0]
-                    pos2.y = tmpPos[1]
-                    pos2.theta = tmpPos[2]
+                    pos2.x = float(tmpPos[0])
+                    pos2.y = float(tmpPos[1])
+                    pos2.theta = float(tmpPos[2])
 
                 cursor += 6
 
-#Collect the data from boat 3
+    #Collect the data from boat 3
 
                 if data[cursor+1] != "nothing":
                     ID3 = data[cursor]
@@ -273,36 +291,49 @@ def run():
 
                     direction3.data = float(data[cursor+2])
 
+
                     gps3.data = data[cursor+3]
 
                     tmpEuler = data[cursor+4].split(',')
-                    euler3.x = tmpEuler[0]
-                    euler3.y = tmpEuler[1]
-                    euler3.z = tmpEuler[2]
+                    euler3.x = float(tmpEuler[0])
+                    euler3.y = float(tmpEuler[1])
+                    euler3.z = float(tmpEuler[2])
 
                     tmpPos = data[cursor+5].split(',')
-                    pos3.x = tmpPos[0]
-                    pos3.y = tmpPos[1]
-                    pos3.theta = tmpPos[2]
+                    pos3.x = float(tmpPos[0])
+                    pos3.y = float(tmpPos[1])
+                    pos3.theta = float(tmpPos[2])
 
                 cursor += 6
 
-#Collect the data from the operator
+    #Collect the data from the operator
 
                 targetString.data = data[cursor]
 
                 modeString.data = data[cursor+1]
 
-#Publish the data for internal use
+    #Publish the data for internal use
 
-                pubControlMode.publish(modeString)
-                pubTarget.publish(targetString)
+                pub_send_control_mode.publish(modeString)
+                pub_send_target.publish(targetString)
 
-                pubBoat1.publish(pose1)
-                pubBoat2.publish(pose2)
-                pubBoat3.publish(pose3)
+                pub_send_wind_force_1.publish(force1)
+                pub_send_wind_direction_1.publish(direction1)
+                pub_send_gps_1.publish(gps1)
+                pub_send_euler_1.publish(euler1)
+                pub_send_pos_1.publish(pos1)
 
+                pub_send_wind_force_2.publish(force2)
+                pub_send_wind_direction_2.publish(direction2)
+                pub_send_gps_2.publish(gps2)
+                pub_send_euler_2.publish(euler2)
+                pub_send_pos_2.publish(pos2)
 
+                pub_send_wind_force_3.publish(force3)
+                pub_send_wind_direction_3.publish(direction3)
+                pub_send_gps_3.publish(gps3)
+                pub_send_euler_3.publish(euler3)
+                pub_send_pos_3.publish(pos3)
 
 #Despite message controls, some errors may still occur...
             except:

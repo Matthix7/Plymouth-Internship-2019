@@ -110,7 +110,7 @@ def run():
 
     # To check we have all the boats connected
     connected = [] #list of connected boats IDs
-    expected = 2  # Number of boats expected to connect
+    expected = 1  # Number of boats expected to connect
 
     while not rospy.is_shutdown() and len(connected) < expected:
         line = ser.readline()
@@ -153,10 +153,11 @@ def run():
 ###################################################################
 
     emission = 0
+    received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
+
 
     while not rospy.is_shutdown():
         emission += 1
-        received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
 
         line = ser.readline()
 
@@ -191,6 +192,9 @@ def run():
 
             msg = "#####"+size+'_'+msg+"=====\n"
             ser.write(msg)
+
+            received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
+
 
             rospy.loginfo("Emission " + str(emission//3))
 
