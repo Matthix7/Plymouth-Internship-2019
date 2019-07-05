@@ -26,6 +26,9 @@ def run():
 
     rawCapture = PiRGBArray(camera, size=(640, 480))
 
+    # allow the camera to warmup
+    time.sleep(0.1)
+
 
     t0 = time.time()
 

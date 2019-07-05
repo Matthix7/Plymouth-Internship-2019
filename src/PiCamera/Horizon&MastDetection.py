@@ -16,7 +16,7 @@ def run():
 
     t0 = time.time()
 
-    cap = cv2.VideoCapture('testImages/china_lake.mp4')
+    cap = cv2.VideoCapture('testImages/some_boats.mp4')
     cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
@@ -30,7 +30,7 @@ def run():
 
             image = cv2.resize(image, (640,480))
 
-            cv2.imshow('Origin', image)
+#            cv2.imshow('Origin', image)
 
             #Find the area where is horizon is located and return a frame containing the horizon, transformed to be horizontal.
             #Takes about 0.04s per frame.
@@ -38,9 +38,9 @@ def run():
 
             #Find the areas where vertical lines are found (ie possible sailboats).
             #Takes about 0.1s per frame.
-#            masts = detectMast(horizon, horizon_height)
+            masts = detectMast(horizon, horizon_height)
 
-            cv2.imshow('Result', horizon)
+            cv2.imshow('Result', masts)
             time.sleep(0.1)
 
             key = cv2.waitKey(1) & 0xFF
@@ -86,7 +86,7 @@ def horizonArea(image, horizon_prev):
     grey = cv2.bilateralFilter(grey,9,40,10)
 #    grey = cv2.medianBlur(grey,7)
 
-    cv2.imshow('Blur', grey)
+#    cv2.imshow('Blur', grey)
 
     rows,cols = grey.shape
 
@@ -99,7 +99,7 @@ def horizonArea(image, horizon_prev):
 
 
     ret, bin_y = cv2.threshold(grad_y,10,255,0)
-    cv2.imshow('Binary', bin_y)
+#    cv2.imshow('Binary', bin_y)
 
     horizontalLines = cv2.HoughLines(bin_y,1,np.pi/180,100)
 
@@ -107,16 +107,16 @@ def horizonArea(image, horizon_prev):
         for rho,theta in horizontalLines[0]:
             rotation = (theta-np.pi/2)*180/np.pi
 
-            if abs(rotation) < 60:
-                a = np.cos(theta)
-                b = np.sin(theta)
-                x0 = a*rho
-                y0 = b*rho
-                x1 = int(x0 + 10000*(-b))
-                y1 = int(y0 + 10000*(a))
-                x2 = int(x0 - 10000*(-b))
-                y2 = int(y0 - 10000*(a))
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a*rho
+            y0 = b*rho
+            x1 = int(x0 + 10000*(-b))
+            y1 = int(y0 + 10000*(a))
+            x2 = int(x0 - 10000*(-b))
+            y2 = int(y0 - 10000*(a))
 
+            if abs(rotation) < 60 and abs(y0-horizon_prev[2]) < 50:
 
                 cv2.line(image, (x1, y1), (x2, y2), (0,255,0), 1)
 
@@ -159,10 +159,22 @@ def detectMast(horizon, horizon_height):
 
     grey = cv2.cvtColor(horizon, cv2.COLOR_BGR2GRAY)
 
-    grad_x = cv2.Sobel(grey, -1, 1, 0, ksize = 3)
+    kernel = np.zeros((5,5))
+    kernel_side = np.ones((5,2))
+    kernel[:,:2] = -(1./(4*5))*kernel_side
+    kernel[:,-2:] = (1./(4*5))*kernel_side
+    grad_x = cv2.filter2D(grey,cv2.CV_16S,kernel)
+    grad_x = np.uint8(np.absolute(grad_x))
 
+#    grad_x = cv2.Sobel(grey, -1, 1, 0, ksize = 3)
 
-    ret, bin_x = cv2.threshold(grad_x,50,255,0)
+    kernel = np.ones((30,1))
+    ret, bin_x = cv2.threshold(grad_x,5,255,0)
+    bin_x = cv2.morphologyEx(bin_x, cv2.MORPH_OPEN, kernel)
+
+    cv2.imshow('Grad', grad_x)
+    cv2.imshow('Bin', bin_x)
+
 
     kernel = np.zeros((7,7), np.uint8)
     kernel[:,3] = np.ones((7,), np.uint8)
