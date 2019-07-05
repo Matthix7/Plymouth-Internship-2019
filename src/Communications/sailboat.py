@@ -150,19 +150,19 @@ def run():
 
 #    Receives a GPS standard frame
 #    Contains xBoat, yBoat and others
-    rospy.Subscriber('gps', String, sub_GPS)
+    rospy.Subscriber('gps', String, sub_GPS) #topic name to change
 
 #    Receives the speed of the wind
-    rospy.Subscriber('wind_force', Float32, sub_WIND_FORCE)
+    rospy.Subscriber('filter_send_wind_force', Float32, sub_WIND_FORCE)
 
 #    Receives the direction of the wind
-    rospy.Subscriber('wind_direction', Float32, sub_WIND_DIRECTION)
+    rospy.Subscriber('filter_send_wind_direction', Float32, sub_WIND_DIRECTION)
 
 #    Receives the direction of the wind
-    rospy.Subscriber('euler_angles', Vector3, sub_EULER_ANGLES)
+    rospy.Subscriber('filter_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
 #    Receives the direction of the wind
-    rospy.Subscriber('pos', Pose2D, sub_POS)
+    rospy.Subscriber('pos', Pose2D, sub_POS) #topic name to change
 
 
 
@@ -170,32 +170,32 @@ def run():
 #   Transmit data from the other boats to the boat's controller (max 999 char)
 ###################################################################
 #    Publishes the string indicator of the control mode
-    pub_send_control_mode = rospy.Publisher('controlMode', String, queue_size = 2)
+    pub_send_control_mode = rospy.Publisher('xbee_send_mode', String, queue_size = 2)
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pub_send_target = rospy.Publisher('poseTarget', String, queue_size = 2)
+    pub_send_target = rospy.Publisher('xbee_send_target', String, queue_size = 2)
 
 #    Publishes the data relative to each boat
-    pub_send_wind_force_1 = rospy.Publisher('wind_force_1', Float32, queue_size = 2)
-    pub_send_wind_force_2 = rospy.Publisher('wind_force_2', Float32, queue_size = 2)
-    pub_send_wind_force_3 = rospy.Publisher('wind_force_3', Float32, queue_size = 2)
+    pub_send_wind_force_1 = rospy.Publisher('xbee_send_wind_force_1', Float32, queue_size = 2)
+    pub_send_wind_force_2 = rospy.Publisher('xbee_send_wind_force_2', Float32, queue_size = 2)
+    pub_send_wind_force_3 = rospy.Publisher('xbee_send_wind_force_3', Float32, queue_size = 2)
 
-    pub_send_wind_direction_1 = rospy.Publisher('wind_direction_1', Float32, queue_size = 2)
-    pub_send_wind_direction_2 = rospy.Publisher('wind_direction_2', Float32, queue_size = 2)
-    pub_send_wind_direction_3 = rospy.Publisher('wind_direction_3', Float32, queue_size = 2)
+    pub_send_wind_direction_1 = rospy.Publisher('xbee_send_wind_direction_1', Float32, queue_size = 2)
+    pub_send_wind_direction_2 = rospy.Publisher('xbee_send_wind_direction_2', Float32, queue_size = 2)
+    pub_send_wind_direction_3 = rospy.Publisher('xbee_send_wind_direction_3', Float32, queue_size = 2)
 
-    pub_send_gps_1 = rospy.Publisher('gps_1', String, queue_size = 2)
-    pub_send_gps_2 = rospy.Publisher('gps_2', String, queue_size = 2)
-    pub_send_gps_3 = rospy.Publisher('gps_3', String, queue_size = 2)
+    pub_send_gps_1 = rospy.Publisher('xbee_send_gps_1', String, queue_size = 2)
+    pub_send_gps_2 = rospy.Publisher('xbee_send_gps_2', String, queue_size = 2)
+    pub_send_gps_3 = rospy.Publisher('xbee_send_gps_3', String, queue_size = 2)
 
-    pub_send_euler_1 = rospy.Publisher('euler_1', Vector3, queue_size = 2)
-    pub_send_euler_2 = rospy.Publisher('euler_2', Vector3, queue_size = 2)
-    pub_send_euler_3 = rospy.Publisher('euler_3', Vector3, queue_size = 2)
+    pub_send_euler_1 = rospy.Publisher('xbee_send_euler_1', Vector3, queue_size = 2)
+    pub_send_euler_2 = rospy.Publisher('xbee_send_euler_2', Vector3, queue_size = 2)
+    pub_send_euler_3 = rospy.Publisher('xbee_send_euler_3', Vector3, queue_size = 2)
 
-    pub_send_pos_1 = rospy.Publisher('pos_1', Pose2D, queue_size = 2)
-    pub_send_pos_2 = rospy.Publisher('pos_2', Pose2D, queue_size = 2)
-    pub_send_pos_3 = rospy.Publisher('pos_3', Pose2D, queue_size = 2)
+    pub_send_pos_1 = rospy.Publisher('xbee_send_pos_1', Pose2D, queue_size = 2)
+    pub_send_pos_2 = rospy.Publisher('xbee_send_pos_2', Pose2D, queue_size = 2)
+    pub_send_pos_3 = rospy.Publisher('xbee_send_pos_3', Pose2D, queue_size = 2)
 
 
 
