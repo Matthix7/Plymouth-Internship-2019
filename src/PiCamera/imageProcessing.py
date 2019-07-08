@@ -23,7 +23,6 @@ from detectionAruco import detectAruco
 
 def run():
 
-    t0 = time.time()
 
     cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
     cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
@@ -39,6 +38,8 @@ def run():
 ##    Running on test video
 #    cap = cv2.VideoCapture('testImages/some_boat.mp4')
 
+#    t0 = time.time()
+
 #    while(cap.isOpened()):
 
 #        # Capture frame-by-frame
@@ -48,6 +49,8 @@ def run():
 #            break
 
 #        image = cv2.resize(image, (640,480))
+
+
 
 #################     CAMERA     ####################################
 #####################################################################
@@ -62,6 +65,8 @@ def run():
 
     # allow the camera to warmup
     time.sleep(0.1)
+
+    t0 = time.time()
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
@@ -83,19 +88,27 @@ def run():
         #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
         #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
         #detected in the new image.
+        t1 = time.time()-t0
         horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        print('T1', time.time()-t1)
 
         #Find the areas where vertical lines are found (ie possible sailboats).
         #Takes about 0.1s per frame.
         #masts: image cropped around the horizon, where vertical lines are highlighted
+        t2 = time.time()-t0
         masts = detectMast(horizon, horizon_height)
+        print('T2', time.time()-t2)
 
         #Find the buoy in the cropped image and highlight them in the result image
+        t3 = time.time()-t0
         colorRange = getColorRange()
         center, buoy = detectBuoy(image, image.copy(), colorRange)
+        print('T3', time.time()-t3)
 
         #Find the April Tags in the cropped image
+        t4 = time.time()-t0
         frame_markers, corners = detectAruco(image, buoy, aruco_dict)
+        print('T4', time.time()-t4)
 
 
 
