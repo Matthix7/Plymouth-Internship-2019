@@ -116,7 +116,7 @@ def run():
         t5 = time.time()
         cv2.imshow('Global', frame_markers)
         cv2.imshow('Horizon', masts)
-        print('T5', time.time()-t4)
+        print('T5', time.time()-t5)
 
 
         time.sleep(dodo)
@@ -138,7 +138,7 @@ def run():
             cv2.imwrite('sample.png',masts)
             print("Picture saved")
 
-        print('T6', time.time()-t4)
+        print('T6', time.time()-t6)
 
 
     try:

@@ -195,7 +195,7 @@ def detectMast(horizon, horizon_height):
     possible_masts = []
 
     if verticalLines is not None:
-        print(len(verticalLines))
+#        print(len(verticalLines))
 #        verticalLines = [verticalLines[i] for i in range(0, len(verticalLines), 1+len(verticalLines)//50)]
         for verticalLine in verticalLines:
             for rho,theta in verticalLine:
