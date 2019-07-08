@@ -118,7 +118,8 @@ def horizonArea(image, horizon_prev):
 
             if abs(rotation) < 60 and abs(y0-horizon_prev[2]) < 50:
 
-                cv2.line(image, (x1, y1), (x2, y2), (0,255,0), 1)
+                if __name__ == "__main__":
+                    cv2.line(image, (x1, y1), (x2, y2), (0,255,0), 1)
 
                 horizon_prev = (rotation, x0, y0)
 
@@ -158,6 +159,7 @@ def horizonArea(image, horizon_prev):
 def detectMast(horizon, horizon_height):
 
     grey = cv2.cvtColor(horizon, cv2.COLOR_BGR2GRAY)
+    result = horizon.copy()
 
     kernel = np.zeros((5,5))
     kernel_side = np.ones((5,2))
@@ -206,10 +208,10 @@ def detectMast(horizon, horizon_height):
 
                 if -pi/4 < theta and theta < pi/4 and newMast(xMast, possible_masts):
                     possible_masts.append(xMast)
-                    cv2.line(horizon, (xMast, horizon_height-10), (xMast, horizon_height+10), (0,0,255), 2)
-                    cv2.line(horizon, (x1, y1), (x2, y2), (0,0,255), 1)
+                    cv2.line(result, (xMast, horizon_height-10), (xMast, horizon_height+10), (0,0,255), 2)
+                    cv2.line(result, (x1, y1), (x2, y2), (0,0,255), 1)
 
-    return horizon
+    return result
 
 
 
