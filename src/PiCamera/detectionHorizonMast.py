@@ -86,7 +86,7 @@ def horizonArea(image, horizon_prev):
     tTest = time.time()
 
 #    grey = cv2.bilateralFilter(grey,9,40,10) #more precision, but slower than medianBlur
-    grey = cv2.medianBlur(grey,7)
+#    grey = cv2.medianBlur(grey,7)
     print('T_test', time.time()-tTest)
 
 
