@@ -111,20 +111,22 @@ def run():
         print('T4', time.time()-t4)
 
 
-
+        t5 = time.time()
         cv2.imshow('Global', frame_markers)
         cv2.imshow('Horizon', masts)
+        print('T5', time.time()-t4)
+
 #        time.sleep(0.05)
 
 #####################################################################
 #############        INTERACTION          ###########################
 
-
+        t6 = time.time()
         key = cv2.waitKey(1) & 0xFF
         if key == 27 or key == ord('q'):
                 break
 
-        if key == 32:
+        elif key == 32:
             key = cv2.waitKey(1) & 0xFF
             while key != 32:
                 key = cv2.waitKey(1) & 0xFF
@@ -132,6 +134,8 @@ def run():
         elif key == ord('c'):
             cv2.imwrite('sample.png',masts)
             print("Picture saved")
+
+        print('T6', time.time()-t4)
 
 
     try:
