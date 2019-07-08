@@ -12,8 +12,8 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+#from picamera.array import PiRGBArray
+#from picamera import PiCamera
 
 
 from detectionBuoy import detectBuoy, getColorRange
@@ -33,47 +33,47 @@ def run():
 
     c = 0
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture('testImages/some_boat.mp4')
-
-#    t0 = time.time()
-
-#    while(cap.isOpened()):
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (640,480))
-
-
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
-    camera = PiCamera()
-    camera.resolution = (640, 480)
-    camera.framerate = 32
-
-    camera.exposure_mode = 'sports'
-
-    rawCapture = PiRGBArray(camera, size=(640, 480))
-
-    # allow the camera to warmup
-    time.sleep(0.1)
+#    Running on test video
+    cap = cv2.VideoCapture('testImages/some_boats.mp4')
 
     t0 = time.time()
 
-    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    while(cap.isOpened()):
 
-        image = frame.array
+        # Capture frame-by-frame
+        ret, image = cap.read()
 
-        # clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
+        if not ret:
+            break
+
+        image = cv2.resize(image, (640,480))
+
+
+
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+#    camera = PiCamera()
+#    camera.resolution = (640, 480)
+#    camera.framerate = 32
+
+#    camera.exposure_mode = 'sports'
+
+#    rawCapture = PiRGBArray(camera, size=(640, 480))
+
+#    # allow the camera to warmup
+#    time.sleep(0.1)
+
+#    t0 = time.time()
+
+#    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+#        image = frame.array
+
+#        # clear the stream in preparation for the next frame
+#        rawCapture.truncate(0)
 #####################################################################
 #####################################################################
 
