@@ -40,6 +40,8 @@ def run():
 
     t0 = time.time()
 
+    dodo = 0.1
+
     while(cap.isOpened()):
 
         # Capture frame-by-frame
@@ -116,7 +118,8 @@ def run():
         cv2.imshow('Horizon', masts)
         print('T5', time.time()-t4)
 
-#        time.sleep(0.05)
+
+        time.sleep(dodo)
 
 #####################################################################
 #############        INTERACTION          ###########################
@@ -145,7 +148,7 @@ def run():
     cv2.destroyAllWindows()
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
-    print("Time per frame : ", (time.time()-t0)/c)
+    print("Time per frame : ", (time.time()-t0)/c - dodo)
 
 
 if __name__ == "__main__":

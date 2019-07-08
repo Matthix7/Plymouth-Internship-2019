@@ -83,8 +83,10 @@ def run():
 def horizonArea(image, horizon_prev):
 
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    grey = cv2.bilateralFilter(grey,9,40,10)
-#    grey = cv2.medianBlur(grey,7)
+
+#    grey = cv2.bilateralFilter(grey,9,40,10) #more precision, but slower than medianBlur
+    grey = cv2.medianBlur(grey,7)
+
 
 #    cv2.imshow('Blur', grey)
 
@@ -101,7 +103,7 @@ def horizonArea(image, horizon_prev):
     ret, bin_y = cv2.threshold(grad_y,10,255,0)
 #    cv2.imshow('Binary', bin_y)
 
-    horizontalLines = cv2.HoughLines(bin_y,1,1*np.pi/180,100)
+    horizontalLines = cv2.HoughLines(bin_y,5,np.pi/180,100)
 
     if horizontalLines is not None:
         for rho,theta in horizontalLines[0]:
@@ -134,7 +136,9 @@ def horizonArea(image, horizon_prev):
 
     M = cv2.getRotationMatrix2D((x0, y0),rotation,1)
 
+    tTest = time.time()
     rotated = cv2.warpAffine(image,M,(cols,rows))
+    print('T_test', time.time()-tTest)
 
     rows_rotated, cols_rotated = shape(rotated)[0], shape(rotated)[1]
 
@@ -142,9 +146,11 @@ def horizonArea(image, horizon_prev):
     left = max( int(M[0,0]*0 + M[0,1]*0 + M[0,2]), int(M[0,0]*0 + M[0,1]*rows_rotated + M[0,2]))+1
     right = min( int(M[0,0]*cols_rotated + M[0,1]*0 + M[0,2]), int(M[0,0]*cols_rotated + M[0,1]*rows_rotated + M[0,2]))-1
 
-    bottom_margin, top_margin = 0.02, 0.02
+    bottom_margin, top_margin = 0.05, 0.02
     bottom = min(rows_rotated,int(horizon + bottom_margin*rows_rotated))
     top = max(0, int(horizon - top_margin*rows_rotated))
+
+
 
     cropped = rotated[top:bottom, left:right]
 
