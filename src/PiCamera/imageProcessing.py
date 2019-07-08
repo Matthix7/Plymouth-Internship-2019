@@ -98,7 +98,7 @@ def run():
 
 
 
-        cv2.imshow('Result', horizon)
+        cv2.imshow('Result', frame_markers)
 #        time.sleep(0.1)
 
 #####################################################################
