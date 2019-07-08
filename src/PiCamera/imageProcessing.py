@@ -70,7 +70,7 @@ def run():
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
-        image = cv2.resize(frame.array, (640,480))
+        image = frame.array
 
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
@@ -114,7 +114,7 @@ def run():
 
         cv2.imshow('Global', frame_markers)
         cv2.imshow('Horizon', masts)
-        time.sleep(0.05)
+#        time.sleep(0.05)
 
 #####################################################################
 #############        INTERACTION          ###########################
@@ -141,7 +141,7 @@ def run():
     cv2.destroyAllWindows()
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
-    print("Time per frame : ", (time.time()-t0)/c - 0.05)
+    print("Time per frame : ", (time.time()-t0)/c)
 
 
 if __name__ == "__main__":
