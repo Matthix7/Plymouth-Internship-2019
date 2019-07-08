@@ -12,8 +12,8 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-#from picamera.array import PiRGBArray
-#from picamera import PiCamera
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 
 from detectionBuoy import detectBuoy, getColorRange
