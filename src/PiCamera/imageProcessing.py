@@ -12,8 +12,8 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+#from picamera.array import PiRGBArray
+#from picamera import PiCamera
 
 
 from detectionBuoy import detectBuoy, getColorRange
@@ -25,7 +25,8 @@ def run():
 
     t0 = time.time()
 
-    cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -33,41 +34,41 @@ def run():
 
     c = 0
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture('testImages/some_buoys.mp4')
-
-#    while(cap.isOpened()):
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (640,480))
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
-    camera = PiCamera()
-    camera.resolution = (640, 480)
-    camera.framerate = 32
+#    Running on test video
+    cap = cv2.VideoCapture('testImages/some_boat.mp4')
 
-    camera.exposure_mode = 'sports'
+    while(cap.isOpened()):
 
-    rawCapture = PiRGBArray(camera, size=(640, 480))
+        # Capture frame-by-frame
+        ret, image = cap.read()
 
-    # allow the camera to warmup
-    time.sleep(0.1)
+        if not ret:
+            break
 
-    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        image = cv2.resize(image, (640,480))
 
-        image = cv2.resize(frame.array, (640,480))
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+#    camera = PiCamera()
+#    camera.resolution = (640, 480)
+#    camera.framerate = 32
 
-        # clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
+#    camera.exposure_mode = 'sports'
+
+#    rawCapture = PiRGBArray(camera, size=(640, 480))
+
+#    # allow the camera to warmup
+#    time.sleep(0.1)
+
+#    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+#        image = cv2.resize(frame.array, (640,480))
+
+#        # clear the stream in preparation for the next frame
+#        rawCapture.truncate(0)
 #####################################################################
 #####################################################################
 
@@ -82,12 +83,12 @@ def run():
         #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
         #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
         #detected in the new image.
-#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 
         #Find the areas where vertical lines are found (ie possible sailboats).
         #Takes about 0.1s per frame.
         #masts: image cropped around the horizon, where vertical lines are highlighted
-#        masts = detectMast(horizon, horizon_height)
+        masts = detectMast(horizon, horizon_height)
 
         #Find the buoy in the cropped image and highlight them in the result image
         colorRange = getColorRange()
@@ -98,8 +99,9 @@ def run():
 
 
 
-        cv2.imshow('Result', frame_markers)
-#        time.sleep(0.1)
+        cv2.imshow('Global', frame_markers)
+        cv2.imshow('Horizon', masts)
+        time.sleep(0.05)
 
 #####################################################################
 #############        INTERACTION          ###########################
@@ -126,7 +128,7 @@ def run():
     cv2.destroyAllWindows()
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
-    print("Time per frame : ", (time.time()-t0)/c - 0.1)
+    print("Time per frame : ", (time.time()-t0)/c - 0.05)
 
 
 if __name__ == "__main__":

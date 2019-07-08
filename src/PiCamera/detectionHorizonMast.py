@@ -16,7 +16,7 @@ def run():
 
     t0 = time.time()
 
-    cap = cv2.VideoCapture('testImages/some_buoys.mp4')
+    cap = cv2.VideoCapture('testImages/some_boat.mp4')
     cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
@@ -101,7 +101,7 @@ def horizonArea(image, horizon_prev):
     ret, bin_y = cv2.threshold(grad_y,10,255,0)
 #    cv2.imshow('Binary', bin_y)
 
-    horizontalLines = cv2.HoughLines(bin_y,1,np.pi/180,100)
+    horizontalLines = cv2.HoughLines(bin_y,1,1*np.pi/180,100)
 
     if horizontalLines is not None:
         for rho,theta in horizontalLines[0]:
@@ -142,7 +142,7 @@ def horizonArea(image, horizon_prev):
     left = max( int(M[0,0]*0 + M[0,1]*0 + M[0,2]), int(M[0,0]*0 + M[0,1]*rows_rotated + M[0,2]))+1
     right = min( int(M[0,0]*cols_rotated + M[0,1]*0 + M[0,2]), int(M[0,0]*cols_rotated + M[0,1]*rows_rotated + M[0,2]))-1
 
-    bottom_margin, top_margin = 0.2, 0.08
+    bottom_margin, top_margin = 0.02, 0.02
     bottom = min(rows_rotated,int(horizon + bottom_margin*rows_rotated))
     top = max(0, int(horizon - top_margin*rows_rotated))
 
@@ -184,11 +184,13 @@ def detectMast(horizon, horizon_height):
 
     bin_x = cv2.morphologyEx(bin_x, cv2.MORPH_OPEN, kernel)
 
-    verticalLines = cv2.HoughLines(bin_x,1,np.pi/180,0)
+    verticalLines = cv2.HoughLines(bin_x,20,10*np.pi/180,70)
 
     possible_masts = []
 
     if verticalLines is not None:
+#        print(len(verticalLines))
+#        verticalLines = [verticalLines[i] for i in range(0, len(verticalLines), 1+len(verticalLines)//50)]
         for verticalLine in verticalLines:
             for rho,theta in verticalLine:
 
@@ -227,8 +229,6 @@ def newMast(possibleNew, mastList):
         if abs(possibleNew - mast) < 30:
             check = False
     return check
-
-
 
 
 
