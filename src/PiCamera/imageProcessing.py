@@ -87,11 +87,11 @@ def run():
         #Find the areas where vertical lines are found (ie possible sailboats).
         #Takes about 0.1s per frame.
         #masts: image cropped around the horizon, where vertical lines are highlighted
-        masts = detectMast(horizon, horizon_height)
+#        masts = detectMast(horizon, horizon_height)
 
         #Find the buoy in the cropped image and highlight them in the result image
         colorRange = getColorRange()
-        center, buoy = detectBuoy(horizon, masts, colorRange)
+        center, buoy = detectBuoy(horizon, horizon.copy(), colorRange)
 
         #Find the April Tags in the cropped image
         frame_markers, corners = detectAruco(horizon, buoy, aruco_dict)
