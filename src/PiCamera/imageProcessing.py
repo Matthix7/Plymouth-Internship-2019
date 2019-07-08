@@ -82,7 +82,7 @@ def run():
         #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
         #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
         #detected in the new image.
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 
         #Find the areas where vertical lines are found (ie possible sailboats).
         #Takes about 0.1s per frame.
@@ -91,10 +91,10 @@ def run():
 
         #Find the buoy in the cropped image and highlight them in the result image
         colorRange = getColorRange()
-        center, buoy = detectBuoy(horizon, horizon.copy(), colorRange)
+        center, buoy = detectBuoy(image, image.copy(), colorRange)
 
         #Find the April Tags in the cropped image
-        frame_markers, corners = detectAruco(horizon, buoy, aruco_dict)
+        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
 
 
 
