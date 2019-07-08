@@ -34,41 +34,41 @@ def run():
 
     c = 0
 
-##############          VIDEO           #############################
-#####################################################################
-#    Running on test video
-    cap = cv2.VideoCapture('testImages/some_boat.mp4')
-
-    while(cap.isOpened()):
-
-        # Capture frame-by-frame
-        ret, image = cap.read()
-
-        if not ret:
-            break
-
-        image = cv2.resize(image, (640,480))
-
-##################     CAMERA     ####################################
+###############          VIDEO           #############################
 ######################################################################
-##    Running with the camera
-#    camera = PiCamera()
-#    camera.resolution = (640, 480)
-#    camera.framerate = 32
+##    Running on test video
+#    cap = cv2.VideoCapture('testImages/some_boat.mp4')
 
-#    camera.exposure_mode = 'sports'
+#    while(cap.isOpened()):
 
-#    rawCapture = PiRGBArray(camera, size=(640, 480))
+#        # Capture frame-by-frame
+#        ret, image = cap.read()
 
-#    # allow the camera to warmup
-#    time.sleep(0.1)
+#        if not ret:
+#            break
 
-#    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+#        image = cv2.resize(image, (640,480))
 
-#        image = cv2.resize(frame.array, (640,480))
+#################     CAMERA     ####################################
+#####################################################################
+#    Running with the camera
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 32
 
-#        # clear the stream in preparation for the next frame
-#        rawCapture.truncate(0)
+    camera.exposure_mode = 'sports'
+
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+
+    # allow the camera to warmup
+    time.sleep(0.1)
+
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+        image = cv2.resize(frame.array, (640,480))
+
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
 #####################################################################
 #####################################################################
 
