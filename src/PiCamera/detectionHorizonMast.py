@@ -83,9 +83,11 @@ def run():
 def horizonArea(image, horizon_prev):
 
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    tTest = time.time()
 
 #    grey = cv2.bilateralFilter(grey,9,40,10) #more precision, but slower than medianBlur
     grey = cv2.medianBlur(grey,7)
+    print('T_test', time.time()-tTest)
 
 
 #    cv2.imshow('Blur', grey)
@@ -136,9 +138,7 @@ def horizonArea(image, horizon_prev):
 
     M = cv2.getRotationMatrix2D((x0, y0),rotation,1)
 
-    tTest = time.time()
     rotated = cv2.warpAffine(image,M,(cols,rows))
-    print('T_test', time.time()-tTest)
 
     rows_rotated, cols_rotated = shape(rotated)[0], shape(rotated)[1]
 
