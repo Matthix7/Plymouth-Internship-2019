@@ -4,17 +4,17 @@
 ##import rospy
 
 # import the necessary packages
-from picamera.array import PiRGBArray
-from picamera import PiCamera
-import time
+
+if __name__ == "__main__":
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
+    import time
+    import numpy as np
+    from math import atan2
+    from numpy import pi, cos, sin, array, shape
+
 import cv2
 from cv2 import aruco
-import numpy as np
-from math import atan2
-from numpy import pi, cos, sin, array, shape
-import matplotlib.pyplot as plt
-import matplotlib
-
 
 def run():
 
@@ -46,23 +46,9 @@ def run():
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        frame_markers, corners = detectAruco(image, image, aruco_dict)
+        print(corners[0][0])
 
-        parameters =  aruco.DetectorParameters_create()
-        corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
-        frame_markers = aruco.drawDetectedMarkers(image, corners, ids)
-
-        if ids is not None:
-
-            markerLength = 3.8
-            camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])
-            dist_coeffs = array([[1.37958351e-01, -2.43061015e-01, -5.22562568e-05, -6.84849581e-03, -2.59284496e-02]])
-
-            rvec, tvec = aruco.estimatePoseSingleMarkers(corners, markerLength, camera_matrix, dist_coeffs) # For a single marker
-
-            
-            for i in range(len(ids)):
-                frame_markers = aruco.drawAxis(frame_markers, camera_matrix, dist_coeffs, rvec[i], tvec[i], 10)
 
         frame_markers = cv2.flip(frame_markers, 0)
         cv2.imshow("Webcam", frame_markers)
@@ -89,6 +75,32 @@ def run():
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
     print("Time per frame : ", (time.time()-t0)/c) # - 0.1)
+
+
+
+
+def detectAruco(image, resultImage, dictionary):
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    parameters =  aruco.DetectorParameters_create()
+    corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, dictionary, parameters=parameters)
+    frame_markers = aruco.drawDetectedMarkers(resultImage, corners, ids)
+
+#    if ids is not None:
+
+#        markerLength = 3.8
+#        camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])
+#        dist_coeffs = array([[1.37958351e-01, -2.43061015e-01, -5.22562568e-05, -6.84849581e-03, -2.59284496e-02]])
+
+#        rvec, tvec = aruco.estimatePoseSingleMarkers(corners, markerLength, camera_matrix, dist_coeffs) # For a single marker
+
+
+#        for i in range(len(ids)):
+#            frame_markers = aruco.drawAxis(frame_markers, camera_matrix, dist_coeffs, rvec[i], tvec[i], 10)
+
+
+    return frame_markers, corners
 
 
 

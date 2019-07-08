@@ -31,15 +31,7 @@ def run():
     #picture counter
     c=0
 
-    # define range of buoy color in HSV
-    # voir https://www.google.com/search?client=firefox-b&q=%23D9E80F
 
-    teinte_min = 15
-    teinte_max = 25
-    sat_min = 50
-    sat_max = 100
-    val_min = 45
-    val_max = 70
 
 #    # capture frames from the camera
 #    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -54,35 +46,8 @@ def run():
         if not ret:
             break
 
-        # Convert BGR to HSV
-        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
-
-
-        lower = np.array([int(teinte_min/2),int(sat_min*255/100),int(val_min*255/100)])
-        upper = np.array([int(teinte_max/2),int(sat_max*255/100),int(val_max*255/100)])
-
-        # Threshold the HSV image to get only yellow/green colors
-        mask1 = cv2.inRange(hsv, lower, upper)
-        mask1 = cv2.medianBlur(mask1, 5)
-
-
-        # Bitwise-AND mask and original image
-        res = cv2.bitwise_and(image,image, mask= mask1)
-
-        ret1,thresh1 = cv2.threshold(mask1,127,255,0)
-        im2,contours1,hierarchy1 = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, 2)
-
-        if len(contours1) > 0:
-            cnt1 = max(contours1, key = cv2.contourArea)
-
-            (x1,y1),radius1 = cv2.minEnclosingCircle(cnt1)
-            center1 = (int(x1),int(y1))
-            radius1 = int(radius1)
-
-            cv2.circle(image,center1,radius1,(255,0,0),1)
-            cv2.circle(image,center1,1,(255,0,0),2)
-
+        colorRange = getColorRange()
+        center1, image = detectBuoy(image, colorRange)
 
         # clear the stream in preparation for the next frame
 #        rawCapture.truncate(0)
@@ -105,6 +70,59 @@ def run():
             print("Picture saved")
 
     cv2.destroyAllWindows()
+
+
+
+def getColorRange():
+    # define range of buoy color in HSV
+    # voir https://www.google.com/search?client=firefox-b&q=%23D9E80F
+
+    hue_min = 15
+    hue_max = 25
+    sat_min = 50
+    sat_max = 100
+    val_min = 45
+    val_max = 70
+
+    lower = np.array([int(hue_min/2),int(sat_min*255/100),int(val_min*255/100)])
+    upper = np.array([int(hue_max/2),int(sat_max*255/100),int(val_max*255/100)])
+
+    return (lower, upper)
+
+
+
+
+def detectBuoy(image, resultImage, colorRange):
+
+    lower, upper = colorRange[0], colorRange[1]
+
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Threshold the HSV image to get only yellow/green colors
+    mask1 = cv2.inRange(hsv, lower, upper)
+    mask1 = cv2.medianBlur(mask1, 5)
+
+
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(image,image, mask= mask1)
+
+    ret1,thresh1 = cv2.threshold(mask1,127,255,0)
+    im2,contours1,hierarchy1 = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, 2)
+
+    if len(contours1) > 0:
+        cnt1 = max(contours1, key = cv2.contourArea)
+
+        (x1,y1),radius1 = cv2.minEnclosingCircle(cnt1)
+        center1 = (int(x1),int(y1))
+        radius1 = int(radius1)
+
+        cv2.circle(resultImage,center1,radius1,(255,0,0),1)
+        cv2.circle(resultImage,center1,1,(255,0,0),2)
+    else:
+        center1 = None
+
+    return center1, resultImage
 
 
 

@@ -16,7 +16,7 @@ def run():
 
     t0 = time.time()
 
-    cap = cv2.VideoCapture('testImages/some_boats.mp4')
+    cap = cv2.VideoCapture('testImages/some_buoys.mp4')
     cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
@@ -168,12 +168,13 @@ def detectMast(horizon, horizon_height):
 
 #    grad_x = cv2.Sobel(grey, -1, 1, 0, ksize = 3)
 
-    kernel = np.ones((30,1))
+    kernel = np.ones((15,1))
     ret, bin_x = cv2.threshold(grad_x,5,255,0)
     bin_x = cv2.morphologyEx(bin_x, cv2.MORPH_OPEN, kernel)
 
-    cv2.imshow('Grad', grad_x)
-    cv2.imshow('Bin', bin_x)
+    if __name__ == "__main__":
+        cv2.imshow('Grad', grad_x)
+        cv2.imshow('Bin', bin_x)
 
 
     kernel = np.zeros((7,7), np.uint8)
