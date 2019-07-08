@@ -97,9 +97,9 @@ def horizonArea(image, horizon_prev):
     kernel_side = np.ones((3,7))
     kernel[:3] = -(1./(4*7))*kernel_side
     kernel[-3:] = (1./(4*7))*kernel_side
-    print('T_test', time.time()-tTest)
     grad_y = cv2.filter2D(grey,cv2.CV_16S,kernel)
     grad_y = np.uint8(np.absolute(grad_y))
+    print('T_test', time.time()-tTest)
 
 
     ret, bin_y = cv2.threshold(grad_y,10,255,0)
