@@ -95,6 +95,8 @@ def run():
 #        #detected in the new image.
         t1 = time.time()
 #        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+
+#        cv2.imshow('Global', horizon)
 #        print('T1', time.time()-t1)
         T1.append(time.time()-t1)
 
@@ -118,7 +120,6 @@ def run():
 #                t4 = time.time()
 #                frame_m
 #        t5 = time.time()
-        cv2.imshow('Global', horizon)
 #        cv2.imshow('Horizon', masts)
 #        print('T5', time.time()-t5)
 
