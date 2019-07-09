@@ -38,48 +38,49 @@ def run():
 
     c = 0
 
-##############          VIDEO           #############################
-#####################################################################
-#    Running on test video
-    cap = cv2.VideoCapture('testImages/some_boats.mp4')
-
-    t0 = time.time()
-
-    dodo = 0
-
-    while(cap.isOpened()):
-
-        # Capture frame-by-frame
-        ret, image = cap.read()
-
-        if not ret:
-            break
-
-        image = cv2.resize(image, (640,480))
-
-
-
-##################     CAMERA     ####################################
+###############          VIDEO           #############################
 ######################################################################
-##    Running with the camera
+##    Running on test video
+#    cap = cv2.VideoCapture('testImages/some_boats.mp4')
 
-#    vs = PiVideoStream().start()
-#    time.sleep(2)
+#    t0 = time.time()
 
 #    dodo = 0
 
+#    while(cap.isOpened()):
 
-#    while True:
+#        # Capture frame-by-frame
+#        ret, image = cap.read()
 
-#        image = vs.read()
+#        if not ret:
+#            break
 
-#        if tframe != 0:
-#            Tframe.append(time.time()-tframe)
-#        tframe = time.time()
+#        image = cv2.resize(image, (640,480))
+
+
+
+#################     CAMERA     ####################################
+#####################################################################
+#    Running with the camera
+
+    vs = PiVideoStream().start()
+    time.sleep(2)
+
+    dodo = 0
+
+
+    while True:
+
+        image = vs.read()
+
+
 
 ######################################################################
 ######################################################################
 
+        if tframe != 0:
+            Tframe.append(time.time()-tframe)
+        tframe = time.time()
 
         c += 1
 
@@ -95,31 +96,31 @@ def run():
         horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
         T1.append(time.time()-t1)
 
-##        #Find the areas where vertical lines are found (ie possible sailboats).
-##        #Takes about 0.1s per frame.
-##        #masts: image cropped around the horizon, where vertical lines are highlighted
+##      Find the areas where vertical lines are found (ie possible sailboats).
+##      Takes about 0.1s per frame.
+##      masts: image cropped around the horizon, where vertical lines are highlighted
 
-#        t2 = time.time()
-#        masts = detectMast(horizon, horizon_height)
-#        T2.append(time.time()-t2)
+        t2 = time.time()
+        masts = detectMast(horizon, horizon_height)
+        T2.append(time.time()-t2)
 
-##        #Find the buoy in the cropped image and highlight them in the result image
-#        t3 = time.time()
-#        colorRange = getColorRange()
-#        center, buoy = detectBuoy(image, image.copy(), colorRange)
-#        T3.append(time.time()-t3)
+##      Find the buoy in the cropped image and highlight them in the result image
+        t3 = time.time()
+        colorRange = getColorRange()
+        center, buoy = detectBuoy(image, image.copy(), colorRange)
+        T3.append(time.time()-t3)
 
-##        #Find the April Tags in the cropped image
+##      Find the April Tags in the cropped image
 
-#        t4 = time.time()
-#        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
-#        T4.append(time.time()-t4)
+        t4 = time.time()
+        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
+        T4.append(time.time()-t4)
 
 
-#        t5 = time.time()
-#        cv2.imshow('Horizon', masts)
-        cv2.imshow('Global', image)
-#        T5.append(time.time()-t5)
+        t5 = time.time()
+        cv2.imshow('Horizon', masts)
+        cv2.imshow('Global', frame_markers)
+        T5.append(time.time()-t5)
 
 
 ##        time.sleep(dodo)
