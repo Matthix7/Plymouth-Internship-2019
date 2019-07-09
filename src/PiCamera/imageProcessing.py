@@ -126,7 +126,7 @@ def run():
 #####################################################################
 #############        INTERACTION          ###########################
 
-        t6 = time.time()
+#        t6 = time.time()
         key = cv2.waitKey(1) & 0xFF
         if key == 27 or key == ord('q'):
                 break
@@ -140,7 +140,7 @@ def run():
             cv2.imwrite('sample.png',masts)
             print("Picture saved")
 
-        print('T6', time.time()-t6)
+#        print('T6', time.time()-t6)
 
 
     try:
