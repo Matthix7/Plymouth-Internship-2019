@@ -128,7 +128,7 @@ def run():
 #####################################################################
 #############        INTERACTION          ###########################
 
-#        t6 = time.time()
+        t6 = time.time()
         key = cv2.waitKey(1) & 0xFF
         if key == 27 or key == ord('q'):
                 break
@@ -142,8 +142,7 @@ def run():
             cv2.imwrite('sample.png',masts)
             print("Picture saved")
 
-#        print('T6', time.time()-t6)
-
+        T6.append(time.time()-t6)
 
     try:
         cap.release()
@@ -155,6 +154,11 @@ def run():
     print("Computed frames : ", c)
     print("Global time per frame : ", (time.time()-t0)/c - dodo)
     print("Time horizon : ", np.mean(T1))
+    print("Time masts   : ", np.mean(T2))
+    print("Time buoy    : ", np.mean(T3))
+    print("Time markers : ", np.mean(T4))
+    print("Time display : ", np.mean(T5))
+    print("Time interact: ", np.mean(T6))
     print("Time per frame accurate: ", np.mean(Tframe))
 
 
