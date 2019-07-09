@@ -24,7 +24,7 @@ from detectionAruco import detectAruco
 def run():
 
 
-    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
 #    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
