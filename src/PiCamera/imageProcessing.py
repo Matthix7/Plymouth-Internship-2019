@@ -94,7 +94,7 @@ def run():
 #        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
 #        #detected in the new image.
         t1 = time.time()
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 #        print('T1', time.time()-t1)
         T1.append(time.time()-t1)
 
