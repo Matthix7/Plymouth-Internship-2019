@@ -71,7 +71,9 @@ def run():
     dodo = 0
 
     t0 = time.time()
+    t1 = time.time()
     T1 = []
+    Tframe = []
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
@@ -93,6 +95,8 @@ def run():
 #        #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
 #        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
 #        #detected in the new image.
+
+        Tframe.append(time.time()-t1)
         t1 = time.time()
         horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 
@@ -155,6 +159,7 @@ def run():
     print("Computed frames : ", c)
     print("Time per frame : ", (time.time()-t0)/c - dodo)
     print("Time horizon : ", np.mean(T1))
+    print("Time per frame new: ", np.mean(Tframe))
 
 
 if __name__ == "__main__":
