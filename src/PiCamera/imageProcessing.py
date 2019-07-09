@@ -24,7 +24,7 @@ from detectionAruco import detectAruco
 def run():
 
 
-#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
 #    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
@@ -96,7 +96,7 @@ def run():
         t1 = time.time()
 #        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 
-#        cv2.imshow('Global', horizon)
+        cv2.imshow('Global', image)
 #        print('T1', time.time()-t1)
         T1.append(time.time()-t1)
 
