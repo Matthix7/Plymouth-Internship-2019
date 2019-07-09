@@ -24,6 +24,10 @@ from camThread import PiVideoStream
 
 def run():
 
+    t0 = time.time()
+    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
+    tframe = 0
+
 
     cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
 #    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
@@ -41,7 +45,7 @@ def run():
 
     t0 = time.time()
 
-    dodo = 0.1
+    dodo = 0
 
     while(cap.isOpened()):
 
@@ -64,9 +68,6 @@ def run():
 
 #    dodo = 0
 
-#    t0 = time.time()
-#    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
-#    tframe = 0
 
 #    while True:
 
