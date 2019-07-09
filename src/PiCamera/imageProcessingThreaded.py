@@ -34,47 +34,47 @@ def run():
 
     c = 0
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture('testImages/some_boats.mp4')
-
-#    t0 = time.time()
-
-#    dodo = 0.1
-
-#    while(cap.isOpened()):
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (640,480))
-
-
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
-
-    vs = PiVideoStream().start()
-    time.sleep(2)
-
-    dodo = 0
+#    Running on test video
+    cap = cv2.VideoCapture('testImages/some_boats.mp4')
 
     t0 = time.time()
-    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
-    tframe = 0
 
-    while True:
+    dodo = 0.1
 
-        image = vs.read()
+    while(cap.isOpened()):
 
-        if tframe != 0:
-            Tframe.append(time.time()-tframe)
-        tframe = time.time()
+        # Capture frame-by-frame
+        ret, image = cap.read()
+
+        if not ret:
+            break
+
+        image = cv2.resize(image, (640,480))
+
+
+
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+
+#    vs = PiVideoStream().start()
+#    time.sleep(2)
+
+#    dodo = 0
+
+#    t0 = time.time()
+#    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
+#    tframe = 0
+
+#    while True:
+
+#        image = vs.read()
+
+#        if tframe != 0:
+#            Tframe.append(time.time()-tframe)
+#        tframe = time.time()
 
 ######################################################################
 ######################################################################
