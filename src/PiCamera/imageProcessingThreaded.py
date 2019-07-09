@@ -106,7 +106,7 @@ def run():
 
 ##      Find the buoy in the cropped image and highlight them in the result image
         t3 = time.time()
-        colorRange = getColorRange()
+        colorRange = getColorRangeTest()
         center, buoy = detectBuoy(image, image.copy(), colorRange)
         T3.append(time.time()-t3)
 
