@@ -59,7 +59,7 @@ def run():
 #    Running with the camera
     camera = PiCamera()
     camera.resolution = (640, 480)
-    camera.framerate = 9
+    camera.framerate = 18
 
     camera.exposure_mode = 'sports'
 
