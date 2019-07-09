@@ -60,6 +60,7 @@ def run():
 #    Running with the camera
 
     vs = PiVideoStream().start()
+    time.sleep(2)
 
     dodo = 0
 
