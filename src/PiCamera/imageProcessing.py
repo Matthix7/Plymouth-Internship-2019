@@ -61,7 +61,7 @@ def run():
     camera.resolution = (640, 480)
     camera.framerate = 60
 
-    camera.exposure_mode = 'sports'
+#    camera.exposure_mode = 'sports'
 
     rawCapture = PiRGBArray(camera, size=(640, 480))
 
