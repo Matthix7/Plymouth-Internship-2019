@@ -101,7 +101,7 @@ def run():
 
 
         t1 = time.time()
-#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 #        print('T1', time.time()-t1)
         T1.append(time.time()-t1)
 
