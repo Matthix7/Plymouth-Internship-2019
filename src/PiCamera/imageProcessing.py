@@ -71,9 +71,7 @@ def run():
     dodo = 0
 
     t0 = time.time()
-    t1 = time.time()
-    T1 = []
-    Tframe = []
+    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
     tframe = 0
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -92,45 +90,46 @@ def run():
 
         c += 1
 
-#        #Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
-#        #Takes about 0.04s per frame.
-#        #horizon: image cropped around the horizon
-#        #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
-#        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
-#        #detected in the new image.
+##        #Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
+##        #Takes about 0.04s per frame.
+##        #horizon: image cropped around the horizon
+##        #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
+##        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
+##        #detected in the new image.
 
 
         t1 = time.time()
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
-#        print('T1', time.time()-t1)
+#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
         T1.append(time.time()-t1)
 
-#        #Find the areas where vertical lines are found (ie possible sailboats).
-#        #Takes about 0.1s per frame.
-#        #masts: image cropped around the horizon, where vertical lines are highlighted
+##        #Find the areas where vertical lines are found (ie possible sailboats).
+##        #Takes about 0.1s per frame.
+##        #masts: image cropped around the horizon, where vertical lines are highlighted
+
 #        t2 = time.time()
 #        masts = detectMast(horizon, horizon_height)
-#        print('T2', time.time()-t2)
+#        T2.append(time.time()-t2)
 
-#        #Find the buoy in the cropped image and highlight them in the result image
+##        #Find the buoy in the cropped image and highlight them in the result image
 #        t3 = time.time()
 #        colorRange = getColorRange()
 #        center, buoy = detectBuoy(image, image.copy(), colorRange)
-#        print('T3', time.time()-t3)
+#        T3.append(time.time()-t3)
 
-#        #Find tarkers, corners = detectAruco(image, buoy, aruco_dict)
-#        print('T4', time.time()-t4)
+##        #Find the April Tags in the cropped image
 
-#        he April Tags in the cropped image
-#                t4 = time.time()
-#                frame_m
+#        t4 = time.time()
+#        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
+#        T4.append(time.time()-t4)
+
+
 #        t5 = time.time()
 #        cv2.imshow('Horizon', masts)
-        cv2.imshow('Global', image)
-#        print('T5', time.time()-t5)
+#        cv2.imshow('Global', frame_markers)
+#        T5.append(time.time()-t5)
 
 
-#        time.sleep(dodo)
+##        time.sleep(dodo)
 
 #####################################################################
 #############        INTERACTION          ###########################
