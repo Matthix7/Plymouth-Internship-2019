@@ -71,6 +71,7 @@ def run():
     dodo = 0
 
     t0 = time.time()
+    T1 = []
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
@@ -94,7 +95,8 @@ def run():
 #        #detected in the new image.
         t1 = time.time()
         horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
-        print('T1', time.time()-t1)
+#        print('T1', time.time()-t1)
+        T1.append(time.time()-t1)
 
 #        #Find the areas where vertical lines are found (ie possible sailboats).
 #        #Takes about 0.1s per frame.
@@ -151,6 +153,7 @@ def run():
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
     print("Time per frame : ", (time.time()-t0)/c - dodo)
+    print("Time horizon : ", np.mean(T1))
 
 
 if __name__ == "__main__":
