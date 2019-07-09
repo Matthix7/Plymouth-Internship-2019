@@ -25,7 +25,7 @@ def run():
 
 
     cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -67,6 +67,8 @@ def run():
 
     # allow the camera to warmup
     time.sleep(0.1)
+
+    dodo = 0
 
     t0 = time.time()
 
