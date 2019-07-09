@@ -25,7 +25,7 @@ from camThread import PiVideoStream
 def run():
 
     t0 = time.time()
-    Tframe, T1, T2, T3, T4, T5 = [], [], [], [], [], []
+    Tframe, T1, T2, T3, T4, T5, T6 = [], [], [], [], [], [], []
     tframe = 0
 
 
