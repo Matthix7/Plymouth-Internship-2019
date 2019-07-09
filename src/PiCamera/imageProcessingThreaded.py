@@ -69,7 +69,7 @@ def run():
     dodo = 0
 
 
-    while True:
+    while c<20:
 
         image = vs.read()
 
@@ -118,8 +118,8 @@ def run():
 
 
         t5 = time.time()
-        cv2.imshow('Horizon', masts)
-        cv2.imshow('Global', frame_markers)
+#        cv2.imshow('Horizon', masts)
+#        cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
 
