@@ -93,7 +93,7 @@ def run():
 #        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
 #        #detected in the new image.
 #        t1 = time.time()
-#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 #        print('T1', time.time()-t1)
 
 #        #Find the areas where vertical lines are found (ie possible sailboats).
@@ -116,7 +116,7 @@ def run():
 #                t4 = time.time()
 #                frame_m
 #        t5 = time.time()
-        cv2.imshow('Global', image)
+        cv2.imshow('Global', horizon)
 #        cv2.imshow('Horizon', masts)
 #        print('T5', time.time()-t5)
 
