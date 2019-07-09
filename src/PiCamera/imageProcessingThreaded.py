@@ -75,8 +75,6 @@ def run():
             Tframe.append(time.time()-tframe)
         tframe = time.time()
 
-        image = frame.array
-
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 ######################################################################
