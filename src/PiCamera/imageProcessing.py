@@ -125,7 +125,7 @@ def run():
 
 #        t5 = time.time()
 #        cv2.imshow('Horizon', masts)
-#        cv2.imshow('Global', frame_markers)
+        cv2.imshow('Global', image)
 #        T5.append(time.time()-t5)
 
 
