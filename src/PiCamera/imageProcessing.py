@@ -74,8 +74,13 @@ def run():
     t1 = time.time()
     T1 = []
     Tframe = []
+    tframe = 0
 
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+        if tframe != 0:
+            Tframe.append(time.time()-tframe)
+        tframe = time.time()
 
         image = frame.array
 
@@ -87,8 +92,6 @@ def run():
 
         c += 1
 
-##        cv2.imshow('Origin', image)
-
 #        #Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
 #        #Takes about 0.04s per frame.
 #        #horizon: image cropped around the horizon
@@ -96,11 +99,9 @@ def run():
 #        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
 #        #detected in the new image.
 
-        Tframe.append(time.time()-t1)
-        t1 = time.time()
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 
-        cv2.imshow('Global', image)
+        t1 = time.time()
+#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
 #        print('T1', time.time()-t1)
         T1.append(time.time()-t1)
 
@@ -125,6 +126,7 @@ def run():
 #                frame_m
 #        t5 = time.time()
 #        cv2.imshow('Horizon', masts)
+        cv2.imshow('Global', image)
 #        print('T5', time.time()-t5)
 
 
@@ -157,9 +159,9 @@ def run():
     cv2.destroyAllWindows()
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
-    print("Time per frame : ", (time.time()-t0)/c - dodo)
+    print("Global time per frame : ", (time.time()-t0)/c - dodo)
     print("Time horizon : ", np.mean(T1))
-    print("Time per frame new: ", np.mean(Tframe))
+    print("Time per frame accurate: ", np.mean(Tframe))
 
 
 if __name__ == "__main__":
