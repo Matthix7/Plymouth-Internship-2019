@@ -91,7 +91,7 @@ def run():
 
 
         t1 = time.time()
-#        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
         T1.append(time.time()-t1)
 
 ##        #Find the areas where vertical lines are found (ie possible sailboats).
