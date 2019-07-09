@@ -69,7 +69,7 @@ def run():
     dodo = 0
 
 
-    while c<20:
+    while True:#c<20:
 
         image = vs.read()
 
