@@ -88,7 +88,6 @@ def run():
 
     rospy.init_node('endPoint', anonymous=True)
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 0.02)
 
     receiving_freq = 6 #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
@@ -100,6 +99,22 @@ def run():
     pos1, pos2, pos3                   = Pose2D(), Pose2D(), Pose2D()
 
     targetString, modeString = String(), String()
+
+
+###################################################################
+#    Look for XBee USB port
+###################################################################
+
+    context = pyudev.Context()
+    usbPort = 'No XBee found'
+
+    for device in context.list_devices(subsystem='tty'):
+        if 'ID_VENDOR' in device and device['ID_VENDOR'] == 'FTDI':
+            usbPort = device['DEVNAME']
+
+    ser = serial.Serial(usbPort,baudrate=57600, timeout = 0.02)
+
+
 
 ###################################################################
 #    Get local XBee ID and send it to coordinator

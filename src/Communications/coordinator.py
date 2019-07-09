@@ -11,6 +11,8 @@ from sensor_msgs.msg import Imu
 import serial
 from time import time
 
+import pyudev
+
 
 ###################################################################
 #    To execute when a message to transmit is received
@@ -82,9 +84,22 @@ def run():
     emission_freq = 6
     rate = rospy.Rate(3*emission_freq)
 
-    ser = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout = 1/(2.5*emission_freq))
-
     compteur = 0
+
+###################################################################
+#    Look for XBee USB port
+###################################################################
+
+    context = pyudev.Context()
+    usbPort = 'No XBee found'
+
+    for device in context.list_devices(subsystem='tty'):
+        if 'ID_VENDOR' in device and device['ID_VENDOR'] == 'FTDI':
+            usbPort = device['DEVNAME']
+
+    ser = serial.Serial(usbPort,baudrate=57600, timeout = 1/(2.5*emission_freq))
+
+
 ###################################################################
 #    Get local XBee ID
 #(especially important for sailboats, not coordinator)
