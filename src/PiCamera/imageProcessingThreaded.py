@@ -12,14 +12,14 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+#from picamera.array import PiRGBArray
+#from picamera import PiCamera
 
 
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
 from detectionHorizonMast import horizonArea, detectMast
 from detectionAruco import detectAruco
-from camThread import PiVideoStream
+#from camThread import PiVideoStream
 
 
 def run():
@@ -29,8 +29,8 @@ def run():
     tframe = 0
 
 
-#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-#    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -38,40 +38,40 @@ def run():
 
     c = 0
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture('testImages/some_boats.mp4')
-
-#    t0 = time.time()
-
-#    dodo = 0
-
-#    while(cap.isOpened()):
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (640,480))
-
-
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
+#    Running on test video
+    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
 
-    vs = PiVideoStream().start()
-    time.sleep(2)
+    t0 = time.time()
 
     dodo = 0
 
+    while(cap.isOpened()):
 
-    while True:#c<20:
+        # Capture frame-by-frame
+        ret, image = cap.read()
 
-        image = vs.read()
+        if not ret:
+            break
+
+        image = cv2.resize(image, (640,480))
+
+
+
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+
+#    vs = PiVideoStream().start()
+#    time.sleep(2)
+
+#    dodo = 0
+
+
+#    while True:#c<20:
+
+#        image = vs.read()
 
 
 
@@ -106,8 +106,8 @@ def run():
 
 ##      Find the buoy in the cropped image and highlight them in the result image
         t3 = time.time()
-        colorRange = getColorRangeTest() #For test target
-#        colorRange = getColorRange #For real buoys
+#        colorRange = getColorRangeTest() #For test target
+        colorRange = getColorRange() #For real buoys
         center, buoy = detectBuoy(image, image.copy(), colorRange)
         T3.append(time.time()-t3)
 
@@ -124,7 +124,7 @@ def run():
         T5.append(time.time()-t5)
 
 
-##        time.sleep(dodo)
+        time.sleep(dodo)
 
 #####################################################################
 #############        INTERACTION          ###########################
