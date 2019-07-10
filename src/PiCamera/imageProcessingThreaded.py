@@ -41,7 +41,7 @@ def run():
 ##############          VIDEO           #############################
 #####################################################################
 #    Running on test video
-    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
+    cap = cv2.VideoCapture('testImages/some_boat.mp4')
 
     t0 = time.time()
 
@@ -79,7 +79,7 @@ def run():
 ######################################################################
 
         if tframe != 0:
-            Tframe.append(time.time()-tframe)
+            Tframe.append(time.time()-tframe-dodo)
         tframe = time.time()
 
         c += 1
