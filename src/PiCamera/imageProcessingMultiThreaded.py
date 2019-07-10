@@ -96,7 +96,7 @@ def run():
 
         hm.newImage(image)
         ba.newImage(image)
-        time.sleep(0.05)
+        time.sleep(0.01)
 
         masts = hm.read()
         frame_markers, corners, center = ba.read()

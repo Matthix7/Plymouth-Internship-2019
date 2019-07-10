@@ -18,35 +18,42 @@ class HMdetector():
         # if the thread should be stopped
         self.frame = None
         self.masts = None
-        self.called = False
+        self.processComplete = True
         self.stopped = False
+        print('Initialized')
 
     def start(self):
         # start the thread to read frames from the video stream
         Thread(target=self.detect, args=()).start()
+        print('Started')
         return self
 
     def detect(self):
         while not self.stopped:
-            if (not self.called) and (self.frame is not None):
+            if self.frame is not None and self.processComplete:
 
+                self.processComplete = False
+                print(' Begin proccessing')
                 horizon, horizon_height, self.horizon_prev = horizonArea(self.frame, self.horizon_prev)
 
                 self.masts = detectMast(horizon, horizon_height)
-#            else:
-#                time.sleep(0.05)
+                print('Processed')
 
 
 
     def newImage(self,image):
         self.frame = image
         self.masts = None
-        self.called = False
+        self.processComplete = True
+        print('newImage')
 
     def read(self):
-        # return the frame most recently read
-        self.called = True
+        print('Called')
+        while self.masts is None:
+            pass
+        print('Got Masts')
         return self.masts
+
 
     def stop(self):
         # indicate that the thread should be stopped

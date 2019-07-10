@@ -19,6 +19,7 @@ class BAdetector():
         self.frame_markers = None
         self.center = None
         self.corners = None
+        self.processComplete = True
         self.stopped = False
 
 #        self.colorRange = getColorRange() #For real buoys
@@ -34,7 +35,8 @@ class BAdetector():
 
     def detect(self):
         while not self.stopped:
-            if self.frame is not None:
+            if self.frame is not None and self.processComplete:
+                self.processComplete = False
 
                 self.center, buoy = detectBuoy(self.frame, self.frame.copy(), self.colorRange)
                 self.frame_markers, self.corners = detectAruco(self.frame, buoy, self.aruco_dict)
@@ -47,9 +49,11 @@ class BAdetector():
         self.frame_markers = None
         self.corners = None
         self.center = None
+        self.processComplete = True
 
     def read(self):
-        # return the frame most recently read
+        while self.frame_markers is None:
+            pass
         return self.frame_markers, self.corners, self.center
 
     def stop(self):
