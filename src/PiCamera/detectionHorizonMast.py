@@ -103,7 +103,11 @@ def horizonArea(image, horizon_prev):
 
 
     ret, bin_y = cv2.threshold(grad_y,10,255,0)
-#    cv2.imshow('Binary', bin_y)
+
+
+    if __name__ == "__main__":
+        cv2.imshow('Grad', grad_y)
+        cv2.imshow('Bin', bin_y)
 
     horizontalLines = cv2.HoughLines(bin_y,5,np.pi/180,100)
 
@@ -120,7 +124,7 @@ def horizonArea(image, horizon_prev):
             x2 = int(x0 - 10000*(-b))
             y2 = int(y0 - 10000*(a))
 
-            if abs(rotation) < 60 and abs(y0-horizon_prev[2]) < 50:
+            if abs(rotation) < 70 and abs(y0-horizon_prev[2]) < 70:
 
                 if __name__ == "__main__":
                     cv2.line(image, (x1, y1), (x2, y2), (0,255,0), 1)
@@ -179,10 +183,6 @@ def detectMast(horizon, horizon_height):
     kernel = np.ones((15,1))
     ret, bin_x = cv2.threshold(grad_x,5,255,0)
     bin_x = cv2.morphologyEx(bin_x, cv2.MORPH_OPEN, kernel)
-
-    if __name__ == "__main__":
-        cv2.imshow('Grad', grad_x)
-        cv2.imshow('Bin', bin_x)
 
 
     kernel = np.zeros((7,7), np.uint8)

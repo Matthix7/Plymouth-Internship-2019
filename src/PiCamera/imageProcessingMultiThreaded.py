@@ -19,7 +19,12 @@ from numpy import pi, cos, sin, array, shape
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
 from detectionHorizonMast import horizonArea, detectMast
 from detectionAruco import detectAruco
+
 #from camThread import PiVideoStream
+from buoyArucoThread import BAdetector
+from horizonMastsThread import HMdetector
+
+
 
 
 def run():
@@ -32,9 +37,11 @@ def run():
     cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
     cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
-    horizon_prev = (0, 320, 240)
+    hm = HMdetector()
+    hm.start()
 
-    aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
+    ba = BAdetector()
+    ba.start()
 
     c = 0
 
@@ -45,7 +52,7 @@ def run():
 
     t0 = time.time()
 
-    dodo = 0.05
+    dodo = 0
 
     while(cap.isOpened()):
 
@@ -84,38 +91,24 @@ def run():
 
         c += 1
 
-##        #Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
-##        #Takes about 0.04s per frame.
-##        #horizon: image cropped around the horizon
-##        #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
-##        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
-##        #detected in the new image.
-
 
         t1 = time.time()
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+
+        hm.newImage(image)
+        ba.newImage(image)
+        time.sleep(0.05)
+
+        masts = hm.read()
+        frame_markers, corners, center = ba.read()
+
+        while masts is None or frame_markers is None:
+            if masts is None:
+                masts = hm.read()
+
+            if frame_markers is None:
+                frame_markers, corners, center = ba.read()
+
         T1.append(time.time()-t1)
-
-##      Find the areas where vertical lines are found (ie possible sailboats).
-##      Takes about 0.1s per frame.
-##      masts: image cropped around the horizon, where vertical lines are highlighted
-
-        t2 = time.time()
-        masts = detectMast(horizon, horizon_height)
-        T2.append(time.time()-t2)
-
-##      Find the buoy in the cropped image and highlight them in the result image
-        t3 = time.time()
-#        colorRange = getColorRangeTest() #For test target
-        colorRange = getColorRange() #For real buoys
-        center, buoy = detectBuoy(image, image.copy(), colorRange)
-        T3.append(time.time()-t3)
-
-##      Find the April Tags in the cropped image
-
-        t4 = time.time()
-        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
-        T4.append(time.time()-t4)
 
 
         t5 = time.time()
@@ -151,13 +144,13 @@ def run():
         vs.stop()
 
     cv2.destroyAllWindows()
+    hm.stop()
+    ba.stop()
+
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
     print("Global time per frame : ", (time.time()-t0)/c - dodo)
-    print("Time horizon : ", np.mean(T1))
-    print("Time masts   : ", np.mean(T2))
-    print("Time buoy    : ", np.mean(T3))
-    print("Time markers : ", np.mean(T4))
+    print("Time detectors : ", np.mean(T1))
     print("Time display : ", np.mean(T5))
     print("Time interact: ", np.mean(T6))
     print("Time per frame accurate: ", np.mean(Tframe))
