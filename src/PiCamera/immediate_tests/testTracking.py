@@ -148,7 +148,7 @@ def run():
                 print("dist1 = ", dist1, "\ndist2 = ", dist2)
 
             heading = Sf*(x-camera.resolution[0]/2)
-            pritn("Heading = ", heading)
+            print("Heading = ", heading)
 
 
 
