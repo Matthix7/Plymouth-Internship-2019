@@ -130,9 +130,8 @@ def run():
         headingsMarkers = []
 
         for corner in corners:
-            print('corners = \n',corner[0], corner[0,0], corner[0,0,0])
+            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
             headingsMarkers.append((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
-        print(headingsMarkers)
         T4.append(time.time()-t4)
 
 
