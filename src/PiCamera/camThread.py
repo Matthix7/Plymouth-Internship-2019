@@ -10,7 +10,7 @@ from picamera import PiCamera
 from threading import Thread
 import cv2
 import time
-from numpy import array
+from numpy import array, tan
 
 from chessboard_calibration import getCamDistortData
 
