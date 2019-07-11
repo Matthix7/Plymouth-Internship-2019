@@ -104,7 +104,10 @@ def run():
 
         t2 = time.time()
         masts, xMasts = detectMast(horizon, horizon_height)
-        headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
+        if xMasts is not None:
+            headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
+        else:
+            headingsBoats = None
         T2.append(time.time()-t2)
 
 ##      Find the buoy in the cropped image and highlight them in the result image
@@ -112,7 +115,10 @@ def run():
 #        colorRange = getColorRangeTest() #For test target
         colorRange = getColorRange() #For real buoys
         center, buoy = detectBuoy(image, image.copy(), colorRange)
-        headingBuoy = (center-resolution[0]/2)*Sf
+        if center is not None:
+            headingBuoy = (center-resolution[0]/2)*Sf
+        else:
+            headingBuoy = None
         T3.append(time.time()-t3)
 
 ##      Find the April Tags in the cropped image
