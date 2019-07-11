@@ -9,6 +9,7 @@ from picamera import PiCamera
 import time
 import cv2
 import numpy as np
+from numpy import tan
 
 def getCamDistortData(filename):
     saveFile = open(filename, 'r')
@@ -69,7 +70,7 @@ def run():
     targetMaxDim = 0.11   
     targetMinDim = 0.068
 
-    Sp = 0.11/49.5   #Camera scale factor
+    Sf = tan(0.11)/49.5   #Camera scale factor, rad/pixel
 
     # Read the camera matrix from calibration file
     mtx, dist = getCamDistortData('calibration_data.txt')
@@ -140,12 +141,14 @@ def run():
             w,h = rect[1]
             if w > h:
                 w,h = h,w
-            angle = rect[2]
 
             if h > 0 and w > 0:
-                dist1 = targetMaxDim/(h*Sp)
-                dist2 = targetMinDim/(w*Sp)
+                dist1 = targetMaxDim/(h*Sf)
+                dist2 = targetMinDim/(w*Sf)
                 print("dist1 = ", dist1, "\ndist2 = ", dist2)
+
+            heading = Sf*(x-camera.resolution[0]/2)
+            pritn("Heading = ", heading)
 
 
 

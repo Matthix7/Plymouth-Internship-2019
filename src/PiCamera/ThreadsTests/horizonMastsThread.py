@@ -33,11 +33,11 @@ class HMdetector():
             if self.frame is not None and self.processComplete:
 
                 self.processComplete = False
-                print(' Begin proccessing')
+#                print(' Begin proccessing')
                 horizon, horizon_height, self.horizon_prev = horizonArea(self.frame, self.horizon_prev)
 
                 self.masts = detectMast(horizon, horizon_height)
-                print('Processed')
+#                print('Processed')
 
 
 
@@ -45,13 +45,10 @@ class HMdetector():
         self.frame = image
         self.masts = None
         self.processComplete = True
-        print('newImage')
+#        print('newImage')
 
     def read(self):
-        print('Called')
-        while self.masts is None:
-            pass
-        print('Got Masts')
+#        print('Called')
         return self.masts
 
 

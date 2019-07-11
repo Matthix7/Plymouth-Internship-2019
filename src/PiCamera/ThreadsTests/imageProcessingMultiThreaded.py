@@ -34,8 +34,8 @@ def run():
     tframe = 0
 
 
-    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     hm = HMdetector()
     hm.start()
@@ -101,18 +101,19 @@ def run():
         masts = hm.read()
         frame_markers, corners, center = ba.read()
 
-        while masts is None or frame_markers is None:
+        while  masts is None: # orframe_markers is None
+#            time.sleep(0.01)
             if masts is None:
                 masts = hm.read()
 
-            if frame_markers is None:
-                frame_markers, corners, center = ba.read()
+#            if frame_markers is None:
+#                frame_markers, corners, center = ba.read()
 
         T1.append(time.time()-t1)
 
 
         t5 = time.time()
-        cv2.imshow('Horizon', masts)
+#        cv2.imshow('Horizon', masts)
         cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 

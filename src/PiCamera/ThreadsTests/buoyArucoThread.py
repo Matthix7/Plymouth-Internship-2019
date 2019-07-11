@@ -52,8 +52,6 @@ class BAdetector():
         self.processComplete = True
 
     def read(self):
-        while self.frame_markers is None:
-            pass
         return self.frame_markers, self.corners, self.center
 
     def stop(self):
