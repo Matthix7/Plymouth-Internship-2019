@@ -96,6 +96,7 @@ def run():
 
         t1 = time.time()
         horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+        rotation = horizon_prev[0]
         T1.append(time.time()-t1)
 
 ##      Find the areas where vertical lines are found (ie possible sailboats).
@@ -116,7 +117,8 @@ def run():
 #        colorRange = getColorRange() #For real buoys
         center, buoy = detectBuoy(image, image.copy(), colorRange)
         if center is not None:
-            headingBuoy = (center-resolution[0]/2)*Sf
+            xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
+            headingBuoy = (xBuoy-resolution[0]/2)*Sf
         else:
             headingBuoy = None
         T3.append(time.time()-t3)
