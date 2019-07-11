@@ -125,7 +125,8 @@ def run():
 
         t4 = time.time()
         frame_markers, corners = detectAruco(image, buoy, aruco_dict)
-        print(corners)
+        if corners != []:
+            print(corners[:][0,0,0])
         T4.append(time.time()-t4)
 
 
