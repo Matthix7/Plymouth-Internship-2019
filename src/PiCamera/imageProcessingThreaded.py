@@ -38,42 +38,42 @@ def run():
 
     c = 0
 
-##############          VIDEO           #############################
-#####################################################################
-#    Running on test video
-    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
-
-    t0 = time.time()
-
-    dodo = 0.05
-
-    while(cap.isOpened()):
-
-        # Capture frame-by-frame
-        ret, image = cap.read()
-
-        if not ret:
-            break
-
-        image = cv2.resize(image, (640,480))
-        Sf, resolution = 0.398/203.55, (640,480)
-
-
-
-##################     CAMERA     ####################################
+###############          VIDEO           #############################
 ######################################################################
-##    Running with the camera
+##    Running on test video
+#    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
 
-#    vs = PiVideoStream().start()
-#    time.sleep(2)
+#    t0 = time.time()
 
-#    Sf, resolution = vs.getScaleFactor()
-#    dodo = 0
+#    dodo = 0.05
+
+#    while(cap.isOpened()):
+
+#        # Capture frame-by-frame
+#        ret, image = cap.read()
+
+#        if not ret:
+#            break
+
+#        image = cv2.resize(image, (640,480))
+#        Sf, resolution = 0.398/203.55, (640,480)
 
 
-#    while True:#c<20:
 
-#        image = vs.read()
+#################     CAMERA     ####################################
+#####################################################################
+#    Running with the camera
+
+    vs = PiVideoStream().start()
+    time.sleep(2)
+
+    Sf, resolution = vs.getScaleFactor()
+    dodo = 0
+
+
+    while True:#c<20:
+
+        image = vs.read()
 
 
 
@@ -112,8 +112,8 @@ def run():
 
 ##      Find the buoy in the cropped image and highlight them in the result image
         t3 = time.time()
-#        colorRange = getColorRangeTest() #For test target
-        colorRange = getColorRange() #For real buoys
+        colorRange = getColorRangeTest() #For test target
+#        colorRange = getColorRange() #For real buoys
         center, buoy = detectBuoy(image, image.copy(), colorRange)
         if center is not None:
             headingBuoy = (center-resolution[0]/2)*Sf
