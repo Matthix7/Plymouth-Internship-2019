@@ -19,7 +19,7 @@ from numpy import pi, cos, sin, array, shape
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
 from detectionHorizonMast import horizonArea, detectMast
 from detectionAruco import detectAruco
-#from camThread import PiVideoStream
+from camThread import PiVideoStream
 
 
 def run():
