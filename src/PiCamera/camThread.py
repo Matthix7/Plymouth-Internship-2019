@@ -12,6 +12,8 @@ import cv2
 import time
 from numpy import array
 
+from chessboard_calibration import getCamDistortData
+
 class PiVideoStream:
     def __init__(self, resolution=(640, 480), framerate=15, mode = 'sports'):
         # initialize the camera and stream
@@ -20,12 +22,13 @@ class PiVideoStream:
         self.camera.framerate = framerate
         self.camera.exposure_mode = mode
 
+        self.scale_factor = tan(0.398)/(resolution[0]*203.55/640)   #Camera scale factor, rad/pixel
+
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
-        #Load the calibration data (manually...) from calibration_data.txt
-        self.calibration_matrix = array([[485.36568341, 0., 308.96642615], [0., 486.22575965, 236.66818825], [0., 0., 1.]])
-        self.calibration_dist = array([[1.37958351e-01, -2.43061015e-01, -5.22562568e-05, -6.84849581e-03, -2.59284496e-02]])
+        # Read the camera matrix from calibration file
+        self.calibration_matrix, self.calibration_dist = getCamDistortData('calibration_data.txt')
 
         # initialize the frame and the variable used to indicate
         # if the thread should be stopped
@@ -63,6 +66,9 @@ class PiVideoStream:
     def stop(self):
         # indicate that the thread should be stopped
         self.stopped = True
+
+    def getScaleFactor(self):
+        return self.scale_factor, self.camera.resolution
 
 
 

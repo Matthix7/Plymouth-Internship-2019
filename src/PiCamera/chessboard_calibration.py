@@ -2,6 +2,63 @@ import numpy as np
 import cv2
 import glob
 
+
+
+def getCamDistortData(filename):
+    saveFile = open(filename, 'r')
+    lines = saveFile.readlines()
+    saveFile.close()
+
+    for i in range(len(lines)):
+        if lines[i] == '#mtx\n':
+            i+=1
+            mtxString = lines[i]+lines[i+1]+lines[i+2]
+            mtxList = mtxString.split()
+            mtx = np.zeros((3,3))
+            cnt = 0
+
+            for part in mtxList:
+
+                try:
+                    while part[0] == '[':
+                        part = part[1:]
+
+                    while part[-1] == ']':
+                        part = part[:-1]
+
+                    mtx[cnt//3][cnt%3] = float(part)
+                    cnt+=1
+                except:
+                    pass
+
+        if lines[i] == '#dist\n':
+            i+=1
+            distString = lines[i]+lines[i+1]
+            distList = distString.split()
+            dist = np.zeros((1,5))
+            cnt = 0
+
+            for part in distList:
+
+                try:
+                    while part[0] == '[':
+                        part = part[1:]
+
+                    while part[-1] == ']':
+                        part = part[:-1]
+
+                    dist[0][cnt] = float(part)
+                    cnt+=1
+                except:
+                    pass
+
+            return mtx, dist
+
+
+
+
+
+
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 

@@ -38,7 +38,7 @@ def run():
 
             #Find the areas where vertical lines are found (ie possible sailboats).
             #Takes about 0.1s per frame.
-            masts = detectMast(horizon, horizon_height)
+            masts, xMasts = detectMast(horizon, horizon_height)
 
             cv2.imshow('Result', masts)
             time.sleep(0.1)
@@ -219,7 +219,7 @@ def detectMast(horizon, horizon_height):
                     cv2.line(result, (xMast, horizon_height-10), (xMast, horizon_height+10), (0,0,255), 2)
                     cv2.line(result, (x1, y1), (x2, y2), (0,0,255), 1)
 
-    return result
+    return result, possible_masts
 
 
 

@@ -70,7 +70,7 @@ def run():
     targetMaxDim = 0.11   
     targetMinDim = 0.068
 
-    Sf = tan(0.398)/203.55   #Camera scale factor, rad/pixel
+    Sf = tan(0.398)/(camera.resolution[0]*203.55/640)   #Camera scale factor, rad/pixel
 
     # Read the camera matrix from calibration file
     mtx, dist = getCamDistortData('calibration_data.txt')
