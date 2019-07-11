@@ -104,7 +104,7 @@ def run():
 
         t2 = time.time()
         masts, xMasts = detectMast(horizon, horizon_height)
-        headingsBoats = (np.toarray(xMasts)-resolution[0]/2)*Sf
+        headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
         T2.append(time.time()-t2)
 
 ##      Find the buoy in the cropped image and highlight them in the result image
