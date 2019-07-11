@@ -109,7 +109,6 @@ def run():
             headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
         else:
             headingsBoats = None
-        print(headingsBoats)
         T2.append(time.time()-t2)
 
 ##      Find the buoy in the cropped image and highlight them in the result image
@@ -131,6 +130,7 @@ def run():
         headingsMarkers = []
         for corner in corners:
             headingsMarkers.append((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+        print(headingsMarkers)
         T4.append(time.time()-t4)
 
 
