@@ -128,6 +128,7 @@ def run():
         t4 = time.time()
         frame_markers, corners = detectAruco(image, buoy, aruco_dict)
         headingsMarkers = []
+        print('corners = \n',corners)
         for corner in corners:
             headingsMarkers.append((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
         print(headingsMarkers)
