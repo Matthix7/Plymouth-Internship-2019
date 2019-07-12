@@ -13,7 +13,7 @@ from numpy import pi, cos, sin, array, shape
 
 
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
-from detectionHorizonMastNew import horizonArea, detectMast
+from detectionHorizonMast2 import horizonArea, detectMast
 from detectionAruco import detectAruco
 #from camThread import PiVideoStream
 
@@ -62,20 +62,25 @@ def run():
 
 
 
-##################     CAMERA     ####################################
-######################################################################
-##    Running with the camera
+#################     CAMERA     ####################################
+#####################################################################
+#    Running with the camera
 
-#    vs = PiVideoStream().start()
-#    time.sleep(2)
+    vs = PiVideoStream().start()
+    time.sleep(2)
 
-#    Sf, resolution = vs.getScaleFactor()
-#    dodo = 0
+    Sf, resolution = vs.getScaleFactor()
+    dodo = 0
+
+    horizon_prev = (0, resolution[0], resolution[1])
+    image = vs.read()
+
+    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 
 
-#    while True:#c<20:
+    while True:#c<20:
 
-#        image = vs.read()
+        image = vs.read()
 
 
 
