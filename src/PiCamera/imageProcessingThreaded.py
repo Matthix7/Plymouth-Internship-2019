@@ -111,7 +111,7 @@ def run():
             headingsBoats = None
         T2.append(time.time()-t2)
 
-##      Find the buoy in the cropped image and highlight them in the result image
+##      Find the buoy in the original cropped image and highlight them in the result image
         t3 = time.time()
         colorRange = getColorRangeTest() #For test target
 #        colorRange = getColorRange() #For real buoys
@@ -121,9 +121,10 @@ def run():
             headingBuoy = (xBuoy-resolution[0]/2)*Sf
         else:
             headingBuoy = None
+        print("Headings ", headingBuoy)
         T3.append(time.time()-t3)
 
-##      Find the April Tags in the cropped image
+##      Find the April Tags in the original-sized image
 
         t4 = time.time()
         frame_markers, corners = detectAruco(image, buoy, aruco_dict)
@@ -132,7 +133,7 @@ def run():
         for corner in corners:
             print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
             headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
-        print("Headings ", headingsMarkers)
+#        print("Headings ", headingsMarkers)
         T4.append(time.time()-t4)
 
 
