@@ -8,13 +8,13 @@
 if __name__ == "__main__":
     from picamera.array import PiRGBArray
     from picamera import PiCamera
-    import time
     import numpy as np
     from math import atan2
     from numpy import pi, cos, sin, array, shape
 
 import cv2
 from cv2 import aruco
+import time
 
 def run():
 
