@@ -15,7 +15,7 @@ from numpy import pi, cos, sin, array, shape
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
 from detectionHorizonMast2 import horizonArea, detectMast
 from detectionAruco import detectAruco
-#from camThread import PiVideoStream
+from camThread import PiVideoStream
 
 
 def run():
@@ -34,31 +34,31 @@ def run():
 
     c = 0
 
-##############          VIDEO           #############################
-#####################################################################
-#    Running on test video
-    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
+###############          VIDEO           #############################
+######################################################################
+##    Running on test video
+#    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
 
-    t0 = time.time()
+#    t0 = time.time()
 
-    dodo = 0.05
+#    dodo = 0.05
 
-    Sf, resolution = 0.398/203.55, (640,480)
+#    Sf, resolution = 0.398/203.55, (640,480)
 
-    horizon_prev = (0, 320, 240)
-    ret, image = cap.read()
-    image = cv2.resize(image, resolution)
-    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
+#    horizon_prev = (0, 320, 240)
+#    ret, image = cap.read()
+#    image = cv2.resize(image, resolution)
+#    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 
-    while(cap.isOpened()):
+#    while(cap.isOpened()):
 
-        # Capture frame-by-frame
-        ret, image = cap.read()
+#        # Capture frame-by-frame
+#        ret, image = cap.read()
 
-        if not ret:
-            break
+#        if not ret:
+#            break
 
-        image = cv2.resize(image, (640,480))
+#        image = cv2.resize(image, (640,480))
 
 
 
