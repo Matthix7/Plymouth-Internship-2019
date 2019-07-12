@@ -13,7 +13,7 @@ from numpy import pi, cos, sin, array, shape
 
 
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
-from detectionHorizonMast import horizonArea, detectMast
+from detectionHorizonMastNew import horizonArea, detectMast
 from detectionAruco import detectAruco
 #from camThread import PiVideoStream
 
@@ -48,7 +48,7 @@ def run():
     horizon_prev = (0, 320, 240)
     ret, image = cap.read()
     image = cv2.resize(image, resolution)
-    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)#, init = True)
+    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 
     while(cap.isOpened()):
 
