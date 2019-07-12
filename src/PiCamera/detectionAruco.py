@@ -88,7 +88,7 @@ def detectAruco(image, resultImage, dictionary):
     frame_markers = aruco.drawDetectedMarkers(resultImage, corners, ids)
 
     if ids is not None:
-        cv2.imwrite('arucoDetected/aruco_frame_'+time.strftime('%X'), frame_markers)
+        cv2.imwrite('arucoDetected/aruco_frame_'+time.strftime('%X')+'.png', frame_markers)
 
 #        markerLength = 3.8
 #        camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])
