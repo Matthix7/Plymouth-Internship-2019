@@ -12,14 +12,10 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-#from picamera.array import PiRGBArray
-#from picamera import PiCamera
-
-
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
 from detectionHorizonMast import horizonArea, detectMast
 from detectionAruco import detectAruco
-from camThread import PiVideoStream
+#from camThread import PiVideoStream
 
 
 def run():
@@ -38,42 +34,48 @@ def run():
 
     c = 0
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
-
-#    t0 = time.time()
-
-#    dodo = 0.05
-
-#    while(cap.isOpened()):
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (640,480))
-#        Sf, resolution = 0.398/203.55, (640,480)
-
-
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
+#    Running on test video
+    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
 
-    vs = PiVideoStream().start()
-    time.sleep(2)
+    t0 = time.time()
 
-    Sf, resolution = vs.getScaleFactor()
-    dodo = 0
+    dodo = 0.05
+
+    Sf, resolution = 0.398/203.55, (640,480)
+
+    horizon_prev = (0, 320, 240)
+    ret, image = cap.read()
+    image = cv2.resize(image, resolution)
+    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)#, init = True)
+
+    while(cap.isOpened()):
+
+        # Capture frame-by-frame
+        ret, image = cap.read()
+
+        if not ret:
+            break
+
+        image = cv2.resize(image, (640,480))
 
 
-    while True:#c<20:
 
-        image = vs.read()
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+
+#    vs = PiVideoStream().start()
+#    time.sleep(2)
+
+#    Sf, resolution = vs.getScaleFactor()
+#    dodo = 0
+
+
+#    while True:#c<20:
+
+#        image = vs.read()
 
 
 
@@ -121,7 +123,7 @@ def run():
             headingBuoy = (xBuoy-resolution[0]/2)*Sf
         else:
             headingBuoy = None
-        print("Headings ", headingBuoy)
+#        print("Headings ", headingBuoy)
         T3.append(time.time()-t3)
 
 ##      Find the April Tags in the original-sized image
