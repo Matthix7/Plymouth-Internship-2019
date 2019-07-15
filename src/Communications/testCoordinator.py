@@ -14,6 +14,7 @@ from numpy import pi, sign
 ###################################################################
 #    Program that allows sending commands from the keyboard
 #   /!\ Same command in broadcast /!\
+#For testing:
 #   Launch  key_teleop in a separate terminal
 #   sudo apt install ros-melodic-teleop-tools ros-melodic-key-teleop
 #   rosrun key_teleop key_teleop.py key_vel:=keyboardControl
@@ -22,13 +23,15 @@ from numpy import pi, sign
 
 
 def callback(data):
-    global rudder, sail, sensibilite1, sensibilite2, pubCommand
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive
 
     rudder += sensibilite1 * sign(data.linear.x)
     sail -= sensibilite2 * sign(data.angular.z)
 
-    commands = String(data=str(rudder)+','+str(sail))
-    pubCommand.publish(commands)
+    if (rudder, sail) != (initRudder, initSail) or keyboardActive:
+        keyboardActive = True
+        commands = String(data=str(rudder)+','+str(sail))
+        pubCommand.publish(commands)
 
 
 
@@ -45,10 +48,14 @@ def run():
 #    Initialisation
 ###################################################################
 
-    global rudder, sail, sensibilite1, sensibilite2, pubCommand
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive
 
-    rudder = 0
-    sail = 80
+    initRudder = 0
+    initSail = 80
+    keyboardActive = False
+
+    rudder = initRudder
+    sail = initSail
     sensibilite1 = pi/100
     sensibilite2 = 1
 
@@ -72,10 +79,12 @@ def run():
 
     rate = rospy.Rate(20)
 
-    controlMode = String(data = "1")
+    controlMode = String(data = "0")
 
 
     while not rospy.is_shutdown():
+        if keyboardActive:
+            controlMode.data = "1"
 
         pubControlMode.publish(controlMode)
 
