@@ -24,7 +24,7 @@ def run():
 
 #    Publishes a GPS standard frame
 #    Contains xBoat, yBoat and others
-    pub_send_GPS = rospy.Publisher('gps', String, queue_size = 2)
+    pub_send_GPS = rospy.Publisher('filter_send_trame_gps', String, queue_size = 2)
 
 #    Publishes the speed of the wind
     pub_send_WIND_FORCE = rospy.Publisher('wind_force', Float32, queue_size = 2)

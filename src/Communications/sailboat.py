@@ -166,7 +166,7 @@ def run():
 
 #    Receives a GPS standard frame
 #    Contains xBoat, yBoat and others
-    rospy.Subscriber('gps', String, sub_GPS) #topic name to change
+    rospy.Subscriber('filter_send_trame_gps', String, sub_GPS) #topic name to change
 
 #    Receives the speed of the wind
     rospy.Subscriber('filter_send_wind_force', Float32, sub_WIND_FORCE)

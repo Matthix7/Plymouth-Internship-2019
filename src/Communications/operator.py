@@ -18,7 +18,7 @@ import time
 #For testing or if need to launch again:
 #   Launch  key_teleop in a separate terminal
 #   sudo apt install ros-melodic-teleop-tools ros-melodic-key-teleop
-#   rosrun key_teleop key_teleop.py key_vel:=keyboardControl
+#   rosrun key_teleop key_teleop.py
 ###################################################################
 
 
@@ -26,19 +26,15 @@ import time
 def callback(data):
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
-    timeLastCommand = time.time()-timeLastCommand
-    if timeLastCommand > 2:
-        keyboardActive = False
-        rudder = initRudder
-        sail = initSail
-
     rudder += sensibilite1 * sign(data.linear.x)
     sail -= sensibilite2 * sign(data.angular.z)
 
     if (rudder, sail) != (initRudder, initSail):
         keyboardActive = True
+
     commands = String(data=str(rudder)+','+str(sail))
     pubCommand.publish(commands)
+    timeLastCommand = time.time()
 
 
 
@@ -98,6 +94,11 @@ def run():
             controlMode.data = "0"
 
         pubControlMode.publish(controlMode)
+
+        if (time.time()-timeLastCommand) > 2:
+            keyboardActive = False
+            rudder = initRudder
+            sail = initSail
 
 
         rate.sleep()
