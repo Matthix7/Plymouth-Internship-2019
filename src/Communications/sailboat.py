@@ -249,7 +249,6 @@ def run():
 
             compteur += 1
             cursor = 0
-            rospy.loginfo("TOTO = "+str(data[cursor]))
             try:
                 data = msgReceived.split('_')
                 rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))
@@ -259,6 +258,7 @@ def run():
 
                 if data[cursor] != "ID":
                     ID1 = data[cursor]
+                    rospy.loginfo("TOTO = "+str(data[cursor]))
 
                     force1.data = float(data[cursor+1])
 
