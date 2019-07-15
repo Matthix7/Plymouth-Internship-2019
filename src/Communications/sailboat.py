@@ -231,7 +231,7 @@ def run():
         line = ''
         loopTime = time()
 
-        windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "nothing", "nothing", "nothing", "nothing", "nothing"
+        windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "-999", "-999", "nothing", "-999,-999,-999", "-999,-999,-999"
 
 
 #    Read what is in the buffer, start and stop with specific signals.
@@ -363,7 +363,7 @@ def run():
 #Despite message controls, some errors may still occur...
             except:
 #                pass
-                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+'\n'+str(sys.exc_info()[2])+"\noccured.")
+                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
 
         elif not check:
