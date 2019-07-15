@@ -160,7 +160,7 @@ def run():
     fleetSize = 1#int(fleetInitMessage.split()[1])
     boatsData = [boatData1]*fleetSize
 
-    rospy.loginfo("Connected to Coordinator, with "+str(fleetSize)+" other sailboats.")
+    rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
 
 
