@@ -363,7 +363,7 @@ def run():
 #Despite message controls, some errors may still occur...
             except:
 #                pass
-                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+"occured.")
+                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+str(sys.exc_info()[1])+"occured.")
 
 
         elif not check:
