@@ -258,13 +258,14 @@ def run():
 
                 if data[cursor] != "ID":
                     ID1 = data[cursor]
-                    rospy.loginfo("TOTO = "+str(data[cursor]))
 
                     force1.data = float(data[cursor+1])
 
                     direction1.data = float(data[cursor+2])
 
                     gps1.data = data[cursor+3]
+
+                    rospy.loginfo("TOTO = "+str(data[cursor+3]))
 
                     tmpEuler = data[cursor+4].split(',')
                     euler1.x = float(tmpEuler[0])
