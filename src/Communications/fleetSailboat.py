@@ -156,7 +156,7 @@ def run():
         ser.write(msg)
         fleetInitMessage = ser.readline()
 
-
+    rospy.loginfo(fleetInitMessage)
     fleetSize = int(fleetInitMessage.split()[1])
     boatsData = [boatData1]*fleetSize
 
