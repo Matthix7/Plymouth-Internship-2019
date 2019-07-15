@@ -257,6 +257,7 @@ def run():
 
                 if data[cursor+1] != "nothing":
                     ID1 = data[cursor]
+                    ropsy.loginfo("TOTO = "+str(ID1))
 
                     force1.data = float(data[cursor+1])
 
