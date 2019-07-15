@@ -163,7 +163,7 @@ def run():
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
 
-
+    tie.sleep(5)
 
 ###################################################################
 #   Transmit useful data to broadcast (max 999 char)
