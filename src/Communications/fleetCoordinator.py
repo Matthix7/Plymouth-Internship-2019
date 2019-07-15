@@ -130,6 +130,7 @@ def run():
     while not rospy.is_shutdown() and len(connected) < expected:
         line = ser.readline()
 
+
         check, msgReceived = is_valid(line)
 
         if check:
@@ -140,6 +141,7 @@ def run():
                 connected.append(IDboat)
                 rospy.loginfo('|'+msgReceived+'|')
 
+    rospy.loginfo("TOTO="+str(len(connected)))
     ser.write('OK '+str(len(connected))+' \n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
