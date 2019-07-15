@@ -186,7 +186,7 @@ def run():
 #   Transmit data from the other boats to the boat's controller (max 999 char)
 ###################################################################
 #    Publishes the string indicator of the control mode
-    pub_send_control_mode = rospy.Publisher('xbee_send_mode', String, queue_size = 2)
+    pub_send_control_mode = rospy.Publisher('xbee_send_mode', Float32, queue_size = 2)
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
@@ -331,7 +331,6 @@ def run():
                 sail = Float32(data = float(targetData[1]))
 
                 mode.data = int(data[cursor+1])
-                rospy.loginfo("TOTO = "+str(rudder)+str(sail))
 
     #Publish the data for internal use
 
