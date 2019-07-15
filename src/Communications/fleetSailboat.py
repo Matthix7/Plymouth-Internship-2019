@@ -144,7 +144,7 @@ def run():
 #   Wait until all boats are connected
 ###################################################################
     fleetInitMessage = ser.readline()
-    while not rospy.is_shutdown() and "OK" not in fleetInitMessage:
+    while not rospy.is_shutdown() and "toto" not in fleetInitMessage:
         rospy.sleep(ID*0.2)
         msg = "Hello, I am Boat " + str(ID)
 
