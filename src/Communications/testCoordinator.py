@@ -28,10 +28,10 @@ def callback(data):
     rudder += sensibilite1 * sign(data.linear.x)
     sail -= sensibilite2 * sign(data.angular.z)
 
-    if (rudder, sail) != (initRudder, initSail) or keyboardActive:
+    if (rudder, sail) != (initRudder, initSail)
         keyboardActive = True
-        commands = String(data=str(rudder)+','+str(sail))
-        pubCommand.publish(commands)
+    commands = String(data=str(rudder)+','+str(sail))
+    pubCommand.publish(commands)
 
 
 
