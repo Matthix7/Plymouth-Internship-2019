@@ -249,10 +249,11 @@ def run():
 
             compteur += 1
             cursor = 0
+            ropsy.loginfo("TOTO = "+str(data[cursor]))
             try:
                 data = msgReceived.split('_')
                 rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))
-                ropsy.loginfo("TOTO = "+str(data[cursor]))
+
 
     #Collect the data from boat 1
 
