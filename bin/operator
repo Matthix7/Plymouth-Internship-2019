@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import PiCamera.testTracking
+import Communications.operator
 
 
 if __name__ == '__main__':
-    PiCamera.testTracking.run()
+    Communications.operator.run()

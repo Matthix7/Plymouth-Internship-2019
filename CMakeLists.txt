@@ -168,9 +168,9 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-catkin_install_python(PROGRAMS bin/dataTX bin/dataRX bin/keyboardControl
-    bin/coordinator bin/sailboat bin/testCoordinator bin/testSailboat
-    bin/testCamera bin/testTracking
+catkin_install_python(PROGRAMS
+    bin/coordinator bin/sailboat bin/testSailboat
+    bin/operator
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
