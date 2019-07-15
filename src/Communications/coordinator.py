@@ -21,7 +21,7 @@ import pyudev
 
 def targetTransmission(data):
     global targetString
-    targetString = str(data.x)+','+str(data.y)+','+str(data.theta)
+    targetString = data.data
 
 def modeTransmission(data):
     global modeString
@@ -152,7 +152,7 @@ def run():
 
 #    Receives the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    rospy.Subscriber('poseTarget', Pose2D, targetTransmission)
+    rospy.Subscriber('commands', String, targetTransmission)
 
 #    Receives the string indicator of the control mode
     rospy.Subscriber('controlMode', String, modeTransmission)
@@ -199,7 +199,7 @@ def run():
             for line in received:
                 receivedLines += line+'_'
 
-            msg = receivedLines+targetString+'_'+modeString+str(emission//3)
+            msg = receivedLines+targetString+'_'+modeString
 
             size = str(len(msg)+4)
             for i in range(len(size),3):

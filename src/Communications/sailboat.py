@@ -99,7 +99,7 @@ def run():
     euler1, euler2, euler3             = Vector3(),Vector3(),Vector3()
     pos1, pos2, pos3                   = Pose2D(), Pose2D(), Pose2D()
 
-    targetString, modeString = String(), String()
+    rudder, sail, mode = Float32(), Float32(), Float32()
 
 
 ###################################################################
@@ -190,7 +190,8 @@ def run():
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pub_send_target = rospy.Publisher('xbee_send_target', String, queue_size = 2)
+    pub_send_u_rudder = rospy.Publisher('xbee_send_u_rudder', String, queue_size = 2)
+    pub_send_u_sail = rospy.Publisher('xbee_send_u_sail', String, queue_size = 2)
 
 #    Publishes the data relative to each boat
     pub_send_wind_force_1 = rospy.Publisher('xbee_send_wind_force_1', Float32, queue_size = 2)
@@ -218,7 +219,7 @@ def run():
 ########################################################################################################################
 #   Receive useful data from the coordinator
 # Frame received:
-# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_posString1_ID2_windForceString2_windDirectionString2_gpsString2_eulerAnglesString2_posString2_ID3_windForceString3_windDirectionString3_gpsString3_eulerAnglesString3_posString3_targetString_modeString=====\n"
+# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_posString1_ID2_windForceString2_windDirectionString2_gpsString2_eulerAnglesString2_posString2_ID3_windForceString3_windDirectionString3_gpsString3_eulerAnglesString3_posString3_targetString_mode=====\n"
 ########################################################################################################################
 
     compteur = 0
@@ -324,14 +325,18 @@ def run():
 
     #Collect the data from the operator
 
-                targetString.data = data[cursor]
+                targetString = data[cursor]
+                targetData = targetString.split(',')
+                rudder = int(targetData[0])
+                sail = int(targetData[1])
 
-                modeString.data = data[cursor+1]
+                mode.data = int(data[cursor+1])
 
     #Publish the data for internal use
 
-                pub_send_control_mode.publish(modeString)
-                pub_send_target.publish(targetString)
+                pub_send_control_mode.publish(mode)
+                pub_send_u_rudder.publish(rudder)
+                pub_send_u_sail.publish(sail)
 
                 pub_send_wind_force_1.publish(force1)
                 pub_send_wind_direction_1.publish(direction1)

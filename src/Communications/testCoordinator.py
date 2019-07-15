@@ -10,6 +10,30 @@ from sensor_msgs.msg import Imu
 
 from numpy import pi
 
+
+###################################################################
+#    Program that allows sending commands from the keyboard
+#   /!\ Same command in broadcast /!\
+#   Launch  key_teleop in a separate terminal
+#   sudo apt install ros-melodic-teleop-tools ros-melodic-key-teleop
+#   rosrun key_teleop key_teleop.py key_vel:=keyboardControl
+###################################################################
+
+
+
+def callback(data):
+    global rudder, sail, sensibilite1, sensibilite2, pubSail, pubRudder
+
+    rudder += sensibilite1 * sign(data.linear.x)
+    sail += sensibilite2 * sign(data.angular.z)
+
+    commands = String(data=str(rudder)+','+str(sail))
+    pubCommand.publish(commands)
+
+
+
+
+
 ###################################################################
 #    Main
 ###################################################################
@@ -21,14 +45,25 @@ def run():
 #    Initialisation
 ###################################################################
 
+    global rudder, sail, sensibilite1, sensibilite2, pubSail, pubRudder
+
+    rudder = 0
+    sail = 80
+    sensibilite1 = pi/100
+    sensibilite2 = 1
+
+
     rospy.init_node('testGenerator', anonymous=True)
+
+    rospy.Subscriber("keyboardControl", Twist, callback)
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pubTarget = rospy.Publisher('poseTarget', Pose2D, queue_size = 2)
+    pubCommand = rospy.Publisher('commands', String, queue_size = 2)
 
 #    Publishes the string indicator of the control mode
     pubControlMode = rospy.Publisher('controlMode', String, queue_size = 2)
+
 
 
 ###################################################################
@@ -37,15 +72,10 @@ def run():
 
     rate = rospy.Rate(20)
 
-    dataTarget = Pose2D(x = 100.5, y = 100.5, theta = 0.)
-
-    controlMode = String(data = "Test")
+    controlMode = String(data = "1")
 
 
     while not rospy.is_shutdown():
-        dataTarget.theta += 1
-
-        pubTarget.publish(dataTarget)
 
         pubControlMode.publish(controlMode)
 
