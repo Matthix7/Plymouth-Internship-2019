@@ -331,7 +331,7 @@ def run():
                 sail = Float32(data = float(targetData[1]))
 
                 mode.data = int(data[cursor+1])
-                rospy.loginfo("MODE = "+str(mode))
+                rospy.loginfo("TOTO = "+str(rudder)+str(sail))
 
     #Publish the data for internal use
 
