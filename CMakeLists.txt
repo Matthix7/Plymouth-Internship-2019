@@ -170,7 +170,7 @@ include_directories(
 
 catkin_install_python(PROGRAMS
     bin/coordinator bin/sailboat bin/testSailboat
-    bin/operator
+    bin/operator bin/fleetCoordinator bin/fleetSailboat
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
