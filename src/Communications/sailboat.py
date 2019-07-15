@@ -11,6 +11,7 @@ import serial
 from time import time
 
 import pyudev
+import sys
 
 ###################################################################
 #    To execute when a message to transmit is received
