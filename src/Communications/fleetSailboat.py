@@ -144,7 +144,7 @@ def run():
 #   Wait until all boats are connected
 ###################################################################
     fleetInitMessage = ser.readline()
-    while not rospy.is_shutdown() and "toto" not in fleetInitMessage:
+    while not rospy.is_shutdown() and "Connected" not in fleetInitMessage:
         rospy.sleep(ID*0.2)
         msg = "Hello, I am Boat " + str(ID)
 
@@ -157,7 +157,7 @@ def run():
         fleetInitMessage = ser.readline()
 
     rospy.loginfo('||'+fleetInitMessage+'||')
-    fleetSize = int(fleetInitMessage.split()[1])
+    fleetSize = int(fleetInitMessage.split()[0])
     boatsData = [boatData1]*fleetSize
 
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")

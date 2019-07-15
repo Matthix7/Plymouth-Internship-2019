@@ -142,7 +142,7 @@ def run():
                 rospy.loginfo('|'+msgReceived+'|')
 
     rospy.loginfo("TOTO="+str(len(connected)))
-    ser.write('OKi '+str(len(connected))+' \n')
+    ser.write(str(len(connected))+' Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
 
