@@ -255,7 +255,7 @@ def run():
 
     #Collect the data from boat 1
 
-                if data[cursor+1] != "nothing":
+                if data[cursor] != "ID":
                     ID1 = data[cursor]
                     ropsy.loginfo("TOTO = "+str(ID1))
 
@@ -279,7 +279,7 @@ def run():
 
     #Collect the data from boat 2
 
-                if data[cursor+1] != "nothing":
+                if data[cursor] != "ID":
                     ID2 = data[cursor]
 
                     force2.data = float(data[cursor+1])
@@ -302,7 +302,7 @@ def run():
 
     #Collect the data from boat 3
 
-                if data[cursor+1] != "nothing":
+                if data[cursor] != "ID":
                     ID3 = data[cursor]
 
                     force3.data = float(data[cursor+1])
