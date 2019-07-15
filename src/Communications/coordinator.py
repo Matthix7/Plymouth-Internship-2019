@@ -194,6 +194,7 @@ def run():
             rospy.loginfo("Could not read\n"+line)
 
 
+
         if emission%3 == 0:
             receivedLines = ''
             for line in received:

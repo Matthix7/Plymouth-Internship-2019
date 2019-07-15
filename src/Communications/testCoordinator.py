@@ -5,10 +5,10 @@
 import rospy
 
 from std_msgs.msg import Float32, String
-from geometry_msgs.msg import Pose2D
+from geometry_msgs.msg import Pose2D, Twist
 from sensor_msgs.msg import Imu
 
-from numpy import pi
+from numpy import pi, sign
 
 
 ###################################################################
@@ -22,10 +22,10 @@ from numpy import pi
 
 
 def callback(data):
-    global rudder, sail, sensibilite1, sensibilite2, pubSail, pubRudder
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand
 
     rudder += sensibilite1 * sign(data.linear.x)
-    sail += sensibilite2 * sign(data.angular.z)
+    sail -= sensibilite2 * sign(data.angular.z)
 
     commands = String(data=str(rudder)+','+str(sail))
     pubCommand.publish(commands)
@@ -45,7 +45,7 @@ def run():
 #    Initialisation
 ###################################################################
 
-    global rudder, sail, sensibilite1, sensibilite2, pubSail, pubRudder
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand
 
     rudder = 0
     sail = 80
@@ -55,7 +55,7 @@ def run():
 
     rospy.init_node('testGenerator', anonymous=True)
 
-    rospy.Subscriber("keyboardControl", Twist, callback)
+    rospy.Subscriber("key_vel", Twist, callback)
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)

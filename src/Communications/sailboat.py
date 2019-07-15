@@ -190,8 +190,8 @@ def run():
 
 #    Publishes the data relative to the target point
 #    (depends on controlMode, common to all boats)
-    pub_send_u_rudder = rospy.Publisher('xbee_send_u_rudder', String, queue_size = 2)
-    pub_send_u_sail = rospy.Publisher('xbee_send_u_sail', String, queue_size = 2)
+    pub_send_u_rudder = rospy.Publisher('xbee_send_u_rudder', Float32, queue_size = 2)
+    pub_send_u_sail = rospy.Publisher('xbee_send_u_sail', Float32, queue_size = 2)
 
 #    Publishes the data relative to each boat
     pub_send_wind_force_1 = rospy.Publisher('xbee_send_wind_force_1', Float32, queue_size = 2)
@@ -327,8 +327,8 @@ def run():
 
                 targetString = data[cursor]
                 targetData = targetString.split(',')
-                rudder = int(targetData[0])
-                sail = int(targetData[1])
+                rudder = Float32(data = float(targetData[0]))
+                sail = Float32(data = float(targetData[1]))
 
                 mode.data = int(data[cursor+1])
 
