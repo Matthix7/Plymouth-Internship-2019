@@ -86,7 +86,7 @@ def run():
 ###################################################################
     global windForceString, windDirectionString, gpsString, eulerAnglesString, posString
 
-    GPSstring, poseString = 'init', 'init'
+    GPSstring, poseString, line = 'init', 'init', 'init'
 
     rospy.init_node('endPoint', anonymous=True)
 
@@ -156,8 +156,8 @@ def run():
         ser.write(msg)
         fleetInitMessage = ser.readline()
 
-    rospy.loginfo('|'+fleetInitMessage+'|')
-    fleetSize = 1#int(fleetInitMessage.split()[1])
+    rospy.loginfo('||'+fleetInitMessage+'||')
+    fleetSize = int(fleetInitMessage.split()[1])
     boatsData = [boatData1]*fleetSize
 
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
