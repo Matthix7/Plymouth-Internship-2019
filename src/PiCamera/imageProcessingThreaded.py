@@ -73,7 +73,7 @@ def run():
 #    image = cv2.resize(image, resolution)
 #    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 
-#    while(cap.isOpened()):
+#    while(cap.isOpened()) and not rospy.is_shutdown()::
 
 #        # Capture frame-by-frame
 #        ret, image = cap.read()
@@ -101,7 +101,7 @@ def run():
     horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 
 
-    while True:#c<20:
+    while not rospy.is_shutdown():
 
         image = vs.read()
 
