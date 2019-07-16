@@ -91,8 +91,7 @@ def run():
     rospy.init_node('endPoint', anonymous=True)
 
 
-    receiving_freq = 6 #Equal to coordinator emission_freq
-    rate = rospy.Rate(receiving_freq)
+
 
     ID1 = -1
     force1 = Float32()
@@ -163,7 +162,8 @@ def run():
 
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
-
+    receiving_freq = 15/fleetSize #Equal to coordinator emission_freq
+    rate = rospy.Rate(receiving_freq)
 
 ###################################################################
 #   Transmit useful data to broadcast (max 999 char)
@@ -261,26 +261,28 @@ def run():
 
     #Collect the data from boats
             for boat in range(fleetSize):
+                try:
+                    if data[cursor] != "ID":
+                        boatsData[boat][0] = data[cursor]  #ID
 
-                if data[cursor] != "ID":
-                    boatsData[boat][0] = data[cursor]  #ID
+                        boatsData[boat][1].data = float(data[cursor+1]) #Wind force
 
-                    boatsData[boat][1].data = float(data[cursor+1]) #Wind force
+                        boatsData[boat][2].data = float(data[cursor+2]) #Wind direction
 
-                    boatsData[boat][2].data = float(data[cursor+2]) #Wind direction
+                        boatsData[boat][3].data = data[cursor+3] #GPS frame
 
-                    boatsData[boat][3].data = data[cursor+3] #GPS frame
+                        tmpEuler = data[cursor+4].split(',')     #Euler angles
+                        boatsData[boat][4].x = float(tmpEuler[0])
+                        boatsData[boat][4].y = float(tmpEuler[1])
+                        boatsData[boat][4].z = float(tmpEuler[2])
 
-                    tmpEuler = data[cursor+4].split(',')     #Euler angles
-                    boatsData[boat][4].x = float(tmpEuler[0])
-                    boatsData[boat][4].y = float(tmpEuler[1])
-                    boatsData[boat][4].z = float(tmpEuler[2])
+                        tmpPos = data[cursor+5].split(',')       #Position
+                        boatsData[boat][5].x = float(tmpPos[0])
+                        boatsData[boat][5].y = float(tmpPos[1])
+                        boatsData[boat][5].theta = float(tmpPos[2])
 
-                    tmpPos = data[cursor+5].split(',')      #Position
-                    boatsData[boat][5].x = float(tmpPos[0])
-                    boatsData[boat][5].y = float(tmpPos[1])
-                    boatsData[boat][5].theta = float(tmpPos[2])
-
+                except:
+                    rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
                 cursor += 6
 
@@ -303,26 +305,9 @@ def run():
             pub_send_u_rudder.publish(rudder)
             pub_send_u_sail.publish(sail)
 
-
-
-            pub_send_wind_force_1.publish(force1)
-            pub_send_wind_direction_1.publish(direction1)
-            pub_send_gps_1.publish(gps1)
-            pub_send_euler_1.publish(euler1)
-            pub_send_pos_1.publish(pos1)
-
-            pub_send_wind_force_2.publish(force2)
-            pub_send_wind_direction_2.publish(direction2)
-            pub_send_gps_2.publish(gps2)
-            pub_send_euler_2.publish(euler2)
-            pub_send_pos_2.publish(pos2)
-
-            pub_send_wind_force_3.publish(force3)
-            pub_send_wind_direction_3.publish(direction3)
-            pub_send_gps_3.publish(gps3)
-            pub_send_euler_3.publish(euler3)
-            pub_send_pos_3.publish(pos3)
-
+            for boat in range(fleetSize):
+                for msg_publisher in range(len(boatsPublishers[0])):
+                    boatsPublishers[boat][msg_publisher].publish(boatsData[boat][msg_publisher])
 
 
 
@@ -336,14 +321,14 @@ def run():
 
 #Generating the checkSum message control
         size = str(len(msg)+4)
-        for i in range(len(size),3):
+        for i in range(len(size),4):
             size = '0'+size
 
         msg = "#####"+size+'_'+msg+"=====\n"
 
         processTime = time() - loopTime
 #Sleep while others are talking
-        rospy.sleep( ID/4. * ((1./receiving_freq) - processTime))
+        rospy.sleep( ID/(fleetSize+1) * ((1./receiving_freq) - processTime))
 
         ser.write(msg)
         emission += 1

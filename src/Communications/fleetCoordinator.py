@@ -74,19 +74,6 @@ def is_valid(line):
 def run():
 
 ###################################################################
-#    Initialisation
-###################################################################
-    global targetString, modeString
-    targetString, modeString = 'init', 'init'
-
-    rospy.init_node('coordinator', anonymous=True)
-
-    emission_freq = 6
-    rate = rospy.Rate(3*emission_freq)
-
-    compteur = 0
-
-###################################################################
 #    Look for XBee USB port
 ###################################################################
 
@@ -97,7 +84,7 @@ def run():
         if 'ID_VENDOR' in device and device['ID_VENDOR'] == 'FTDI':
             usbPort = device['DEVNAME']
 
-    ser = serial.Serial(usbPort,baudrate=57600, timeout = 1/(2.5*emission_freq))
+    ser = serial.Serial(usbPort,baudrate=57600, timeout = 0.5)
 
 
 ###################################################################
@@ -141,12 +128,33 @@ def run():
                 connected.append(IDboat)
                 rospy.loginfo('|'+msgReceived+'|')
 
-    ser.write(str(len(connected))+' Connected'+ '\n')
+    fleetSize = len(connected)
+
+    linkDict = {connected[i]:i for i in range(fleetSize)}
+
+    ser.write(str(fleetSize)+' Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
 
 ###################################################################
-#   Transmit useful data for control (max 999 char)
+#    Initialisation
+###################################################################
+    global targetString, modeString
+    targetString, modeString = 'init', 'init'
+
+    rospy.init_node('coordinator', anonymous=True)
+
+    receiving_freq = 15
+    emission_freq = receiving_freq/fleetSize
+    rate = rospy.Rate(receiving_freq)
+    ser.timeout = 1.5/(receiving_freq)
+
+    compteur = 0
+
+
+
+###################################################################
+#   Transmit useful data for control (max 9999 char)
 # Frame emitted:
 # "#####msgSize_ID1_GPSstring1_poseString1_ID2_GPSstring2_poseString2_ID3_GPSstring3_poseString3_targetString_modeString=====\n"
 ###################################################################
@@ -169,7 +177,7 @@ def run():
 ###################################################################
 
     emission = 0
-    received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
+    received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
 
     while not rospy.is_shutdown():
@@ -187,7 +195,7 @@ def run():
             try:
                 IDboat = int(msgReceived.split('_')[0])
 
-                received[IDboat-1] = msgReceived
+                received[linkDict[IDboat]-1] = msgReceived
             except:
                 pass
 
@@ -196,7 +204,7 @@ def run():
 
 
 
-        if emission%3 == 0:
+        if emission%fleetSize == 0:
             receivedLines = ''
             for line in received:
                 receivedLines += line+'_'
@@ -204,7 +212,7 @@ def run():
             msg = receivedLines+targetString+'_'+modeString
 
             size = str(len(msg)+4)
-            for i in range(len(size),3):
+            for i in range(len(size),4):
                 size = '0'+size
 
             msg = "#####"+size+'_'+msg+"=====\n"
@@ -213,7 +221,7 @@ def run():
             received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
 
 
-            rospy.loginfo("Emission " + str(emission//3))
+            rospy.loginfo("Emission " + str(emission//fleetSize))
 
 
         rate.sleep()

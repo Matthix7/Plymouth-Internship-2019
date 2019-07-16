@@ -11,6 +11,7 @@ from sensor_msgs.msg import Imu
 from numpy import pi, sign
 
 import time
+import os
 
 ###################################################################
 #    Program that allows sending commands from the keyboard
@@ -56,6 +57,7 @@ def run():
     initRudder = 0
     initSail = 80
     keyboardActive = False
+    keyboardWindow = True
 
     rudder = initRudder
     sail = initSail
@@ -92,11 +94,16 @@ def run():
             controlMode.data = "1"
         else:
             controlMode.data = "0"
+            if keyboardWindow == False:
+                os.system("gnome-terminal --  rosrun key_teleop key_teleop.py")
+                keyboardWindow = True
+                timeLastCommand = time.time()
 
         pubControlMode.publish(controlMode)
 
         if (time.time()-timeLastCommand) > 2:
             keyboardActive = False
+            keyboardWindow = False
             rudder = initRudder
             sail = initSail
 
