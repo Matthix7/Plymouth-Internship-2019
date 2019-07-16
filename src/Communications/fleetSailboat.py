@@ -162,7 +162,7 @@ def run():
 
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
-    receiving_freq = 15/fleetSize #Equal to coordinator emission_freq
+    receiving_freq = 1/fleetSize #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
     sleep(5)
@@ -322,7 +322,7 @@ def run():
         msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+posString
 
 #Generating the checkSum message control
-        size = str(len(msg)+4)
+        size = str(len(msg)+5)
         for i in range(len(size),4):
             size = '0'+size
 

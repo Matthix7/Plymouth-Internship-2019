@@ -144,10 +144,10 @@ def run():
     global targetString, modeString
     targetString, modeString = 'init', 'init'
 
-    receiving_freq = 15
+    receiving_freq = 1
     emission_freq = receiving_freq/fleetSize
     rate = rospy.Rate(receiving_freq)
-    ser.timeout = 1.5/(receiving_freq)
+    ser.timeout = 1/(receiving_freq)
 
     compteur = 0
 
@@ -211,7 +211,7 @@ def run():
 
             msg = receivedLines+targetString+'_'+modeString
 
-            size = str(len(msg)+4)
+            size = str(len(msg)+5)
             for i in range(len(size),4):
                 size = '0'+size
 
