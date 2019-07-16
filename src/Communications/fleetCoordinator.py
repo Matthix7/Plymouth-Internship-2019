@@ -219,7 +219,7 @@ def run():
             ser.write(msg)
             rospy.loginfo("Emitted\n|" + msg + '|')
 
-            received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
+            received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
 
             rospy.loginfo("Emission " + str(emission//fleetSize))
