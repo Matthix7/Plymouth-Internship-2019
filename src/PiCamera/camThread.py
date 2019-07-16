@@ -28,7 +28,7 @@ class PiVideoStream:
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
         # Read the camera matrix from calibration file
-        self.calibration_matrix, self.calibration_dist = getCamDistortData('plymouth_internship_2019/src/PiCamera/calibration_data.txt')
+        self.calibration_matrix, self.calibration_dist = getCamDistortData('src/PiCamera/calibration_data.txt')
 
         # initialize the frame and the variable used to indicate
         # if the thread should be stopped
