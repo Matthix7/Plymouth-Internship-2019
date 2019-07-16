@@ -248,6 +248,7 @@ def run():
 
 #    Check message syntax and checkSum
         check, msgReceived = is_valid(line)
+        rospy.loginfo("Received\n|" + msgReceived + '|')
 
         if check:
 
@@ -283,7 +284,7 @@ def run():
                         boatsData[boat][5].theta = float(tmpPos[2])
 
                 except:
-                    rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
+                    rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n====>'+str(sys.exc_info()[1]))
 
                 cursor += 6
 
