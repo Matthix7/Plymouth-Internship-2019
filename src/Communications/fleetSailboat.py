@@ -94,13 +94,14 @@ def run():
     receiving_freq = 6 #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
+    ID1 = -1
     force1 = Float32()
     direction1 = Float32()
     gps1 = String()
     euler1 = Vector3()
     pos1 = Pose2D()
 
-    boatData1 = [force1, direction1, gps1, euler1, pos1]
+    boatData1 = [ID1, force1, direction1, gps1, euler1, pos1]
 
 
     rudder, sail, mode = Float32(), Float32(), Float32()
@@ -163,7 +164,6 @@ def run():
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
 
-    time.sleep(5)
 
 ###################################################################
 #   Transmit useful data to broadcast (max 999 char)
@@ -201,25 +201,21 @@ def run():
     pub_send_u_sail = rospy.Publisher('xbee_send_u_sail', Float32, queue_size = 2)
 
 #    Publishes the data relative to each boat
-    pub_send_wind_force_1 = rospy.Publisher('xbee_send_wind_force_1', Float32, queue_size = 2)
-    pub_send_wind_force_2 = rospy.Publisher('xbee_send_wind_force_2', Float32, queue_size = 2)
-    pub_send_wind_force_3 = rospy.Publisher('xbee_send_wind_force_3', Float32, queue_size = 2)
+# List of publishers, 5 publishers for each boat connected to the network
 
-    pub_send_wind_direction_1 = rospy.Publisher('xbee_send_wind_direction_1', Float32, queue_size = 2)
-    pub_send_wind_direction_2 = rospy.Publisher('xbee_send_wind_direction_2', Float32, queue_size = 2)
-    pub_send_wind_direction_3 = rospy.Publisher('xbee_send_wind_direction_3', Float32, queue_size = 2)
+    boatsPublishers = []
+    for boat in range(fleetSize):
+        pubWindForceName = "xbee_send_wind_force_"+str(boat)
+        pubWindDirName = "xbee_send_wind_direction_"+str(boat)
+        pubGPSName = "xbee_send_gps_"+str(boat)
+        pubEulerName = "xbee_send_euler_"+str(boat)
+        pubPosName = "xbee_send_pos_"+str(boat)
+        boatsPublishers.append([ rospy.Publisher(pubWindForceName, Float32, queue_size = 2),\
+                                 rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
+                                 rospy.Publisher(pubGPSName, String, queue_size = 2),\
+                                 rospy.Publisher(pubEulerName, Vector3, queue_size = 2),\
+                                 rospy.Publisher(pubPosName, Pose2D, queue_size = 2)]
 
-    pub_send_gps_1 = rospy.Publisher('xbee_send_gps_1', String, queue_size = 2)
-    pub_send_gps_2 = rospy.Publisher('xbee_send_gps_2', String, queue_size = 2)
-    pub_send_gps_3 = rospy.Publisher('xbee_send_gps_3', String, queue_size = 2)
-
-    pub_send_euler_1 = rospy.Publisher('xbee_send_euler_1', Vector3, queue_size = 2)
-    pub_send_euler_2 = rospy.Publisher('xbee_send_euler_2', Vector3, queue_size = 2)
-    pub_send_euler_3 = rospy.Publisher('xbee_send_euler_3', Vector3, queue_size = 2)
-
-    pub_send_pos_1 = rospy.Publisher('xbee_send_pos_1', Pose2D, queue_size = 2)
-    pub_send_pos_2 = rospy.Publisher('xbee_send_pos_2', Pose2D, queue_size = 2)
-    pub_send_pos_3 = rospy.Publisher('xbee_send_pos_3', Pose2D, queue_size = 2)
 
 
 
@@ -258,118 +254,76 @@ def run():
             cursor = 0
             try:
                 data = msgReceived.split('_')
-                rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))
+                rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))#Despite message controls, some errors may still occur...
+            except:
+                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
 
-    #Collect the data from boat 1
-
-                if data[cursor] != "ID":
-                    ID1 = data[cursor]
-
-                    force1.data = float(data[cursor+1])
-
-                    direction1.data = float(data[cursor+2])
-
-                    gps1.data = data[cursor+3]
-
-                    rospy.loginfo("TOTO = "+str(data[cursor+3]))
-
-                    tmpEuler = data[cursor+4].split(',')
-                    euler1.x = float(tmpEuler[0])
-                    euler1.y = float(tmpEuler[1])
-                    euler1.z = float(tmpEuler[2])
-
-                    tmpPos = data[cursor+5].split(',')
-                    pos1.x = float(tmpPos[0])
-                    pos1.y = float(tmpPos[1])
-                    pos1.theta = float(tmpPos[2])
-
-                cursor += 6
-
-    #Collect the data from boat 2
+    #Collect the data from boats
+            for boat in range(fleetSize):
 
                 if data[cursor] != "ID":
-                    ID2 = data[cursor]
+                    boatsData[boat][0] = data[cursor]  #ID
 
-                    force2.data = float(data[cursor+1])
+                    boatsData[boat][1].data = float(data[cursor+1]) #Wind force
 
-                    direction2.data = float(data[cursor+2])
+                    boatsData[boat][2].data = float(data[cursor+2]) #Wind direction
 
-                    gps2.data = data[cursor+3]
+                    boatsData[boat][3].data = data[cursor+3] #GPS frame
 
-                    tmpEuler = data[cursor+4].split(',')
-                    euler2.x = float(tmpEuler[0])
-                    euler2.y = float(tmpEuler[1])
-                    euler2.z = float(tmpEuler[2])
+                    tmpEuler = data[cursor+4].split(',')     #Euler angles
+                    boatsData[boat][4].x = float(tmpEuler[0])
+                    boatsData[boat][4].y = float(tmpEuler[1])
+                    boatsData[boat][4].z = float(tmpEuler[2])
 
-                    tmpPos = data[cursor+5].split(',')
-                    pos2.x = float(tmpPos[0])
-                    pos2.y = float(tmpPos[1])
-                    pos2.theta = float(tmpPos[2])
+                    tmpPos = data[cursor+5].split(',')      #Position
+                    boatsData[boat][5].x = float(tmpPos[0])
+                    boatsData[boat][5].y = float(tmpPos[1])
+                    boatsData[boat][5].theta = float(tmpPos[2])
 
-                cursor += 6
-
-    #Collect the data from boat 3
-
-                if data[cursor] != "ID":
-                    ID3 = data[cursor]
-
-                    force3.data = float(data[cursor+1])
-
-                    direction3.data = float(data[cursor+2])
-
-
-                    gps3.data = data[cursor+3]
-
-                    tmpEuler = data[cursor+4].split(',')
-                    euler3.x = float(tmpEuler[0])
-                    euler3.y = float(tmpEuler[1])
-                    euler3.z = float(tmpEuler[2])
-
-                    tmpPos = data[cursor+5].split(',')
-                    pos3.x = float(tmpPos[0])
-                    pos3.y = float(tmpPos[1])
-                    pos3.theta = float(tmpPos[2])
 
                 cursor += 6
 
     #Collect the data from the operator
 
-                targetString = data[cursor]
-                targetData = targetString.split(',')
-                rudder = Float32(data = float(targetData[0]))
-                sail = Float32(data = float(targetData[1]))
+            targetString = data[cursor]
+            targetData = targetString.split(',')
+            rudder = Float32(data = float(targetData[0]))
+            sail = Float32(data = float(targetData[1]))
 
-                mode.data = int(data[cursor+1])
+            mode.data = int(data[cursor+1])
+
+    #Organise data to create a link between topics names and boats IDs
+            boatsData = sorted(boatsData, key = lamda dataList: int(dataList[0]))
+
 
     #Publish the data for internal use
 
-                pub_send_control_mode.publish(mode)
-                pub_send_u_rudder.publish(rudder)
-                pub_send_u_sail.publish(sail)
+            pub_send_control_mode.publish(mode)
+            pub_send_u_rudder.publish(rudder)
+            pub_send_u_sail.publish(sail)
 
-                pub_send_wind_force_1.publish(force1)
-                pub_send_wind_direction_1.publish(direction1)
-                pub_send_gps_1.publish(gps1)
-                pub_send_euler_1.publish(euler1)
-                pub_send_pos_1.publish(pos1)
 
-                pub_send_wind_force_2.publish(force2)
-                pub_send_wind_direction_2.publish(direction2)
-                pub_send_gps_2.publish(gps2)
-                pub_send_euler_2.publish(euler2)
-                pub_send_pos_2.publish(pos2)
 
-                pub_send_wind_force_3.publish(force3)
-                pub_send_wind_direction_3.publish(direction3)
-                pub_send_gps_3.publish(gps3)
-                pub_send_euler_3.publish(euler3)
-                pub_send_pos_3.publish(pos3)
+            pub_send_wind_force_1.publish(force1)
+            pub_send_wind_direction_1.publish(direction1)
+            pub_send_gps_1.publish(gps1)
+            pub_send_euler_1.publish(euler1)
+            pub_send_pos_1.publish(pos1)
 
-#Despite message controls, some errors may still occur...
-            except:
-#                pass
-                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
+            pub_send_wind_force_2.publish(force2)
+            pub_send_wind_direction_2.publish(direction2)
+            pub_send_gps_2.publish(gps2)
+            pub_send_euler_2.publish(euler2)
+            pub_send_pos_2.publish(pos2)
+
+            pub_send_wind_force_3.publish(force3)
+            pub_send_wind_direction_3.publish(direction3)
+            pub_send_gps_3.publish(gps3)
+            pub_send_euler_3.publish(euler3)
+            pub_send_pos_3.publish(pos3)
+
+
 
 
         elif not check:

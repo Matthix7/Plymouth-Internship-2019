@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-##import rospy
+import rospy
+
+from std_msgs.msg import Float32, String
 
 # import the necessary packages
 import time
@@ -19,6 +21,27 @@ from camThread import PiVideoStream
 
 
 def run():
+
+####################    ROS inialisation     #########################
+######################################################################
+
+    rospy.init_node('imageProcessing', anonymous=True)
+
+#    Publishes an array with the headings leading to vertical lines (ie possible boats)
+    pub_send_headings_boats = rospy.Publisher('camera_send_headings_to_boats', String, queue_size = 2)
+    headings_boats_msg = String()
+
+#    Publishes the heading leading to the biggest detected buoy
+    pub_send_heading_buoy = rospy.Publisher('camera_send_heading_buoy', Float32, queue_size = 2)
+    heading_buoy_msg = String()
+
+#    Publishes a list with the headings leading to the detected ArUco codes (April Tags)
+    pub_send_headings_arucos = rospy.Publisher('camera_send_headings_arucos', String, queue_size = 2)
+    headings_arucos_msg = String()
+
+
+###################    Code initialisation    #######################
+####################################################################
 
     t0 = time.time()
     Tframe, T1, T2, T3, T4, T5, T6 = [], [], [], [], [], [], []
@@ -116,9 +139,13 @@ def run():
             headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
         else:
             headingsBoats = None
+        headings_boats_msg.data = str(headingsBoats)
+        pub_send_headings_boats.publish(headings_boats_msg)
         T2.append(time.time()-t2)
 
 ##      Find the buoy in the original cropped image and highlight them in the result image
+##      Check if the color range corresponds to what you look for!
+
         t3 = time.time()
         colorRange = getColorRangeTest() #For test target
 #        colorRange = getColorRange() #For real buoys
@@ -127,8 +154,9 @@ def run():
             xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
             headingBuoy = (xBuoy-resolution[0]/2)*Sf
         else:
-            headingBuoy = None
-#        print("Headings ", headingBuoy)
+            headingBuoy = -999
+        heading_buoy_msg.data = headingBuoy
+        pub_send_heading_buoy.publish(heading_buoy_msg)
         T3.append(time.time()-t3)
 
 ##      Find the April Tags in the original-sized image
@@ -140,7 +168,8 @@ def run():
         for corner in corners:
             print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
             headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
-#        print("Headings ", headingsMarkers)
+        headings_arucos_msg.data = str(headingsMarkers)
+        pub_send_headings_arucos.publish(headings_arucos_msg)
         T4.append(time.time()-t4)
 
 

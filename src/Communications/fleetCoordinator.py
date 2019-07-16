@@ -141,10 +141,8 @@ def run():
                 connected.append(IDboat)
                 rospy.loginfo('|'+msgReceived+'|')
 
-    rospy.loginfo("TOTO="+str(len(connected)))
     ser.write(str(len(connected))+' Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
-    time.sleep(5)
 
 
 ###################################################################
