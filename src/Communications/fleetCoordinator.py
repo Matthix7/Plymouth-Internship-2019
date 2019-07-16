@@ -9,7 +9,7 @@ from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import Imu
 
 import serial
-from time import time
+from time import time, sleep
 
 import pyudev
 
@@ -76,6 +76,7 @@ def run():
 ###################################################################
 #    Look for XBee USB port
 ###################################################################
+    rospy.init_node('coordinator', anonymous=True)
     rospy.loginfo("Looking for XBee...")
 
     context = pyudev.Context()
@@ -136,14 +137,12 @@ def run():
     ser.write(str(fleetSize)+' Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
-
+    sleep(5)
 ###################################################################
 #    Initialisation
 ###################################################################
     global targetString, modeString
     targetString, modeString = 'init', 'init'
-
-    rospy.init_node('coordinator', anonymous=True)
 
     receiving_freq = 15
     emission_freq = receiving_freq/fleetSize

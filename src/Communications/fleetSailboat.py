@@ -165,6 +165,8 @@ def run():
     receiving_freq = 15/fleetSize #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
+    sleep(5)
+
 ###################################################################
 #   Transmit useful data to broadcast (max 999 char)
 # Frame emitted:
