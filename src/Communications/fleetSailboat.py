@@ -148,8 +148,8 @@ def run():
         rospy.sleep(ID*0.2)
         msg = "Hello, I am Boat " + str(ID)
 
-        size = str(len(msg)+4)
-        for i in range(len(size),3):
+        size = str(len(msg)+5)
+        for i in range(len(size),4):
             size = '0'+size
 
         msg = "#####"+size+'_'+msg+"=====\n"
@@ -312,9 +312,9 @@ def run():
 
             for boat in range(fleetSize):
                 for msg_publisher in range(len(boatsPublishers[0])):
-                    rospy.loginfo("Publisher :"+str(boatsPublishers[boat][msg_publisher]))
-                    rospy.loginfo("message :"+str(boatsData[boat][msg_publisher]))
-                    boatsPublishers[boat][msg_publisher].publish(boatsData[boat][msg_publisher])
+                    rospy.loginfo("Publisher :"+str(boatsPublishers[boat][msg_publisher+1]))
+                    rospy.loginfo("message :"+str(boatsData[boat][msg_publisher+1]))
+                    boatsPublishers[boat][msg_publisher].publish(boatsData[boat][msg_publisher+1])
 
 
 
