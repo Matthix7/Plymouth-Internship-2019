@@ -76,6 +76,7 @@ def run():
 ###################################################################
 #    Look for XBee USB port
 ###################################################################
+    rospy.loginfo("Looking for XBee...")
 
     context = pyudev.Context()
     usbPort = 'No XBee found'
@@ -84,7 +85,7 @@ def run():
         if 'ID_VENDOR' in device and device['ID_VENDOR'] == 'FTDI':
             usbPort = device['DEVNAME']
 
-    ser = serial.Serial(usbPort,baudrate=57600, timeout = 0.5)
+    ser = serial.Serial(usbPort,baudrate=57600, timeout = 2)
 
 
 ###################################################################

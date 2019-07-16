@@ -214,7 +214,7 @@ def run():
                                  rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubGPSName, String, queue_size = 2),\
                                  rospy.Publisher(pubEulerName, Vector3, queue_size = 2),\
-                                 rospy.Publisher(pubPosName, Pose2D, queue_size = 2)]
+                                 rospy.Publisher(pubPosName, Pose2D, queue_size = 2)])
 
 
 
