@@ -56,7 +56,7 @@ def is_valid(line):
                 size = int(msg.split('_')[0])
 
                 if size == len(msg):
-                    msg = msg[4:]
+                    msg = msg[5:]
                     return True, msg
                 else:
                     return False, ''
