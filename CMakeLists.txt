@@ -171,6 +171,7 @@ include_directories(
 catkin_install_python(PROGRAMS
     bin/coordinator bin/sailboat bin/testSailboat
     bin/operator bin/fleetCoordinator bin/fleetSailboat
+    bin/imageProcessing
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
