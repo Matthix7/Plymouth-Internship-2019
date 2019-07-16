@@ -217,6 +217,7 @@ def run():
 
             msg = "#####"+size+'_'+msg+"=====\n"
             ser.write(msg)
+            rospy.loginfo("Emitted\n|" + msg + '|')
 
             received = ['ID_nothing_nothing_nothing_nothing_nothing']*3
 

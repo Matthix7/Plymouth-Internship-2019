@@ -156,7 +156,6 @@ def run():
         ser.write(msg)
         fleetInitMessage = ser.readline()
 
-    rospy.loginfo('||'+fleetInitMessage+'||')
     fleetSize = int(fleetInitMessage.split()[0])
     boatsData = [boatData1]*fleetSize
 
@@ -333,6 +332,7 @@ def run():
         rospy.sleep( ID/(fleetSize+1) * ((1./receiving_freq) - processTime))
 
         ser.write(msg)
+        rospy.loginfo("Emitted\n|" + msg + '|')
         emission += 1
         rospy.loginfo("Emission "+str(emission))
 
