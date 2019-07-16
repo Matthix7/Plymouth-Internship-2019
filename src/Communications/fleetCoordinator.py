@@ -142,7 +142,7 @@ def run():
 #    Initialisation
 ###################################################################
     global targetString, modeString
-    targetString, modeString = 'nan', 'nan'
+    targetString, modeString = 'nan, nan', '0'
 
     receiving_freq = 1
     emission_freq = receiving_freq/fleetSize
