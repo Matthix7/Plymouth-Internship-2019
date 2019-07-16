@@ -259,7 +259,7 @@ def run():
                 data_log = "Read\n"
                 for boat in range(fleetSize):
                     data_log += str(data[6*boat:6*(boat+1)])+'\n'
-                data_log += str(data[-2:]
+                data_log += str(data[-2:])
             except:
                 rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
