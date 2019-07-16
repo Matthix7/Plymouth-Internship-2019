@@ -256,7 +256,10 @@ def run():
             cursor = 0
             try:
                 data = msgReceived.split('_')
-                rospy.loginfo("Read\n"+str(data[:6])+'\n'+str(data[6:12])+'\n'+str(data[12:18])+'\n'+str(data[18:20]))#Despite message controls, some errors may still occur...
+                data_log = "Read\n"
+                for boat in range(fleetSize):
+                    data_log += str(data[6*boat:6*(boat+1)])+'\n'
+                data_log += str(data[-2:]
             except:
                 rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
