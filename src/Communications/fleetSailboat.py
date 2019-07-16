@@ -312,6 +312,8 @@ def run():
 
             for boat in range(fleetSize):
                 for msg_publisher in range(len(boatsPublishers[0])):
+                    rospy.loginfo("Publisher :"+str(boatsPublishers[boat][msg_publisher])
+                    rospy.loginfo("message :"+str(boatsData[boat][msg_publisher])
                     boatsPublishers[boat][msg_publisher].publish(boatsData[boat][msg_publisher])
 
 
