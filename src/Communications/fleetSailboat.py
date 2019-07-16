@@ -296,7 +296,7 @@ def run():
             mode.data = int(data[cursor+1])
 
     #Organise data to create a link between topics names and boats IDs
-            boatsData = sorted(boatsData, key = lamda dataList: int(dataList[0]))
+            boatsData = sorted(boatsData, key = lambda dataList: int(dataList[0]))
 
 
     #Publish the data for internal use
