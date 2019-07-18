@@ -342,11 +342,11 @@ def run():
 
                         IDboat = data[cursor]  #ID
 
-                        boatsPublishers[boat][0].publish(Float32(data=float(data[cursor+1])) #Wind force
+                        boatsPublishers[boat][0].publish(Float32(data=float(data[cursor+1]))) #Wind force
 
-                        boatsPublishers[boat][1].publish(Float32(data=float(data[cursor+2])) #Wind direction
+                        boatsPublishers[boat][1].publish(Float32(data=float(data[cursor+2]))) #Wind direction
 
-                        boatsPublishers[boat][2].publish(String(data=data[cursor+3]) #GPS frame
+                        boatsPublishers[boat][2].publish(String(data=data[cursor+3])) #GPS frame
 
                         tmpEuler = data[cursor+4].split(',')  #Euler angles
                         boatsPublishers[boat][3].publish( Vector3( x=float(tmpEuler[0]), y=float(tmpEuler[1]), z=float(tmpEuler[2]) ) )
