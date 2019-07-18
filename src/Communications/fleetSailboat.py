@@ -209,6 +209,7 @@ def run():
     fleetSize = int(fleetInitMessage.split('_')[0])
     fleetIDs = eval(fleetInitMessage.split('_')[1])
     dictLink = {fleetIDs[i]:(i+1) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
+    rospy.loginfo("DICT = "+str(dictLink))
 
     #Print for check
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
