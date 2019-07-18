@@ -138,7 +138,6 @@ def run():
 
     line = 'init' #Will store the string from serial read, ie coming from XBee
 
-    dictLink = {i:i for i in range(30)}
 
     #Initialisationof the ROS node, endPoint refers to XBee network structure
     rospy.init_node('endPoint', anonymous=True)
@@ -208,7 +207,7 @@ def run():
     #Every sailboat is connected, Coordinator sent the message
     fleetSize = int(fleetInitMessage.split('_')[0])
     fleetIDs = eval(fleetInitMessage.split('_')[1])
-    dictLink = {fleetIDs[i]:(i+1) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
+    dictLink = {fleetIDs[i]:(i) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
     rospy.loginfo("DICT = "+str(dictLink))
 
     #Print for check
@@ -262,11 +261,11 @@ def run():
 
     boatsPublishers = []
     for boat in range(fleetSize):
-        pubWindForceName = "xbee_send_wind_force_"+str(boat+1)
-        pubWindDirName = "xbee_send_wind_direction_"+str(boat+1)
-        pubGPSName = "xbee_send_gps_"+str(boat+1)
-        pubEulerName = "xbee_send_euler_"+str(boat+1)
-        pubPosName = "xbee_send_pos_"+str(boat+1)
+        pubWindForceName = "xbee_send_wind_force_"+str(connected[boat])
+        pubWindDirName = "xbee_send_wind_direction_"+str(connected[boat])
+        pubGPSName = "xbee_send_gps_"+str(connected[boat])
+        pubEulerName = "xbee_send_euler_"+str(connected[boat])
+        pubPosName = "xbee_send_pos_"+str(connected[boat])
         boatsPublishers.append([ rospy.Publisher(pubWindForceName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubGPSName, String, queue_size = 2),\
