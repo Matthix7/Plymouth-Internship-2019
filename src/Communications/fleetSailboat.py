@@ -261,11 +261,11 @@ def run():
 
     boatsPublishers = []
     for boat in range(fleetSize):
-        pubWindForceName = "xbee_send_wind_force_"+str(connected[boat])
-        pubWindDirName = "xbee_send_wind_direction_"+str(connected[boat])
-        pubGPSName = "xbee_send_gps_"+str(connected[boat])
-        pubEulerName = "xbee_send_euler_"+str(connected[boat])
-        pubPosName = "xbee_send_pos_"+str(connected[boat])
+        pubWindForceName = "xbee_send_wind_force_"+str(fleetIDs[boat])
+        pubWindDirName = "xbee_send_wind_direction_"+str(fleetIDs[boat])
+        pubGPSName = "xbee_send_gps_"+str(fleetIDs[boat])
+        pubEulerName = "xbee_send_euler_"+str(fleetIDs[boat])
+        pubPosName = "xbee_send_pos_"+str(fleetIDs[boat])
         boatsPublishers.append([ rospy.Publisher(pubWindForceName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubGPSName, String, queue_size = 2),\
