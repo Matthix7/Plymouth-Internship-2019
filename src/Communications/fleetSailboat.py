@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 10. #Equal to coordinator receiving_freq
+    emission_freq = 5. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -143,15 +143,6 @@ def run():
     #Initialisationof the ROS node, endPoint refers to XBee network structure
     rospy.init_node('endPoint', anonymous=True)
 
-    #The data for each boat in the network will be stored in this kind of variables
-    ID1 = -1
-    force1 = Float32()
-    direction1 = Float32()
-    gps1 = String()
-    euler1 = Vector3()
-    pos1 = Pose2D()
-
-    boatData1 = [ID1, force1, direction1, gps1, euler1, pos1] #For one boat
 
     # Commands coming from the operator (for keyboard control and other control modes)
     rudder, sail, mode = Float32(data = 0.), Float32(data = np.pi*2), Float32(data=0.)
@@ -218,9 +209,6 @@ def run():
     fleetSize = int(fleetInitMessage.split('_')[0])
     fleetIDs = eval(fleetInitMessage.split('_')[1])
     dictLink = {fleetIDs[i]:(i+1) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
-
-    #Create the data stroing structure
-    boatsData = [boatData1]*fleetSize
 
     #Print for check
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
@@ -334,15 +322,15 @@ def run():
             cursor = 0
 
             #Organise the data by separating the data from each boat and the data from the operator
-            try:
-                data = msgReceived.split('_')
-                data_log = "Read\n"
-                for boat in range(fleetSize):
-                    data_log += str(data[6*boat:6*(boat+1)])+'\n'
-                data_log += str(data[-2:])
-                rospy.loginfo(data_log)
-            except:
-                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
+#            try:
+            data = msgReceived.split('_')
+#                data_log = "Read\n"
+#                for boat in range(fleetSize):
+#                    data_log += str(data[6*boat:6*(boat+1)])+'\n'
+#                data_log += str(data[-2:])
+#                rospy.loginfo(data_log)
+#            except:
+#                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
 
 
             #Collect the data from boats and store it the corresponding variables
@@ -352,23 +340,19 @@ def run():
                     #For one boat
                     if data[cursor] != "ID":
 
-                        boatsData[boat][0] = data[cursor]  #ID
+                        IDboat = data[cursor]  #ID
 
-                        boatsData[boat][1].data = float(data[cursor+1]) #Wind force
+                        boatsPublishers[boat][0].publish(Float32(data=float(data[cursor+1])) #Wind force
 
-                        boatsData[boat][2].data = float(data[cursor+2]) #Wind direction
+                        boatsPublishers[boat][1].publish(Float32(data=float(data[cursor+2])) #Wind direction
 
-                        boatsData[boat][3].data = data[cursor+3] #GPS frame
+                        boatsPublishers[boat][2].publish(String(data=data[cursor+3]) #GPS frame
 
-                        tmpEuler = data[cursor+4].split(',')     #Euler angles
-                        boatsData[boat][4].x = float(tmpEuler[0])
-                        boatsData[boat][4].y = float(tmpEuler[1])
-                        boatsData[boat][4].z = float(tmpEuler[2])
+                        tmpEuler = data[cursor+4].split(',')  #Euler angles
+                        boatsPublishers[boat][3].publish( Vector3( x=float(tmpEuler[0]), y=float(tmpEuler[1]), z=float(tmpEuler[2]) ) )
 
-                        tmpPos = data[cursor+5].split(',')       #Position
-                        boatsData[boat][5].x = float(tmpPos[0])
-                        boatsData[boat][5].y = float(tmpPos[1])
-                        boatsData[boat][5].theta = float(tmpPos[2])
+                        tmpPos = data[cursor+5].split(',')    #Position
+                        boatsPublishers[boat][4].publish( Pose2D( x=float(tmpPos[0]), y=float(tmpPos[1]), theta=float(tmpPos[2]) ) )
 
 
                 except:
@@ -399,10 +383,6 @@ def run():
             pub_send_control_mode.publish(mode)
             pub_send_u_rudder.publish(rudder)
             pub_send_u_sail.publish(sail)
-
-            for boat in range(fleetSize):
-                for msg_publisher in range(len(boatsPublishers[0])):
-                    boatsPublishers[boat][msg_publisher].publish(boatsData[boat][msg_publisher+1])
 
 
 
