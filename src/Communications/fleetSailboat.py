@@ -142,7 +142,8 @@ def run():
     #Initialisationof the ROS node, endPoint refers to XBee network structure
     rospy.init_node('endPoint', anonymous=True)
 
-
+    # Data coming from the sailboats
+    windForceData, windDirectionData, GPSdata, eulerAnglesData, posData = Float32(), Float32(), String(), Vector3(), Pose2D()
     # Commands coming from the operator (for keyboard control and other control modes)
     rudder, sail, mode = Float32(data = 0.), Float32(data = np.pi*2), Float32(data=0.)
 
@@ -342,17 +343,31 @@ def run():
 
                         IDboat = int(data[cursor])  #ID
 
-                        boatsPublishers[dictLink[IDboat]][0].publish(Float32(data=float(data[cursor+1]))) #Wind force
+                        windForceData.data = float(data[cursor+1])
 
-                        boatsPublishers[dictLink[IDboat]][1].publish(Float32(data=float(data[cursor+2]))) #Wind direction
+                        windDirectionData.data = float(data[cursor+2])
 
-                        boatsPublishers[dictLink[IDboat]][2].publish(String(data=data[cursor+3])) #GPS frame
+                        GPSdata.data = data[cursor+3]
 
-                        tmpEuler = data[cursor+4].split(',')  #Euler angles
-                        boatsPublishers[dictLink[IDboat]][3].publish( Vector3( x=float(tmpEuler[0]), y=float(tmpEuler[1]), z=float(tmpEuler[2]) ) )
+                        tmpEuler = data[cursor+4].split(',')
+                        eulerAnglesData.x = float(tmpEuler[0])
+                        eulerAnglesData.y = float(tmpEuler[1])
+                        eulerAnglesData.z = float(tmpEuler[2])
 
-                        tmpPos = data[cursor+5].split(',')    #Position
-                        boatsPublishers[dictLink[IDboat]][4].publish( Pose2D( x=float(tmpPos[0]), y=float(tmpPos[1]), theta=float(tmpPos[2]) ) )
+                        tmpPos = data[cursor+5].split(',')
+                        posData.x = float(tmpPos[0])
+                        posData.y = float(tmpPos[1])
+                        posData.theta = float(tmpPos[2])
+
+                        boatsPublishers[dictLink[IDboat]][0].publish(windForceData) #Wind force
+
+                        boatsPublishers[dictLink[IDboat]][1].publish(windDirectionData) #Wind direction
+
+                        boatsPublishers[dictLink[IDboat]][2].publish(GPSdata) #GPS frame
+
+                        boatsPublishers[dictLink[IDboat]][3].publish(eulerAnglesData)  #Euler angles
+
+                        boatsPublishers[dictLink[IDboat]][4].publish(posData)  #Position
 
 
                 except:
