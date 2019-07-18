@@ -192,7 +192,7 @@ def run():
     global targetString, modeString
     targetString, modeString = 'nan, nan', '0'
 
-    receiving_freq = 1 #Set the speed of the transmission loops
+    receiving_freq = 0.5 #Set the speed of the transmission loops
     emission_freq = receiving_freq/fleetSize #Frequency of emission for the Coordinator
     rate = rospy.Rate(receiving_freq)
     ser.timeout = 1/(receiving_freq)

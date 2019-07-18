@@ -219,7 +219,7 @@ def run():
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
     #Tell the frequency with which the Coordinator sends messages
-    receiving_freq = 1/fleetSize #Equal to coordinator emission_freq
+    receiving_freq = 0.5/fleetSize #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
     sleep(5)
@@ -265,11 +265,11 @@ def run():
 
     boatsPublishers = []
     for boat in range(fleetSize):
-        pubWindForceName = "xbee_send_wind_force_"+str(boat)
-        pubWindDirName = "xbee_send_wind_direction_"+str(boat)
-        pubGPSName = "xbee_send_gps_"+str(boat)
-        pubEulerName = "xbee_send_euler_"+str(boat)
-        pubPosName = "xbee_send_pos_"+str(boat)
+        pubWindForceName = "xbee_send_wind_force_"+str(boat+1)
+        pubWindDirName = "xbee_send_wind_direction_"+str(boat+1)
+        pubGPSName = "xbee_send_gps_"+str(boat+1)
+        pubEulerName = "xbee_send_euler_"+str(boat+1)
+        pubPosName = "xbee_send_pos_"+str(boat+1)
         boatsPublishers.append([ rospy.Publisher(pubWindForceName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubGPSName, String, queue_size = 2),\

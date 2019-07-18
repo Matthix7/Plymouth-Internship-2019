@@ -55,14 +55,14 @@ def run():
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
     initRudder = 0
-    initSail = 80
+    initSail = 2*pi
     keyboardActive = False
     keyboardWindow = True
 
     rudder = initRudder
     sail = initSail
     sensibilite1 = pi/100
-    sensibilite2 = 1
+    sensibilite2 = pi/50
 
     timeLastCommand = time.time()
 
