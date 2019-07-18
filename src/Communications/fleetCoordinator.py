@@ -219,8 +219,8 @@ def run():
 # Transmission Loop
 ###################################################################################################
 
-    #For statistics
-    emission = 0
+    #For statistics and synchronisation
+    emission = -1
 
     #Data storing structure
     received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize

@@ -429,7 +429,9 @@ def run():
         processTime = time() - loopTime
 
         #Sleep while others are talking
-        rospy.sleep((dictLink[ID]-1)/emission_freq - processTime)
+        rospy.sleep((dictLink[ID]-1)/emission_freq)
+        rospy.loginfo("processTime = "+str(processTime))
+        rospy.loginfo("sleepTime = "+str((dictLink[ID]-1)/emission_freq))
 
         #Emit the message
         ser.write(msg)
