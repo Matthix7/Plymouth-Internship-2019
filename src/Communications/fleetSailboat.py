@@ -219,7 +219,7 @@ def run():
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
 
     #Tell the frequency with which the Coordinator sends messages
-    receiving_freq = 0.5/fleetSize #Equal to coordinator emission_freq
+    receiving_freq = 3/fleetSize #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
     sleep(5)

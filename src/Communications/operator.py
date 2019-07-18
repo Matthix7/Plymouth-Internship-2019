@@ -96,6 +96,8 @@ def run():
             controlMode.data = "0"
             if keyboardWindow == False:
                 os.system("gnome-terminal --  rosrun key_teleop key_teleop.py")
+                rudder = initRudder
+                sail = initSail
                 keyboardWindow = True
                 timeLastCommand = time.time()
 
