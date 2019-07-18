@@ -179,7 +179,7 @@ def run():
     #link each ID to a minimal line number in the data storing structure
     linkDict = {connected[i]:i for i in range(fleetSize)}
 
-    ser.write(str(fleetSize)+','+str(connected)+',Connected'+ '\n')
+    ser.write(str(fleetSize)+'_'+str(connected)+'_Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
     sleep(5)

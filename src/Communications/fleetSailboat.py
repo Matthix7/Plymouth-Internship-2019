@@ -212,8 +212,8 @@ def run():
         fleetInitMessage = ser.readline()
 
     #Every sailboat is connected, Coordinator sent the message
-    fleetSize = int(fleetInitMessage.split(',')[0])
-    fleetIDs = eval(fleetInitMessage.split(',')[1])
+    fleetSize = int(fleetInitMessage.split('_')[0])
+    fleetIDs = eval(fleetInitMessage.split('_')[1])
     dictLink = {fleetIDs[i]:(i+1) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
 
     #Create the data stroing structure
