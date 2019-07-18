@@ -382,8 +382,8 @@ def run():
 
             targetString = data[cursor]
             targetData = targetString.split(',')
-            rudder.data = float(targetData[0]))
-            sail.data = float(targetData[1]))
+            rudder.data = float(targetData[0])
+            sail.data = float(targetData[1])
 
             mode.data = int(data[cursor+1])
 
