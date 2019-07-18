@@ -342,17 +342,17 @@ def run():
 
                         IDboat = data[cursor]  #ID
 
-                        boatsPublishers[boat][0].publish(Float32(data=float(data[cursor+1]))) #Wind force
+                        boatsPublishers[dictLink[IDboat]][0].publish(Float32(data=float(data[cursor+1]))) #Wind force
 
-                        boatsPublishers[boat][1].publish(Float32(data=float(data[cursor+2]))) #Wind direction
+                        boatsPublishers[dictLink[IDboat]][1].publish(Float32(data=float(data[cursor+2]))) #Wind direction
 
-                        boatsPublishers[boat][2].publish(String(data=data[cursor+3])) #GPS frame
+                        boatsPublishers[dictLink[IDboat]][2].publish(String(data=data[cursor+3])) #GPS frame
 
                         tmpEuler = data[cursor+4].split(',')  #Euler angles
-                        boatsPublishers[boat][3].publish( Vector3( x=float(tmpEuler[0]), y=float(tmpEuler[1]), z=float(tmpEuler[2]) ) )
+                        boatsPublishers[dictLink[IDboat]][3].publish( Vector3( x=float(tmpEuler[0]), y=float(tmpEuler[1]), z=float(tmpEuler[2]) ) )
 
                         tmpPos = data[cursor+5].split(',')    #Position
-                        boatsPublishers[boat][4].publish( Pose2D( x=float(tmpPos[0]), y=float(tmpPos[1]), theta=float(tmpPos[2]) ) )
+                        boatsPublishers[dictLink[IDboat]][4].publish( Pose2D( x=float(tmpPos[0]), y=float(tmpPos[1]), theta=float(tmpPos[2]) ) )
 
 
                 except:
@@ -375,7 +375,6 @@ def run():
             #By doing this, you can be sure that the data relative to one boat
             #will always be published in the same publishers, allowing therefore
             #to keep a track of each boat.
-            boatsData = sorted(boatsData, key = lambda dataList: int(dataList[0]))
 
 
             #Publish the data for internal use (controllers, kalman filters, ...)
