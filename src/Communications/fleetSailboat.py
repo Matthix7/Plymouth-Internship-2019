@@ -127,6 +127,8 @@ def is_valid(line):
 
 def run():
 
+    emission_freq = 0.3 #Equal to coordinator receiving_freq
+
 ###################################################################################################
 #    Initialisation
 ###################################################################################################
@@ -224,7 +226,7 @@ def run():
     rospy.loginfo("Other sailboats are "+str(fleetIDs))
 
     #Tell the frequency with which the Coordinator sends messages
-    receiving_freq = 3/fleetSize #Equal to coordinator emission_freq
+    receiving_freq = emission_freq/fleetSize #Equal to coordinator emission_freq
     rate = rospy.Rate(receiving_freq)
 
     sleep(5)
