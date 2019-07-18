@@ -135,6 +135,8 @@ def run():
 
     line = 'init' #Will store the string from serial read, ie coming from XBee
 
+    dictLink = {i:i for i in range(30)}
+
     #Initialisationof the ROS node, endPoint refers to XBee network structure
     rospy.init_node('endPoint', anonymous=True)
 
@@ -211,12 +213,15 @@ def run():
 
     #Every sailboat is connected, Coordinator sent the message
     fleetSize = int(fleetInitMessage.split()[0])
+    fleetIDs = eval(fleetInitMessage.split()[1])
+    dictLink = {fleetIDs[i]:(i+1) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
 
     #Create the data stroing structure
     boatsData = [boatData1]*fleetSize
 
     #Print for check
     rospy.loginfo("Connected to Coordinator, with "+str(fleetSize-1)+" other sailboats.")
+    rospy.loginfo("Other sailboats are "+str(fleetIDs))
 
     #Tell the frequency with which the Coordinator sends messages
     receiving_freq = 3/fleetSize #Equal to coordinator emission_freq
@@ -343,6 +348,7 @@ def run():
                 try:
                     #For one boat
                     if data[cursor] != "ID":
+
                         boatsData[boat][0] = data[cursor]  #ID
 
                         boatsData[boat][1].data = float(data[cursor+1]) #Wind force
@@ -360,6 +366,7 @@ def run():
                         boatsData[boat][5].x = float(tmpPos[0])
                         boatsData[boat][5].y = float(tmpPos[1])
                         boatsData[boat][5].theta = float(tmpPos[2])
+
 
                 except:
                     rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n====>'+str(sys.exc_info()[1]))
@@ -419,8 +426,8 @@ def run():
 
         processTime = time() - loopTime
 
-        #Sleep while others are talking ################################## CANT'T USE ID !!!!!!!!!!!!! TO FIX
-        rospy.sleep( ID/(fleetSize+1) * ((1./receiving_freq) - processTime))
+        #Sleep while others are talking
+        rospy.sleep( dictLink[ID]/(fleetSize+1) * ((1./receiving_freq) - processTime))
 
         #Emit the message
         ser.write(msg)
