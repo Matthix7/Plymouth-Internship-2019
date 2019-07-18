@@ -341,7 +341,7 @@ def run():
                     #For one boat
                     if data[cursor] != "ID":
 
-                        IDboat = data[cursor]  #ID
+                        IDboat = int(data[cursor])  #ID
 
                         boatsPublishers[dictLink[IDboat]][0].publish(Float32(data=float(data[cursor+1]))) #Wind force
 
