@@ -54,6 +54,7 @@ from geometry_msgs.msg import Pose2D, Vector3
 
 import serial
 from time import time, sleep
+import numpy as np
 
 import pyudev
 import sys
@@ -127,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 5. #Equal to coordinator receiving_freq
+    emission_freq = 10. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -153,7 +154,7 @@ def run():
     boatData1 = [ID1, force1, direction1, gps1, euler1, pos1] #For one boat
 
     # Commands coming from the operator (for keyboard control and other control modes)
-    rudder, sail, mode = Float32(), Float32(), Float32()
+    rudder, sail, mode = Float32(data = 0.), Float32(data = np.pi*2), Float32(data=0.)
 
 
 ###################################################################################################
@@ -381,8 +382,8 @@ def run():
 
             targetString = data[cursor]
             targetData = targetString.split(',')
-            rudder = Float32(data = float(targetData[0]))
-            sail = Float32(data = float(targetData[1]))
+            rudder.data = float(targetData[0]))
+            sail.data = float(targetData[1]))
 
             mode.data = int(data[cursor+1])
 
