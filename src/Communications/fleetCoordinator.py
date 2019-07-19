@@ -111,7 +111,7 @@ def is_valid(line):
 
 def run():
     expected_fleet_size = 2
-    receiving_freq = 5. #Set the speed of the transmission loops
+    receiving_freq = 3. #Set the speed of the transmission loops
 
 ###################################################################################################
 #    Look for XBee USB port, to avoid conflicts with other USB devices
@@ -196,7 +196,7 @@ def run():
 
     emission_freq = receiving_freq/fleetSize #Frequency of emission for the Coordinator
     rate = rospy.Rate(receiving_freq)
-    ser.timeout = 1/(receiving_freq)
+    ser.timeout = 0.1
 
     compteur = 0
 
