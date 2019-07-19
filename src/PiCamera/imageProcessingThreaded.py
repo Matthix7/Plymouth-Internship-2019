@@ -89,7 +89,7 @@ def run():
 #####################################################################
 #    Running with the camera
 
-    vs = PiVideoStream().start()
+    vs = PiVideoStream(record = True).start()
     time.sleep(2)
 
     Sf, resolution = vs.getScaleFactor()

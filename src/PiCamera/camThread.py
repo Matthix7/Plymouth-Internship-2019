@@ -15,7 +15,7 @@ from numpy import array, tan
 from chessboard_calibration import getCamDistortData
 
 class PiVideoStream:
-    def __init__(self, resolution=(640, 480), framerate=15, mode = 'sports'):
+    def __init__(self, resolution=(640, 480), framerate=15, mode = 'sports', record = False):
         # initialize the camera and stream
         self.camera = PiCamera()
         self.camera.resolution = resolution
@@ -38,6 +38,13 @@ class PiVideoStream:
         # allow the camera to warmup
         time.sleep(0.1)
 
+        self.record = record
+        if record:
+            # Define the codec and create VideoWriter object
+            self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.out = cv2.VideoWriter('missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',fourcc, framerate, resolution)
+
+
     def start(self):
         # start the thread to read frames from the video stream
         Thread(target=self.update, args=()).start()
@@ -46,6 +53,9 @@ class PiVideoStream:
     def update(self):
         # keep looping infinitely until the thread is stopped
         for f in self.stream:
+            if self.record:
+                self.out.write(f.array)
+
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = cv2.undistort(f.array, self.calibration_matrix, self.calibration_dist, None)
@@ -57,6 +67,8 @@ class PiVideoStream:
                 self.stream.close()
                 self.rawCapture.close()
                 self.camera.close()
+                if self.record:
+                    self.out.release()
                 return
 
     def read(self):
