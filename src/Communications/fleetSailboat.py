@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 20. #Equal to coordinator receiving_freq
+    emission_freq = 1. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -456,7 +456,9 @@ def run():
 
     #print the statistics
     rospy.loginfo("End mission\n")
+    rospy.loginfo("Emitted "+str(emission))
     rospy.loginfo("Received "+str(compteur))
+
 
 
 

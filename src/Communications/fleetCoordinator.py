@@ -111,7 +111,7 @@ def is_valid(line):
 
 def run():
     expected_fleet_size = 1
-    receiving_freq = 20. #Set the speed of the transmission loops
+    receiving_freq = 1. #Set the speed of the transmission loops
 
 ###################################################################################################
 #    Look for XBee USB port, to avoid conflicts with other USB devices
@@ -317,6 +317,7 @@ def run():
     ser.write('#####**********=====\n')
     ser.write('#####**********=====\n')
 
+    rospy.loginfo("Emitted " + str(emission//fleetSize))
     rospy.loginfo("Received "+str(compteur-2))
 
 
