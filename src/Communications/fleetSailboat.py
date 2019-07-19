@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 10. #Equal to coordinator receiving_freq
+    emission_freq = 20. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -309,7 +309,7 @@ def run():
         while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
         #Message begins
-        loopTime = time()
+#        loopTime = time()
 
         while c != '=' and not rospy.is_shutdown():
             line += c
@@ -329,11 +329,11 @@ def run():
 
             data = msgReceived.split('_')
 
-            data_log = "Read\n"
-            for boat in range(fleetSize):
-                data_log += str(data[6*boat:6*(boat+1)])+'\n'
-            data_log += str(data[-2:])
-            rospy.loginfo(data_log)
+#            data_log = "Read\n"
+#            for boat in range(fleetSize):
+#                data_log += str(data[6*boat:6*(boat+1)])+'\n'
+#            data_log += str(data[-2:])
+#            rospy.loginfo(data_log)
 
 
             #Collect the data from boats and store it the corresponding variables
@@ -422,19 +422,19 @@ def run():
 
         msg = "#####"+size+'_'+msg+"=====\n"
 
-        processTime = time() - loopTime
+#        processTime = time() - loopTime
 
         #Sleep while others are talking
         rospy.sleep(dictLink[ID]/emission_freq)
-        rospy.loginfo("processTime = "+str(processTime))
-        rospy.loginfo("sleepTime = "+str(dictLink[ID]/emission_freq))
+#        rospy.loginfo("processTime = "+str(processTime))
+#        rospy.loginfo("sleepTime = "+str(dictLink[ID]/emission_freq))
 
         #Emit the message
         ser.write(msg)
 
-        rospy.loginfo("Emitted\n|" + msg + '|')
+#        rospy.loginfo("Emitted\n|" + msg + '|')
         emission += 1
-        rospy.loginfo("Emission "+str(emission))
+#        rospy.loginfo("Emission "+str(emission))
 
         #Clean the line to check wether it corresponds to the shutdown signal.
         line = line.replace('#','')
