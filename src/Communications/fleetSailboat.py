@@ -293,7 +293,7 @@ def run():
         #Re-initialise variables used in the loop to avoid communicating outdated data if one other boat is disconnected.
         c = ''
         line = ''
-        loopTime = time()
+
 
         windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "-999", "-999", "nothing", "-999,-999,-999", "-999,-999,-999"
 
@@ -308,6 +308,9 @@ def run():
 
         while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
+        #Message begins
+        loopTime = time()
+
         while c != '=' and not rospy.is_shutdown():
             line += c
             c = ser.read(1)
@@ -424,9 +427,9 @@ def run():
         processTime = time() - loopTime
 
         #Sleep while others are talking
-        rospy.sleep((dictLink[ID]-1)/emission_freq)
+        rospy.sleep(dictLink[ID]/emission_freq)
         rospy.loginfo("processTime = "+str(processTime))
-        rospy.loginfo("sleepTime = "+str((dictLink[ID])/emission_freq))
+        rospy.loginfo("sleepTime = "+str(dictLink[ID]/emission_freq))
 
         #Emit the message
         ser.write(msg)
