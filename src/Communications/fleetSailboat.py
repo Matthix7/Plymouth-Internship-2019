@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 10. #Equal to coordinator receiving_freq
+    emission_freq = 6. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -326,15 +326,14 @@ def run():
             cursor = 0
 
             #Organise the data by separating the data from each boat and the data from the operator
-#            try:
+
             data = msgReceived.split('_')
-#                data_log = "Read\n"
-#                for boat in range(fleetSize):
-#                    data_log += str(data[6*boat:6*(boat+1)])+'\n'
-#                data_log += str(data[-2:])
-#                rospy.loginfo(data_log)
-#            except:
-#                rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n'+str(sys.exc_info()[1])+"\noccured.")
+
+            data_log = "Read\n"
+            for boat in range(fleetSize):
+                data_log += str(data[6*boat:6*(boat+1)])+'\n'
+            data_log += str(data[-2:])
+            rospy.loginfo(data_log)
 
 
             #Collect the data from boats and store it the corresponding variables
