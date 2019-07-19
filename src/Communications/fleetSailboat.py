@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 8. #Equal to coordinator receiving_freq
+    emission_freq = 7. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
@@ -139,7 +139,7 @@ def run():
     line = 'init' #Will store the string from serial read, ie coming from XBee
 
 
-    #Initialisationof the ROS node, endPoint refers to XBee network structure
+    #Initialisation of the ROS node, endPoint refers to XBee network structure
     rospy.init_node('endPoint', anonymous=True)
 
     # Data coming from the sailboats
@@ -411,7 +411,6 @@ def run():
 # Frame emitted:
 # "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_posString=====\n"
 ####################################################################################################
-
 
         #Creating the core message
         msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+posString
