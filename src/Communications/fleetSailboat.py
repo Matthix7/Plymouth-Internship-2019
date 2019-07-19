@@ -128,7 +128,7 @@ def is_valid(line):
 
 def run():
 
-    emission_freq = 7. #Equal to coordinator receiving_freq
+    emission_freq = 10. #Equal to coordinator receiving_freq
 
 ###################################################################################################
 #    Initialisation
