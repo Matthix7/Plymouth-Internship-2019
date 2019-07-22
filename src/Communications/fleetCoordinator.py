@@ -75,7 +75,7 @@ def is_valid(line):
     a = (len(line) > 2)
     if a:
         b = (line[0] == '#')
-        c = (line[-2] == '=')
+        c = (line[-1] == '=')
 
         if b and c:
             msg = line[0:-1]
@@ -110,7 +110,7 @@ def is_valid(line):
 
 
 def run():
-    expected_fleet_size = 2
+    expected_fleet_size = 1
     receiving_freq = 20. #Set the speed of the transmission loops
 
 ###################################################################################################
@@ -241,12 +241,12 @@ def run():
         while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
             c = ser.read(1)
 
-        while c != '=' and not rospy.is_shutdown():
+        while c != '=' and (time()-loopTime)<(1/emission_freq)and not rospy.is_shutdown():
             line += c
             c = ser.read(1)
         line += c
 
-#        rospy.loginfo(line)
+#        rospy.loginfo('Line:\n|'+line+'|')
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)
@@ -255,16 +255,13 @@ def run():
 #            rospy.loginfo(msgReceived)
             compteur += 1
 
-            try:
-                #Organise the incoming data in the storing structure
-                IDboat = int(msgReceived.split('_')[0])
-                received[linkDict[IDboat]-1] = msgReceived
+            #Organise the incoming data in the storing structure
+            IDboat = int(msgReceived.split('_')[0])
+            received[linkDict[IDboat]-1] = msgReceived
 
-            except:
-                pass
 
         if not check:
-            rospy.loginfo("Could not read\n"+line)
+            rospy.loginfo("Could not read\n|"+line+'|')
 
 
 

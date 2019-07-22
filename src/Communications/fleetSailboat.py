@@ -201,7 +201,7 @@ def run():
         for i in range(len(size),4):
             size = '0'+size
 
-        msg = "#####"+size+'_'+msg+"=====\n"
+        msg = "#####"+size+'_'+msg+"====="
         ser.write(msg)
         fleetInitMessage = ser.readline()
 
