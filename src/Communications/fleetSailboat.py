@@ -293,6 +293,7 @@ def run():
         #Re-initialise variables used in the loop to avoid communicating outdated data if one other boat is disconnected.
         c = ''
         line = ''
+        loopTime = time()
 
 
         windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "-999", "-999", "nothing", "-999,-999,-999", "-999,-999,-999"
@@ -306,14 +307,13 @@ def run():
         # Read what is in the buffer, start and stop with specific signals.
         # More reliable than ser.readline() for big message.
 
-        while c != '#' and not rospy.is_shutdown():
+        while c != '#' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
             c = ser.read(1)
-#        loopTime = time()
+        msgTime = time()
 
-        while c != '=' and not rospy.is_shutdown():
-            line += c
+        while c != '=' and (time()-msgTime)<(1/receiving_freq) and not rospy.is_shutdown():
             c = ser.read(1)
-        line += c
+            line += c
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)
@@ -426,7 +426,6 @@ def run():
 
         msg = "#####"+size+'_'+msg+"=====\n"
 
-#        processTime = time() - loopTime
 
         #Sleep while others are talking
         rospy.sleep(dictLink[ID]/emission_freq)
