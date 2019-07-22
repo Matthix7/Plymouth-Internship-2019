@@ -255,7 +255,7 @@ def run():
                 line += c
 
 
-        if c != '#' or "Hello" in line:
+        if "Hello" in line:
             continue
 
 #        rospy.loginfo('Line:\n|'+line+'|')
