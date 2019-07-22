@@ -225,7 +225,7 @@ def run():
     #Data storing structure
     received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
-
+    loopTime = time()
     while not rospy.is_shutdown():
         emission += 1
 
@@ -236,7 +236,15 @@ def run():
 ####################################################################################################
 
         #If available, read a line from the XBee
-        line = ser.readline()
+        c = ser.read(1)
+        line = ''
+        while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
+            c = ser.read(1)
+
+        while c != '=' and not rospy.is_shutdown():
+            line += c
+            c = ser.read(1)
+        line += c
 
 #        rospy.loginfo(line)
 
@@ -298,9 +306,7 @@ def run():
 
 #        rate.sleep()
         loopTime = time()
-        c = ser.read(1)
-        while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
-            c = ser.read(1)
+
 
 
 
