@@ -208,6 +208,13 @@ def run():
 
     compteur = 0
 
+    pub_send_gps = rospy.Publisher(xbee_send_gps, String, queue_size = 2)
+
+    pub_send_euler_angles = rospy.Publisher(xbee_send_euler_angles, Vector3, queue_size = 2)
+
+    GPSdata = String()
+    eulerAnglesData = Vector3()
+
 
 ###################################################################################################
 #Subscribe to the topics that send the data to communicate to the sailboats.
@@ -268,8 +275,21 @@ def run():
             compteur += 1
 
             #Organise the incoming data in the storing structure
-            IDboat = int(msgReceived.split('_')[0])
+            msgData = msgReceived.split('_')
+
+            IDboat = int(msgData[0])
             received[linkDict[IDboat]-1] = msgReceived
+
+            GPSdata.data = msgData[3]
+            eulerAnglesData.data = msgData[4]
+
+            if GPSdata.data != "nothing":
+                pub_send_gps.publish(GPSdata)
+
+            if eulerAnglesData.x != -999:
+                pub_send_euler_angles.publish(eulerAnglesData)
+
+
 
 
         if not check:
