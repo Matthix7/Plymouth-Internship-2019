@@ -46,7 +46,7 @@
 import rospy
 
 from std_msgs.msg import Float32, String
-from geometry_msgs.msg import Pose2D
+from geometry_msgs.msg import Pose2D, Vector3
 
 import serial
 from time import time, sleep
@@ -208,9 +208,9 @@ def run():
 
     compteur = 0
 
-    pub_send_gps = rospy.Publisher(xbee_send_gps, String, queue_size = 2)
+    pub_send_gps = rospy.Publisher("xbee_send_gps", String, queue_size = 2)
 
-    pub_send_euler_angles = rospy.Publisher(xbee_send_euler_angles, Vector3, queue_size = 2)
+    pub_send_euler_angles = rospy.Publisher("xbee_send_euler_angles", Vector3, queue_size = 2)
 
     GPSdata = String()
     eulerAnglesData = Vector3()
@@ -281,7 +281,10 @@ def run():
             received[linkDict[IDboat]-1] = msgReceived
 
             GPSdata.data = msgData[3]
-            eulerAnglesData.data = msgData[4]
+            tmpEuler = msgData[4].split(',')
+            eulerAnglesData.x = float(tmpEuler[0])
+            eulerAnglesData.y = float(tmpEuler[1])
+            eulerAnglesData.z = float(tmpEuler[2])
 
             if GPSdata.data != "nothing":
                 pub_send_gps.publish(GPSdata)
