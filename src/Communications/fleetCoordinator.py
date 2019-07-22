@@ -253,6 +253,8 @@ def run():
             while c != '=' and (time()-msgTime)<(1/receiving_freq) and not rospy.is_shutdown():
                 c = ser.read(1)
                 line += c
+        else:
+            continue
 
         if "Hello" in line:
             continue
