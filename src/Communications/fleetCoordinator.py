@@ -314,7 +314,10 @@ def run():
 
 
 #        rate.sleep()
-        rospy.sleep(0.2/emission_freq)
+        if fleetSize==1:
+            rospy.sleep(0.1/emission_freq)
+        else:
+            rospy.sleep(0.4/emission_freq)
 
 
 

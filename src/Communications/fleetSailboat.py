@@ -430,7 +430,7 @@ def run():
 
         #Sleep while others are talking
         rospy.sleep(dictLink[ID]/emission_freq)
-#        rospy.loginfo("processTime = "+str(processTime))
+
 #        rospy.loginfo("sleepTime = "+str(dictLink[ID]/emission_freq))
 
         #Emit the message
@@ -443,6 +443,7 @@ def run():
         #Clean the line to check wether it corresponds to the shutdown signal.
         line = line.replace('#','')
         line = line.replace('=','')
+        rospy.loginfo("processFreq = "+str(1/(time()-loopTime)))
 
 
 
