@@ -317,7 +317,7 @@ def run():
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)
-        rospy.loginfo("Received\n|" + line + '|')
+#        rospy.loginfo("Received\n|" + line + '|')
 
         if check:
 
@@ -328,11 +328,11 @@ def run():
 
             data = msgReceived.split('_')
 
-#            data_log = "Read\n"
-#            for boat in range(fleetSize):
-#                data_log += str(data[6*boat:6*(boat+1)])+'\n'
-#            data_log += str(data[-2:])
-#            rospy.loginfo(data_log)
+            data_log = "Read\n"
+            for boat in range(fleetSize):
+                data_log += str(data[6*boat:6*(boat+1)])+'\n'
+            data_log += str(data[-2:])
+            rospy.loginfo(data_log+'\n')
 
 
             #Collect the data from boats and store it the corresponding variables
@@ -360,15 +360,20 @@ def run():
                         posData.y = float(tmpPos[1])
                         posData.theta = float(tmpPos[2])
 
-                        boatsPublishers[dictLink[IDboat]][0].publish(windForceData) #Wind force
+                        if windForceData.data != -999:
+                            boatsPublishers[dictLink[IDboat]][0].publish(windForceData) #Wind force
 
-                        boatsPublishers[dictLink[IDboat]][1].publish(windDirectionData) #Wind direction
+                        if windDirectionData.data != -999:
+                            boatsPublishers[dictLink[IDboat]][1].publish(windDirectionData) #Wind direction
 
-                        boatsPublishers[dictLink[IDboat]][2].publish(GPSdata) #GPS frame
+                        if GPSdata.data != "nothing":
+                            boatsPublishers[dictLink[IDboat]][2].publish(GPSdata) #GPS frame
 
-                        boatsPublishers[dictLink[IDboat]][3].publish(eulerAnglesData)  #Euler angles
+                        if eulerAnglesData.x != -999:
+                            boatsPublishers[dictLink[IDboat]][3].publish(eulerAnglesData)  #Euler angles
 
-                        boatsPublishers[dictLink[IDboat]][4].publish(posData)  #Position
+                        if posData.x != -999:
+                            boatsPublishers[dictLink[IDboat]][4].publish(posData)  #Position
 
 
                 except:

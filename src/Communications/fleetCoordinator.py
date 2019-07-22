@@ -248,10 +248,9 @@ def run():
         #If available, read a line from the XBee
         while c!= '#' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
             c = ser.read()
-        if c=='#':
-            while c!='=' and not rospy.is_shutdown():
-                c = ser.read()
-                line += c
+        while c!='=' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
+            c = ser.read()
+            line += c
 
         if "Hello" in line:
             continue
@@ -262,7 +261,7 @@ def run():
         check, msgReceived = is_valid(line)
 
         if check:
-#            rospy.loginfo(msgReceived)
+            rospy.loginfo("Received\n|" +msgReceived+'|\n')
             compteur += 1
 
             #Organise the incoming data in the storing structure
