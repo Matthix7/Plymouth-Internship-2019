@@ -307,11 +307,11 @@ def run():
         # Read what is in the buffer, start and stop with specific signals.
         # More reliable than ser.readline() for big message.
 
-        while c != '#' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
+        while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
         msgTime = time()
         if c == '#':
-            while c != '=' and (time()-msgTime)<(1/receiving_freq) and not rospy.is_shutdown():
+            while c != '=' and not rospy.is_shutdown():
                 c = ser.read(1)
                 line += c
 
