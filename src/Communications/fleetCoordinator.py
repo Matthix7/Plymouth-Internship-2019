@@ -248,7 +248,8 @@ def run():
         #If available, read a line from the XBee
         while c!= '#' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
             c = ser.read()
-        while c!='=' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
+        msgTime = time()
+        while c!='=' and (time()-msgTime)<(1/receiving_freq) and not rospy.is_shutdown():
             c = ser.read()
             line += c
 
