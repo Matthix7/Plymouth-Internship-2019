@@ -27,8 +27,11 @@ import os
 def callback(data):
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
-    rudder += sensibilite1 * sign(data.linear.x)
-    sail -= sensibilite2 * sign(data.angular.z)
+    rudder += sensibilite1 * sign(data.linear.z)
+    sail -= sensibilite2 * sign(data.angular.x)
+
+    sail = max(0, min(sail, 2*pi))
+    rudder = max(-pi/4, min(rudder, pi/4))
 
     if (rudder, sail) != (initRudder, initSail):
         keyboardActive = True
