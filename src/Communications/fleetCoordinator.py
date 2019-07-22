@@ -110,7 +110,7 @@ def is_valid(line):
 
 
 def run():
-    expected_fleet_size = 1
+    expected_fleet_size = 2
     receiving_freq = 10. #Set the speed of the transmission loops
 
 ###################################################################################################
@@ -314,6 +314,7 @@ def run():
 
 
 #        rate.sleep()
+        rospy.sleep(0.5/emission_freq)
 
 
 
