@@ -161,7 +161,15 @@ def run():
 
     while not rospy.is_shutdown() and len(connected) < expected_fleet_size:
         #Read a connection message from a sailboat
-        line = ser.readline()
+        c = ser.read(1)
+        line = ''
+        while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
+            c = ser.read(1)
+
+        while c != '=' and (time()-loopTime)<(1/emission_freq)and not rospy.is_shutdown():
+            line += c
+            c = ser.read(1)
+        line += c
 
         #Transmission checks, details in the transmission loop part below
         check, msgReceived = is_valid(line)

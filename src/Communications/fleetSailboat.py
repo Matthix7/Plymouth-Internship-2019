@@ -308,7 +308,6 @@ def run():
 
         while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
-        #Message begins
 #        loopTime = time()
 
         while c != '=' and not rospy.is_shutdown():
