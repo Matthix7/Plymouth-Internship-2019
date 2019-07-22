@@ -44,7 +44,7 @@ def run():
 #    Test area
 ###################################################################
 
-    rate = rospy.Rate(20)
+    rate = rospy.Rate(100)
 
     force = Float32(data = 0.1)
 
