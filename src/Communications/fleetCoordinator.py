@@ -163,10 +163,10 @@ def run():
         #Read a connection message from a sailboat
         c = ser.read(1)
         line = ''
-        while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
+        while c != '#' and not rospy.is_shutdown():
             c = ser.read(1)
 
-        while c != '=' and (time()-loopTime)<(1/emission_freq)and not rospy.is_shutdown():
+        while c != '=' and not rospy.is_shutdown():
             line += c
             c = ser.read(1)
         line += c
@@ -233,10 +233,12 @@ def run():
     #Data storing structure
     received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
-    loopTime = time()
+
     while not rospy.is_shutdown():
         emission += 1
-
+        c = ''
+        line = ''
+        loopTime = time()
 ####################################################################################################
 # Receive useful data from the sailboats
 # Frame received:
@@ -244,15 +246,15 @@ def run():
 ####################################################################################################
 
         #If available, read a line from the XBee
-        c = ser.read(1)
-        line = ''
-        while c != '#' and (time()-loopTime)<(1/emission_freq) and not rospy.is_shutdown():
-            c = ser.read(1)
+        while c!= '#' and (time()-loopTime)<(1/receiving_freq) and not rospy.is_shutdown():
+            c = ser.read()
+        if c=='#':
+            while c!='=' and not rospy.is_shutdown():
+                c = ser.read()
+                line += c
 
-        while c != '=' and (time()-loopTime)<(1/emission_freq)and not rospy.is_shutdown():
-            line += c
-            c = ser.read(1)
-        line += c
+        if "Hello" in line:
+            continue
 
 #        rospy.loginfo('Line:\n|'+line+'|')
 
@@ -301,7 +303,7 @@ def run():
 
             #Emit the message
             ser.write(msg)
-#            rospy.loginfo("Emitted\n|" + msg + '|')
+            rospy.loginfo("Emitted\n|" + msg + '|')
 
             received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
@@ -310,7 +312,6 @@ def run():
 
 
 #        rate.sleep()
-        loopTime = time()
 
 
 

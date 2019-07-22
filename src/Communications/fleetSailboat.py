@@ -317,7 +317,7 @@ def run():
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)
-#        rospy.loginfo("Received\n|" + msgReceived + '|')
+        rospy.loginfo("Received\n|" + line + '|')
 
         if check:
 
