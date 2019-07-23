@@ -236,10 +236,10 @@ def run():
 #    Receives the direction of the wind
     rospy.Subscriber('filter_send_wind_direction', Float32, sub_WIND_DIRECTION)
 
-#    Receives the direction of the wind
+#    Receives the euler_angles
     rospy.Subscriber('filter_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
-#    Receives the direction of the wind
+#    Receives the cartesain position of the sailboat
     rospy.Subscriber('pos', Pose2D, sub_POS) #topic name to change
 
 
