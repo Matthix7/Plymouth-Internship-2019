@@ -14,6 +14,9 @@ from numpy import array, tan
 
 from chessboard_calibration import getCamDistortData
 
+import os
+
+
 class PiVideoStream:
     def __init__(self, resolution=(640, 480), framerate=15, mode = 'sports', record = False):
         # initialize the camera and stream
@@ -28,9 +31,8 @@ class PiVideoStream:
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
         # Read the camera matrix from calibration file
-        toto = open('TOTOTEST.txt', 'w')
-        toto.write('toto')
-        toto.close()
+        cwd = os.getcwd()
+        print(str(cwd))
         self.calibration_matrix, self.calibration_dist = getCamDistortData('src/PiCamera/calibration_data.txt')
 
         # initialize the frame and the variable used to indicate
