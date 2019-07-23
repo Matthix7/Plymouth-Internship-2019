@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+import rospkg
 
 from std_msgs.msg import Float32, String
 
@@ -26,6 +27,9 @@ def run():
 ######################################################################
 
     rospy.init_node('imageProcessing', anonymous=True)
+    r = rospkg.RosPack()
+    package_path = r.get_path('plymouth_internship_2019')
+    rospy.loginfo('##############\n'+package_path+'\n###############')
 
 #    Publishes an array with the headings leading to vertical lines (ie possible boats)
     pub_send_headings_boats = rospy.Publisher('camera_send_headings_boats', String, queue_size = 2)
@@ -201,7 +205,7 @@ def run():
                 key = cv2.waitKey(1) & 0xFF
 
         elif key == ord('c'):
-            cv2.imwrite('../workspaceRos/src/plymouth_internship_2019/Samples/sample'+time.strftime('%c')+'.png',masts)
+            cv2.imwrite(package_path+'/Samples/sample'+time.strftime('%c')+'.png',masts)
             print("Picture saved")
 
         T6.append(time.time()-t6)
