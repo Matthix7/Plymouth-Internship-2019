@@ -170,13 +170,13 @@ def run():
 
 #        for corner in corners:
 ##            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
-#            headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
+#            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
 #        headings_arucos_msg.data = str(headingsMarkers)
 
         headings_arucos_msg.data = -999
         if corners != []:
             corner = corners[0]
-            headings_arucos_msg.data = ((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+            headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
 
         pub_send_headings_arucos.publish(headings_arucos_msg)
         T4.append(time.time()-t4)
