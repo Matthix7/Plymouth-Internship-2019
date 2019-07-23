@@ -5,6 +5,7 @@
 
 
 # import the necessary packages
+import rospkg
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
@@ -41,10 +42,12 @@ class PiVideoStream:
         time.sleep(0.1)
 
         self.record = record
+        r = rospkg.RosPack()
+        package_path = r.get_path('plymouth_internship_2019')
         if record:
             # Define the codec and create VideoWriter object
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.out = cv2.VideoWriter('../workspaceRos/src/plymouth_internship_2019/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
+            self.out = cv2.VideoWriter(package_path+'/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
 
 
     def start(self):

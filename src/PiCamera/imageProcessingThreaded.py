@@ -23,13 +23,12 @@ from camThread import PiVideoStream
 
 def run():
 
-####################    ROS inialisation     #########################
+####################    ROS initialisation     #########################
 ######################################################################
 
     rospy.init_node('imageProcessing', anonymous=True)
     r = rospkg.RosPack()
     package_path = r.get_path('plymouth_internship_2019')
-    rospy.loginfo('##############\n'+package_path+'\n###############')
 
 #    Publishes an array with the headings leading to vertical lines (ie possible boats)
     pub_send_headings_boats = rospy.Publisher('camera_send_headings_boats', String, queue_size = 2)
