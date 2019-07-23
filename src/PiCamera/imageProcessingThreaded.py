@@ -169,8 +169,11 @@ def run():
 ##            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
 #            headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
 #        headings_arucos_msg.data = str(headingsMarkers)
-        corner = corners[0]
-        headings_arucos_msg.data = ((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+
+        headings_arucos_msg.data = -999
+        if corners != []:
+            corner = corners[0]
+            headings_arucos_msg.data = ((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
 
         pub_send_headings_arucos.publish(headings_arucos_msg)
         T4.append(time.time()-t4)
@@ -198,7 +201,7 @@ def run():
                 key = cv2.waitKey(1) & 0xFF
 
         elif key == ord('c'):
-            cv2.imwrite('~/workspaceRos/src/plymouth_internship_2019/Samples/sample'+time.strftime('%c')+'.png',masts)
+            cv2.imwrite('../workspaceRos/src/plymouth_internship_2019/Samples/sample'+time.strftime('%c')+'.png',masts)
             print("Picture saved")
 
         T6.append(time.time()-t6)
