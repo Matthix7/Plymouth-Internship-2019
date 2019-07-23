@@ -47,6 +47,7 @@ import rospy
 
 from std_msgs.msg import Float32, String
 from geometry_msgs.msg import Pose2D, Vector3
+from gps_common.msg import GPSFix
 
 import serial
 from time import time, sleep
@@ -212,7 +213,7 @@ def run():
 
     pub_send_euler_angles = rospy.Publisher("xbee_send_euler_angles", Vector3, queue_size = 2)
 
-    GPSdata = String()
+    GPSdata = GPSFix()
     eulerAnglesData = Vector3()
 
 
@@ -280,13 +281,54 @@ def run():
             IDboat = int(msgData[0])
             received[linkDict[IDboat]-1] = msgReceived
 
-            GPSdata.data = msgData[3]
+            GPSframe = msgData[3]
+
             tmpEuler = msgData[4].split(',')
             eulerAnglesData.x = float(tmpEuler[0])
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
 
-            if GPSdata.data != "nothing":
+            if GPSframe != "nothing":
+                data = GPSframe.split(',')
+
+                #header
+                now = rospy.get_rostime()
+                GPSdata.header.stamp.secs = now.secs
+                GPSdata.header.stamp.nsecs = now.nsecs
+                GPSdata.header.frame_id = '/xbee_send_gps'
+
+
+                status = 1
+                time = float(data[1][0:2])*3600 + float(data[1][2:4])*60 + float(data[1][4:])
+                latitude = float(data[2][0:(len(data[2])-7)])+float(data[2][(len(data[2])-7):])/60
+                if data[3] == 'S':
+                    latitude = -latitude
+                longitude = float(data[4][0:(len(data[4])-7)])+float(data[4][(len(data[4])-7):])/60
+                if data[5] == 'W':
+                    longitude = -longitude
+                frame_type = float(data[6])
+                nbSat = float(data[7])
+                hdop = float(data[8])
+                altitude = float(data[9].split(',')[0])
+
+
+                #status
+                GPSdata.status.header.seq = GPSdata.header.seq
+                GPSdata.status.header.stamp.secs = now.secs
+                GPSdata.status.header.stamp.nsecs = now.nsecs
+                GPSdata.status.header.frame_id = frame
+                GPSdata.status.satellites_used = nbSat
+                GPSdata.status.status = status
+
+                #autres
+                GPSdata.latitude = latitude
+                GPSdata.longitude = longitude
+                GPSdata.altitude = altitude
+                GPSdata.track = route
+                GPSdata.speed = speed
+                GPSdata.time = time
+                GPSdata.hdop = hdop
+
                 pub_send_gps.publish(GPSdata)
 
             if eulerAnglesData.x != -999:
