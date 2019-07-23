@@ -88,7 +88,7 @@ def detectAruco(image, resultImage, dictionary):
     frame_markers = aruco.drawDetectedMarkers(resultImage, corners, ids)
 
     if ids is not None:
-        cv2.imwrite('arucoDetected/aruco_frame_'+time.strftime('%c')+'.png', frame_markers)
+        cv2.imwrite('../workspaceRos/src/plymouth_internship_2019/arucoDetected/aruco_frame_'+time.strftime('%c')+'.png', frame_markers)
         print('Saved')
 
 #        markerLength = 3.8
