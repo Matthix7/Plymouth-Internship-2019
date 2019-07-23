@@ -28,7 +28,7 @@ def run():
     rospy.init_node('imageProcessing', anonymous=True)
 
 #    Publishes an array with the headings leading to vertical lines (ie possible boats)
-    pub_send_headings_boats = rospy.Publisher('camera_send_headings_to_boats', String, queue_size = 2)
+    pub_send_headings_boats = rospy.Publisher('camera_send_headings_boats', String, queue_size = 2)
     headings_boats_msg = String()
 
 #    Publishes the heading leading to the biggest detected buoy
@@ -36,8 +36,8 @@ def run():
     heading_buoy_msg = Float32()
 
 #    Publishes a list with the headings leading to the detected ArUco codes (April Tags)
-    pub_send_headings_arucos = rospy.Publisher('camera_send_headings_arucos', String, queue_size = 2)
-    headings_arucos_msg = String()
+    pub_send_headings_arucos = rospy.Publisher('camera_send_headings_arucos', Float32, queue_size = 2)
+    headings_arucos_msg = Float32()
 
 
 ###################    Code initialisation    #######################
@@ -48,8 +48,8 @@ def run():
     tframe = 0
 
 
-    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+#    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -163,19 +163,22 @@ def run():
 
         t4 = time.time()
         frame_markers, corners = detectAruco(image, buoy, aruco_dict)
-        headingsMarkers = []
+#        headingsMarkers = []
 
-        for corner in corners:
-            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
-            headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
-        headings_arucos_msg.data = str(headingsMarkers)
+#        for corner in corners:
+##            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
+#            headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
+#        headings_arucos_msg.data = str(headingsMarkers)
+        corner = corners[0]
+        headings_arucos_msg.data = ((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+
         pub_send_headings_arucos.publish(headings_arucos_msg)
         T4.append(time.time()-t4)
 
 
         t5 = time.time()
-        cv2.imshow('Horizon', masts)
-        cv2.imshow('Global', frame_markers)
+#        cv2.imshow('Horizon', masts)
+#        cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
 
@@ -195,7 +198,7 @@ def run():
                 key = cv2.waitKey(1) & 0xFF
 
         elif key == ord('c'):
-            cv2.imwrite('sample.png',masts)
+            cv2.imwrite('sample'+time.strftime('%c')+'.png',masts)
             print("Picture saved")
 
         T6.append(time.time()-t6)
