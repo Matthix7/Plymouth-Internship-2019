@@ -30,7 +30,7 @@ class PiVideoStream:
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
         # Read the camera matrix from calibration file
-        self.calibration_matrix, self.calibration_dist = getCamDistortData('~/workspaceRos/src/plymouth-internship-2019/src/PiCamera/calibration_data.txt')
+        self.calibration_matrix, self.calibration_dist = getCamDistortData('~/workspaceRos/src/plymouth_internship_2019/src/PiCamera/calibration_data.txt')
 
         # initialize the frame and the variable used to indicate
         # if the thread should be stopped
@@ -44,7 +44,7 @@ class PiVideoStream:
         if record:
             # Define the codec and create VideoWriter object
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.out = cv2.VideoWriter('~/workspaceRos/src/plymouth-internship-2019/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
+            self.out = cv2.VideoWriter('~/workspaceRos/src/plymouth_internship_2019/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
 
 
     def start(self):
