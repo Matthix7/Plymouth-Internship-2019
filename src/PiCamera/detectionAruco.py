@@ -81,6 +81,8 @@ def run():
 
 
 def detectAruco(image, resultImage, dictionary):
+    r = rospkg.RosPack()
+    package_path = r.get_path('plymouth_internship_2019')
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
