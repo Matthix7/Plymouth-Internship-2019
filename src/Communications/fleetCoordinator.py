@@ -299,7 +299,7 @@ def run():
 
 
                 status = 1
-                time = float(data[1][0:2])*3600 + float(data[1][2:4])*60 + float(data[1][4:])
+                gps_time = float(data[1][0:2])*3600 + float(data[1][2:4])*60 + float(data[1][4:])
                 latitude = float(data[2][0:(len(data[2])-7)])+float(data[2][(len(data[2])-7):])/60
                 if data[3] == 'S':
                     latitude = -latitude
@@ -326,7 +326,7 @@ def run():
                 GPSdata.altitude = altitude
                 GPSdata.track = route
                 GPSdata.speed = speed
-                GPSdata.time = time
+                GPSdata.time = gps_time
                 GPSdata.hdop = hdop
 
                 pub_send_gps.publish(GPSdata)
