@@ -198,7 +198,7 @@ def run():
                 key = cv2.waitKey(1) & 0xFF
 
         elif key == ord('c'):
-            cv2.imwrite('sample'+time.strftime('%c')+'.png',masts)
+            cv2.imwrite('~/workspaceRos/src/plymouth-internship-2019/Samples/sample'+time.strftime('%c')+'.png',masts)
             print("Picture saved")
 
         T6.append(time.time()-t6)
