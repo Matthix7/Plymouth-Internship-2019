@@ -288,8 +288,9 @@ def run():
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
 
-            if GPSframe != "nothing" and GPSframe.split(',')[0] == '$GPGGA':
-                data = GPSframe.split(',')
+	    data = GPSframe.split(',')
+            if GPSframe != "nothing" and data[0] == '$GPGGA' and data[2] != '':
+                
 
                 #header
                 now = rospy.get_rostime()
@@ -308,7 +309,8 @@ def run():
                     longitude = -longitude
                 frame_type = float(data[6])
                 nbSat = float(data[7])
-                hdop = float(data[8])
+		if data[8] != '':                
+		 hdop = float(data[8])
                 altitude = float(data[9].split(',')[0])
 
 
