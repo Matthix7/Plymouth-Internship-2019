@@ -3,7 +3,8 @@
     <node name="keyboardController" pkg="key_teleop" type="key_teleop.py" output='screen' launch-prefix="gnome-terminal --  "/>
     <node name="operator" pkg="plymouth_internship_2019" type="operator" output='screen'/>
     <node name="fleetCoordinator" pkg="plymouth_internship_2019" type="fleetCoordinator" output='screen'/>
-
+    <node type="rviz" name="rviz" pkg="rviz" />
+    <node pkg="trimaran_ros" type="displayBoat" name="displayBoat" />
 </launch>
 
 
