@@ -58,7 +58,7 @@ def run():
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
     initRudder = 0
-    initSail = 2*pi
+    initSail = pi/2
     keyboardActive = False
     keyboardWindow = True
 
