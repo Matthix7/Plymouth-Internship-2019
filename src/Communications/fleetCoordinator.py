@@ -209,9 +209,9 @@ def run():
 
     compteur = 0
 
-    pub_send_gps = rospy.Publisher("xbee_send_gps", String, queue_size = 2)
+    pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 2) for i in connected]
 
-    pub_send_euler_angles = rospy.Publisher("xbee_send_euler_angles", Vector3, queue_size = 2)
+    pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 2) for i in connected]
 
     GPSdata = GPSFix()
     eulerAnglesData = Vector3()
@@ -288,7 +288,7 @@ def run():
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
 
-            if GPSframe != "nothing":
+            if GPSframe != "nothing" and GPSframe.split(',')[0] == '$GPGGA':
                 data = GPSframe.split(',')
 
                 #header
@@ -316,7 +316,7 @@ def run():
                 GPSdata.status.header.seq = GPSdata.header.seq
                 GPSdata.status.header.stamp.secs = now.secs
                 GPSdata.status.header.stamp.nsecs = now.nsecs
-                GPSdata.status.header.frame_id = frame
+                GPSdata.status.header.frame_id = 'GPGGA'
                 GPSdata.status.satellites_used = nbSat
                 GPSdata.status.status = status
 
@@ -324,15 +324,13 @@ def run():
                 GPSdata.latitude = latitude
                 GPSdata.longitude = longitude
                 GPSdata.altitude = altitude
-                GPSdata.track = route
-                GPSdata.speed = speed
                 GPSdata.time = gps_time
                 GPSdata.hdop = hdop
 
-                pub_send_gps.publish(GPSdata)
+                pub_send_gps[linkDict[IDboat]].publish(GPSdata)
 
             if eulerAnglesData.x != -999:
-                pub_send_euler_angles.publish(eulerAnglesData)
+                pub_send_euler_angles[linkDict[IDboat]].publish(eulerAnglesData)
 
 
 
