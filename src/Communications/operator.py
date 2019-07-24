@@ -27,10 +27,10 @@ import os
 def callback(data):
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
-    rudder += sensibilite1 * sign(data.angular.z)
+    rudder -= sensibilite1 * sign(data.angular.z)
     sail -= sensibilite2 * sign(data.linear.x)
 
-    sail = max(0, min(sail, 2*pi))
+    sail = max(0, min(sail, pi/2))
     rudder = max(-pi/4, min(rudder, pi/4))
 
     if (rudder, sail) != (initRudder, initSail):
@@ -58,14 +58,14 @@ def run():
     global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
 
     initRudder = 0
-    initSail = 2*pi
+    initSail = pi/2
     keyboardActive = False
     keyboardWindow = True
 
     rudder = initRudder
     sail = initSail
     sensibilite1 = pi/100
-    sensibilite2 = pi/50
+    sensibilite2 = pi/100
 
     timeLastCommand = time.time()
 

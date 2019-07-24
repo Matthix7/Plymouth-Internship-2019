@@ -5,6 +5,7 @@
 
 
 # import the necessary packages
+import rospkg
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
@@ -18,6 +19,9 @@ from chessboard_calibration import getCamDistortData
 
 class PiVideoStream:
     def __init__(self, resolution=(640, 480), framerate=15, mode = 'sports', record = False):
+        r = rospkg.RosPack()
+        package_path = r.get_path('plymouth_internship_2019')
+
         # initialize the camera and stream
         self.camera = PiCamera()
         self.camera.resolution = resolution
@@ -30,7 +34,7 @@ class PiVideoStream:
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
         # Read the camera matrix from calibration file
-        self.calibration_matrix, self.calibration_dist = getCamDistortData('../workspaceRos/src/plymouth_internship_2019/src/PiCamera/calibration_data.txt')
+        self.calibration_matrix, self.calibration_dist = getCamDistortData(package_path+'/src/PiCamera/calibration_data.txt')
 
         # initialize the frame and the variable used to indicate
         # if the thread should be stopped
@@ -41,10 +45,11 @@ class PiVideoStream:
         time.sleep(0.1)
 
         self.record = record
+
         if record:
             # Define the codec and create VideoWriter object
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.out = cv2.VideoWriter('../workspaceRos/src/plymouth_internship_2019/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
+            self.out = cv2.VideoWriter(package_path+'/missionRecord/Mission_'+time.strftime('%c')+'(without calibration).avi',self.fourcc, framerate, resolution)
 
 
     def start(self):

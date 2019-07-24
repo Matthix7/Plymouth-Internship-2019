@@ -47,6 +47,7 @@ import rospy
 
 from std_msgs.msg import Float32, String
 from geometry_msgs.msg import Pose2D, Vector3
+from gps_common.msg import GPSFix
 
 import serial
 from time import time, sleep
@@ -208,11 +209,11 @@ def run():
 
     compteur = 0
 
-    pub_send_gps = rospy.Publisher("xbee_send_gps", String, queue_size = 2)
+    pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 2) for i in connected]
 
-    pub_send_euler_angles = rospy.Publisher("xbee_send_euler_angles", Vector3, queue_size = 2)
+    pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 2) for i in connected]
 
-    GPSdata = String()
+    GPSdata = GPSFix()
     eulerAnglesData = Vector3()
 
 
@@ -280,17 +281,56 @@ def run():
             IDboat = int(msgData[0])
             received[linkDict[IDboat]-1] = msgReceived
 
-            GPSdata.data = msgData[3]
+            GPSframe = msgData[3]
+
             tmpEuler = msgData[4].split(',')
             eulerAnglesData.x = float(tmpEuler[0])
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
 
-            if GPSdata.data != "nothing":
-                pub_send_gps.publish(GPSdata)
+            if GPSframe != "nothing" and GPSframe.split(',')[0] == '$GPGGA':
+                data = GPSframe.split(',')
+
+                #header
+                now = rospy.get_rostime()
+                GPSdata.header.stamp.secs = now.secs
+                GPSdata.header.stamp.nsecs = now.nsecs
+                GPSdata.header.frame_id = '/xbee_send_gps'
+
+
+                status = 1
+                gps_time = float(data[1][0:2])*3600 + float(data[1][2:4])*60 + float(data[1][4:])
+                latitude = float(data[2][0:(len(data[2])-7)])+float(data[2][(len(data[2])-7):])/60
+                if data[3] == 'S':
+                    latitude = -latitude
+                longitude = float(data[4][0:(len(data[4])-7)])+float(data[4][(len(data[4])-7):])/60
+                if data[5] == 'W':
+                    longitude = -longitude
+                frame_type = float(data[6])
+                nbSat = float(data[7])
+                hdop = float(data[8])
+                altitude = float(data[9].split(',')[0])
+
+
+                #status
+                GPSdata.status.header.seq = GPSdata.header.seq
+                GPSdata.status.header.stamp.secs = now.secs
+                GPSdata.status.header.stamp.nsecs = now.nsecs
+                GPSdata.status.header.frame_id = 'GPGGA'
+                GPSdata.status.satellites_used = nbSat
+                GPSdata.status.status = status
+
+                #autres
+                GPSdata.latitude = latitude
+                GPSdata.longitude = longitude
+                GPSdata.altitude = altitude
+                GPSdata.time = gps_time
+                GPSdata.hdop = hdop
+
+                pub_send_gps[linkDict[IDboat]].publish(GPSdata)
 
             if eulerAnglesData.x != -999:
-                pub_send_euler_angles.publish(eulerAnglesData)
+                pub_send_euler_angles[linkDict[IDboat]].publish(eulerAnglesData)
 
 
 

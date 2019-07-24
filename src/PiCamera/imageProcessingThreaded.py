@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+import rospkg
 
 from std_msgs.msg import Float32, String
 
@@ -22,10 +23,12 @@ from camThread import PiVideoStream
 
 def run():
 
-####################    ROS inialisation     #########################
+####################    ROS initialisation     #########################
 ######################################################################
 
     rospy.init_node('imageProcessing', anonymous=True)
+    r = rospkg.RosPack()
+    package_path = r.get_path('plymouth_internship_2019')
 
 #    Publishes an array with the headings leading to vertical lines (ie possible boats)
     pub_send_headings_boats = rospy.Publisher('camera_send_headings_boats', String, queue_size = 2)
@@ -167,13 +170,13 @@ def run():
 
 #        for corner in corners:
 ##            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
-#            headingsMarkers.append(((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
+#            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
 #        headings_arucos_msg.data = str(headingsMarkers)
 
         headings_arucos_msg.data = -999
         if corners != []:
             corner = corners[0]
-            headings_arucos_msg.data = ((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+            headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
 
         pub_send_headings_arucos.publish(headings_arucos_msg)
         T4.append(time.time()-t4)
@@ -201,7 +204,7 @@ def run():
                 key = cv2.waitKey(1) & 0xFF
 
         elif key == ord('c'):
-            cv2.imwrite('../workspaceRos/src/plymouth_internship_2019/Samples/sample'+time.strftime('%c')+'.png',masts)
+            cv2.imwrite(package_path+'/Samples/sample'+time.strftime('%c')+'.png',masts)
             print("Picture saved")
 
         T6.append(time.time()-t6)
