@@ -4,7 +4,8 @@
     <node name="operator" pkg="plymouth_internship_2019" type="operator" output='screen'/>
     <node name="fleetCoordinator" pkg="plymouth_internship_2019" type="fleetCoordinator" output='screen'/>
     <node type="rviz" name="rviz" pkg="rviz" />
-    <node pkg="trimaran_ros" type="displayBoat" name="displayBoat" />
+    <node pkg="rostopic" type="rostopic" name="gps_origin" args="pub /launch_send_gps_origin geometry_msgs/Vector3 -- 50.695251 -4.236975 0" output="screen"/>
+    <node pkg="WRSC_plymouth_JEGAT" type="rviz_displayer_fleet.py" name="rviz_displayer_fleet" />
 </launch>
 
 
