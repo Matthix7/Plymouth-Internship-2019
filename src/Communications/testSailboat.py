@@ -50,7 +50,7 @@ def run():
 
     direction = Float32(data = 0.1)
 
-    gps = String(data = "$GPGGA,064036.289,4836.5375,N,00740.9373,E,1,04,3.2,200.2,M,,,,0000*0E")
+    gps = String(data = "$GPGGA,085153.000,5022.5187,N,00408.3332,W,2,04,2.4,44.4,M,51.5,M,,0000*73")
 
     euler = Vector3(x = 0.1, y = 0.2, z = 0.3)
 
