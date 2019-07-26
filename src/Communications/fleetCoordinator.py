@@ -209,9 +209,9 @@ def run():
 
     compteur = 0
 
-    pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 2) for i in connected]
+    pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 0) for i in connected]
 
-    pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 2) for i in connected]
+    pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 0) for i in connected]
 
     GPSdata = GPSFix()
     eulerAnglesData = Vector3()
@@ -272,7 +272,7 @@ def run():
         check, msgReceived = is_valid(line)
 
         if check:
-            rospy.loginfo("Received\n|" +msgReceived+'|\n')
+#            rospy.loginfo("Received\n|" +msgReceived+'|\n')
             compteur += 1
 
             #Organise the incoming data in the storing structure
@@ -329,7 +329,14 @@ def run():
                 GPSdata.time = gps_time
                 GPSdata.hdop = hdop
 
+                if IDboat == 2:
+                    rospy.loginfo("Accepted GPS data\n|" +str(data)+'|\n')
+
                 pub_send_gps[linkDict[IDboat]].publish(GPSdata)
+
+            else:
+                if IDboat == 2:
+                    rospy.loginfo("Rejected GPS data\n|" +str(data)+'|\n')
 
             if eulerAnglesData.x != -999:
                 pub_send_euler_angles[linkDict[IDboat]].publish(eulerAnglesData)
@@ -338,7 +345,8 @@ def run():
 
 
         if not check:
-            rospy.loginfo("Could not read\n|"+line+'|')
+#            rospy.loginfo("Could not read\n|"+line+'|')
+            pass
 
 
 
@@ -370,7 +378,7 @@ def run():
 
             #Emit the message
             ser.write(msg)
-            rospy.loginfo("Emitted\n|" + msg + '|')
+#            rospy.loginfo("Emitted\n|" + msg + '|')
 
             received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
