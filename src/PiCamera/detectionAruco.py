@@ -48,7 +48,7 @@ def run():
         rawCapture.truncate(0)
 
         frame_markers, corners = detectAruco(image, image, aruco_dict)
-        print(corners[0][0])
+#        print(corners[0][0])
 
 
         frame_markers = cv2.flip(frame_markers, 0)
