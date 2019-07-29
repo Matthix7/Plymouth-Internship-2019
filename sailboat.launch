@@ -1,6 +1,0 @@
-<launch>
-
-    <node name="testSailboat" pkg="plymouth_internship_2019" type="testSailboat"  output='screen'/>
-    <node name="sailboat" pkg="plymouth_internship_2019" type="sailboat"  output='screen'/>
-
-</launch>
