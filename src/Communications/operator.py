@@ -38,6 +38,10 @@ def callback(data):
 
     commands = String(data=str(rudder)+','+str(sail))
     pubCommand.publish(commands)
+
+    if time.time()-timeLastCommand > 0.1:
+        rudder = initRudder
+
     timeLastCommand = time.time()
 
 
