@@ -128,23 +128,29 @@ def run():
 
 
         t1 = time.time()
-        horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
-        rotation = horizon_prev[0]
-        T1.append(time.time()-t1)
+        try:
+            horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+            rotation = horizon_prev[0]
+            T1.append(time.time()-t1)
 
-##      Find the areas where vertical lines are found (ie possible sailboats).
-##      Takes about 0.1s per frame.
-##      masts: image cropped around the horizon, where vertical lines are highlighted
+    ##      Find the areas where vertical lines are found (ie possible sailboats).
+    ##      Takes about 0.1s per frame.
+    ##      masts: image cropped around the horizon, where vertical lines are highlighted
 
-        t2 = time.time()
-        masts, xMasts = detectMast(horizon, horizon_height)
-        if xMasts is not None:
-            headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
-        else:
-            headingsBoats = None
-        headings_boats_msg.data = str(headingsBoats)
-        pub_send_headings_boats.publish(headings_boats_msg)
-        T2.append(time.time()-t2)
+            t2 = time.time()
+            masts, xMasts = detectMast(horizon, horizon_height)
+            if xMasts is not None:
+                headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
+            else:
+                headingsBoats = None
+            headings_boats_msg.data = str(headingsBoats)
+            pub_send_headings_boats.publish(headings_boats_msg)
+            T2.append(time.time()-t2)
+
+        except:
+            rotation = 0
+            T1.append(0)
+            T2.append(0)
 
 ##      Find the buoy in the original cropped image and highlight them in the result image
 ##      Check if the color range corresponds to what you look for!
