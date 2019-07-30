@@ -196,7 +196,7 @@ def run():
             t3 = time.time()
 #           colorRange = getColorRangeTest() #For test target
             colorRange = getColorRange() #For real buoys
-            center, buoy = detectBuoy(image, image.copy(), colorRange)
+            center, frame_markers = detectBuoy(image, image.copy(), colorRange)
             if center is not None:
                 xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
                 headingBuoy = (xBuoy-resolution[0]/2)*Sf
@@ -212,7 +212,10 @@ def run():
     ##      Find the April Tags in the original-sized image
 
             t4 = time.time()
-            frame_markers, corners = detectAruco(image, buoy, aruco_dict)
+            if buoyDetection:
+                frame_markers, corners = detectAruco(image, frame_markers, aruco_dict)
+            else:
+                frame_markers, corners = detectAruco(image, image, aruco_dict)
     #        headingsMarkers = []
 
     #        for corner in corners:
