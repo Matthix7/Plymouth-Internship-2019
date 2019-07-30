@@ -52,7 +52,7 @@ def run():
 
 
     cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-#    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -151,7 +151,7 @@ def run():
             T2.append(time.time()-t2)
 
         except:
-            print('OpenCV error, please do not panic -', c)
+            print('Did not detect horizon, please do not panic -', c)
             newInit = True
             if rotation_prev == -999:
                 rotation = 0
@@ -199,7 +199,7 @@ def run():
 
 
         t5 = time.time()
-#        cv2.imshow('Horizon', masts)
+        cv2.imshow('Horizon', masts)
         cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
