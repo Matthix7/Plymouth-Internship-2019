@@ -99,6 +99,7 @@ def run():
     dodo = 0
 
     horizon_prev = (0, resolution[0], resolution[1])
+    rotation_prev = -999
     image = vs.read()
 
     horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
@@ -128,7 +129,6 @@ def run():
 
 
         t1 = time.time()
-        rotation_prev = rotation
         try:
             horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
             rotation = horizon_prev[0]
@@ -150,9 +150,14 @@ def run():
 
         except:
             print('OpenCV error, please do not panic -', c)
-            rotation = rotation_prev
+            if rotation_prev == -999:
+                rotation = 0
+            else:
+                rotation = rotation_prev
             T1.append(0)
             T2.append(0)
+
+        rotation_prev = rotation
 
 ##      Find the buoy in the original cropped image and highlight them in the result image
 ##      Check if the color range corresponds to what you look for!
