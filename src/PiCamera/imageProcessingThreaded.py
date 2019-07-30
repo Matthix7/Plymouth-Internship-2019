@@ -229,7 +229,10 @@ def run():
 
         t5 = time.time()
         if outputImage and horizonDetection:
-            cv2.imshow('Horizon', masts)
+            if mastsDetection:
+                cv2.imshow('Horizon', masts)
+            else:
+                cv2.imshow('Horizon', horizon)
         if outputImage and (buoyDetection or markerDetection):
             cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
