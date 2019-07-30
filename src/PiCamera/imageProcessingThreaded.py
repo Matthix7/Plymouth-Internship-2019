@@ -128,6 +128,7 @@ def run():
 
 
         t1 = time.time()
+        rotation_prev = rotation
         try:
             horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
             rotation = horizon_prev[0]
@@ -148,8 +149,8 @@ def run():
             T2.append(time.time()-t2)
 
         except:
-            print('toto')
-            rotation = 0
+            print('OpenCV error, please do not panic -', c)
+            rotation = rotation_prev
             T1.append(0)
             T2.append(0)
 
