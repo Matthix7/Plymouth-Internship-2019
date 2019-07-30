@@ -148,6 +148,7 @@ def run():
             T2.append(time.time()-t2)
 
         except:
+            print('toto')
             rotation = 0
             T1.append(0)
             T2.append(0)
