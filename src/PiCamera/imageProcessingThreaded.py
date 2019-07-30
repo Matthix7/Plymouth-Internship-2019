@@ -103,6 +103,7 @@ def run():
     image = vs.read()
 
     horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
+    newInit = False
 
 
     while not rospy.is_shutdown():
@@ -120,17 +121,18 @@ def run():
 
         c += 1
 
-##        #Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
-##        #Takes about 0.04s per frame.
-##        #horizon: image cropped around the horizon
-##        #horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
-##        #horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
-##        #detected in the new image.
+##        Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
+##        Takes about 0.04s per frame.
+##        horizon: image cropped around the horizon
+##        horizon_height: vertical position in pixels of the horizon in the cropped image (for masts detection)
+##        horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
+##        detected in the new image.
 
 
         t1 = time.time()
         try:
-            horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev)
+            horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
+            newInit = False
             rotation = horizon_prev[0]
             T1.append(time.time()-t1)
 
@@ -150,6 +152,7 @@ def run():
 
         except:
             print('OpenCV error, please do not panic -', c)
+            newInit = True
             if rotation_prev == -999:
                 rotation = 0
             else:
