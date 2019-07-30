@@ -25,7 +25,7 @@ def run():
 
     horizonDetection = False
     mastsDetection = False
-    buoyDetection = True
+    buoyDetection = False
     markerDetection = True
     outputImage = True
 
@@ -131,8 +131,6 @@ def run():
         tframe = time.time()
 
         c += 1
-        print(newInit)
-
 
         if horizonDetection:
 
