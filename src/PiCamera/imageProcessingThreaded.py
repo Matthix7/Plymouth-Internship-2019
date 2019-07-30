@@ -60,9 +60,9 @@ def run():
     Tframe, T1, T2, T3, T4, T5, T6 = [], [], [], [], [], [], []
     tframe = 0
 
-    if outputImage and horizonDetection:
-        cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
     if outputImage and (buoyDetection or markerDetection):
+        cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    if outputImage and horizonDetection:
         cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
