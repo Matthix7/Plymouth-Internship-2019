@@ -149,7 +149,10 @@ def run():
                 horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
 
                 rotation = horizon_prev[0]
-                new_height = int(cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2])
+                x0 = horizon_prev[1]
+                y0 = horizon_prev[2]
+                M = horizon_prev[3]
+                new_height = int(M[1,0]*x0 + M[1,1]*y0 + M[1,2])
 
                 if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
                     newInit = True
