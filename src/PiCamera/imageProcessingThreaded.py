@@ -23,7 +23,7 @@ from camThread import PiVideoStream
 
 def run():
 
-    horizonDetection = True
+    horizonDetection = False
     mastsDetection = False
     buoyDetection = True
     markerDetection = True
