@@ -150,7 +150,6 @@ def run():
 
                 rotation = horizon_prev[0]
                 new_height = cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2]
-                image = cv2.line(image, (0,new_height), (resolution[0],new_height), (255,0,0), 2)
 
                 if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
                     newInit = True
@@ -184,7 +183,7 @@ def run():
                     rotation = rotation_prev
 
         rotation_prev = rotation
-
+        image = cv2.line(image, (0,new_height), (resolution[0],new_height), (255,0,0), 2)
 
         if buoyDetection:
 
