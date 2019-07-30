@@ -143,7 +143,7 @@ def run():
 ##        horizon_prev: vertical position in pixels of the horizon in the previous uncropped image, in case horizon is not
 ##        detected in the new image.
 
-            image = cv2.drawLine(image, (0,100), (resolution[0],100), (255,0,0), 2)
+            image = cv2.line(image, (0,100), (resolution[0],100), (255,0,0), 2)
             t1 = time.time()
             try:
                 horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
