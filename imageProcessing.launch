@@ -1,5 +1,0 @@
-<launch>
-
-    <node name="imageProcessing" pkg="plymouth_internship_2019" type="imageProcessing" output='screen'/>
-
-</launch>
