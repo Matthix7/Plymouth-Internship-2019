@@ -131,6 +131,7 @@ def run():
         tframe = time.time()
 
         c += 1
+        print(newInit)
 
 
         if horizonDetection:
