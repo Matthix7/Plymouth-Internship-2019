@@ -150,6 +150,8 @@ def run():
 
                 rotation = horizon_prev[0]
                 new_height = cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2]
+                cv2.drawLine(image, (0,new_height), (resolution[0],new_height), (0,0,255), 2)
+
                 if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
                     newInit = True
                 else:
