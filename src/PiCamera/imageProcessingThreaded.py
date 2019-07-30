@@ -25,8 +25,8 @@ def run():
 
     horizonDetection = True
     mastsDetection = True
-    buoyDetection = False
-    markerDetection = False
+    buoyDetection = True
+    markerDetection = True
     outputImage = True
 
     if mastsDetection:
