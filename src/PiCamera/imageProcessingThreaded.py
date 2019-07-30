@@ -51,7 +51,7 @@ def run():
     tframe = 0
 
 
-#    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
 #    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
@@ -190,7 +190,7 @@ def run():
 
         t5 = time.time()
 #        cv2.imshow('Horizon', masts)
-#        cv2.imshow('Global', frame_markers)
+        cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
 
