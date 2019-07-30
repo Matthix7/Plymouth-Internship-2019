@@ -132,8 +132,14 @@ def run():
         t1 = time.time()
         try:
             horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
-            newInit = False
+
             rotation = horizon_prev[0]
+            new_height = cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2]
+            if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
+                newInit = True
+            else:
+                newInit = False
+
             T1.append(time.time()-t1)
 
     ##      Find the areas where vertical lines are found (ie possible sailboats).
