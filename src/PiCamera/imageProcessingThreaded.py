@@ -177,7 +177,7 @@ def run():
                 newInit = True
                 if rotation_prev == -999:
                     rotation = 0
-                else
+                else:
                     rotation = rotation_prev
 
         rotation_prev = rotation
