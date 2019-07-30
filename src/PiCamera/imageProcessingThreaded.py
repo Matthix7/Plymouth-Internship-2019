@@ -23,6 +23,16 @@ from camThread import PiVideoStream
 
 def run():
 
+    horizonDetection = True
+    mastsDetection = True
+    buoyDetection = True
+    markerDetection = True
+    outputImage = True
+
+    if mastsDetection:
+        horizonDetection = True
+
+
 ####################    ROS initialisation     #########################
 ######################################################################
 
@@ -50,9 +60,10 @@ def run():
     Tframe, T1, T2, T3, T4, T5, T6 = [], [], [], [], [], [], []
     tframe = 0
 
-
-    cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
-    cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
+    if outputImage and horizonDetection:
+        cv2.namedWindow('Global', cv2.WINDOW_NORMAL)
+    if outputImage and (buoyDetection or markerDetection):
+        cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
     horizon_prev = (0, 320, 240)
 
@@ -121,6 +132,9 @@ def run():
 
         c += 1
 
+
+        if horizonDetection:
+
 ##        Find the area where horizon is located and return a frame containing the horizon, transformed to be horizontal.
 ##        Takes about 0.04s per frame.
 ##        horizon: image cropped around the horizon
@@ -129,84 +143,92 @@ def run():
 ##        detected in the new image.
 
 
-        t1 = time.time()
-        try:
-            horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
+            t1 = time.time()
+            try:
+                horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, newInit)
 
-            rotation = horizon_prev[0]
-            new_height = cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2]
-            if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
+                rotation = horizon_prev[0]
+                new_height = cos(rotation)*horizon_prev[1]+sin(rotation)*horizon_prev[2]
+                if new_height < 0.1*resolution[1] or new_height > 0.9*resolution[1]:
+                    newInit = True
+                else:
+                    newInit = False
+
+                T1.append(time.time()-t1)
+
+                if mastsDetection:
+
+            ##      Find the areas where vertical lines are found (ie possible sailboats).
+            ##      Takes about 0.1s per frame.
+            ##      masts: image cropped around the horizon, where vertical lines are highlighted
+
+                    t2 = time.time()
+                    masts, xMasts = detectMast(horizon, horizon_height)
+                    if xMasts is not None:
+                        headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
+                    else:
+                        headingsBoats = None
+                    headings_boats_msg.data = str(headingsBoats)
+                    pub_send_headings_boats.publish(headings_boats_msg)
+                    T2.append(time.time()-t2)
+
+            except:
+                print('Did not detect horizon, please do not panic -', c)
                 newInit = True
-            else:
-                newInit = False
-
-            T1.append(time.time()-t1)
-
-    ##      Find the areas where vertical lines are found (ie possible sailboats).
-    ##      Takes about 0.1s per frame.
-    ##      masts: image cropped around the horizon, where vertical lines are highlighted
-
-            t2 = time.time()
-            masts, xMasts = detectMast(horizon, horizon_height)
-            if xMasts is not None:
-                headingsBoats = (np.asarray(xMasts)-resolution[0]/2)*Sf
-            else:
-                headingsBoats = None
-            headings_boats_msg.data = str(headingsBoats)
-            pub_send_headings_boats.publish(headings_boats_msg)
-            T2.append(time.time()-t2)
-
-        except:
-            print('Did not detect horizon, please do not panic -', c)
-            newInit = True
-            if rotation_prev == -999:
-                rotation = 0
-            else:
-                rotation = rotation_prev
-            T1.append(0)
-            T2.append(0)
+                if rotation_prev == -999:
+                    rotation = 0
+                else
+                    rotation = rotation_prev
 
         rotation_prev = rotation
+
+
+        if buoyDetection:
 
 ##      Find the buoy in the original cropped image and highlight them in the result image
 ##      Check if the color range corresponds to what you look for!
 
-        t3 = time.time()
-#        colorRange = getColorRangeTest() #For test target
-        colorRange = getColorRange() #For real buoys
-        center, buoy = detectBuoy(image, image.copy(), colorRange)
-        if center is not None:
-            xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
-            headingBuoy = (xBuoy-resolution[0]/2)*Sf
-        else:
-            headingBuoy = -999
-        heading_buoy_msg.data = headingBuoy
-        pub_send_heading_buoy.publish(heading_buoy_msg)
-        T3.append(time.time()-t3)
+            t3 = time.time()
+#           colorRange = getColorRangeTest() #For test target
+            colorRange = getColorRange() #For real buoys
+            center, buoy = detectBuoy(image, image.copy(), colorRange)
+            if center is not None:
+                xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
+                headingBuoy = (xBuoy-resolution[0]/2)*Sf
+            else:
+                headingBuoy = -999
+            heading_buoy_msg.data = headingBuoy
+            pub_send_heading_buoy.publish(heading_buoy_msg)
+            T3.append(time.time()-t3)
 
-##      Find the April Tags in the original-sized image
 
-        t4 = time.time()
-        frame_markers, corners = detectAruco(image, buoy, aruco_dict)
-#        headingsMarkers = []
+        if markerDetection:
 
-#        for corner in corners:
-##            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
-#            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
-#        headings_arucos_msg.data = str(headingsMarkers)
+    ##      Find the April Tags in the original-sized image
 
-        headings_arucos_msg.data = -999
-        if corners != []:
-            corner = corners[0]
-            headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+            t4 = time.time()
+            frame_markers, corners = detectAruco(image, buoy, aruco_dict)
+    #        headingsMarkers = []
 
-        pub_send_headings_arucos.publish(headings_arucos_msg)
-        T4.append(time.time()-t4)
+    #        for corner in corners:
+    #            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
+    #            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
+    #        headings_arucos_msg.data = str(headingsMarkers)
+
+            headings_arucos_msg.data = -999
+            if corners != []:
+                corner = corners[0]
+                headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+
+            pub_send_headings_arucos.publish(headings_arucos_msg)
+            T4.append(time.time()-t4)
 
 
         t5 = time.time()
-        cv2.imshow('Horizon', masts)
-        cv2.imshow('Global', frame_markers)
+        if outputImage and horizonDetection:
+            cv2.imshow('Horizon', masts)
+        if outputImage and (buoyDetection or markerDetection):
+            cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
 
@@ -240,10 +262,15 @@ def run():
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
     print("Global time per frame : ", (time.time()-t0)/c - dodo)
-    print("Time horizon : ", np.mean(T1))
-    print("Time masts   : ", np.mean(T2))
-    print("Time buoy    : ", np.mean(T3))
-    print("Time markers : ", np.mean(T4))
+
+    if horizonDetection:
+        print("Time horizon : ", np.mean(T1))
+    if mastsDetection:
+        print("Time masts   : ", np.mean(T2))
+    if buoyDetection:
+        print("Time buoy    : ", np.mean(T3))
+    if markerDetection:
+        print("Time markers : ", np.mean(T4))
     print("Time display : ", np.mean(T5))
     print("Time interact: ", np.mean(T6))
     print("Time per frame accurate: ", np.mean(Tframe))
