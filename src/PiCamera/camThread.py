@@ -26,8 +26,7 @@ class PiVideoStream:
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        self.camera.exposure_mode = 'auto'
-
+        self.camera.exposure_mode = mode
         self.scale_factor = tan(0.398)/(resolution[0]*203.55/640)   #Camera scale factor, rad/pixel
 
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
