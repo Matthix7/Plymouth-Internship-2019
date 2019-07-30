@@ -189,7 +189,6 @@ def run():
             rotation = 0
 
         rotation_prev = rotation
-        image = cv2.line(image, (0,new_height), (resolution[0],new_height), (255,0,0), 2)
 
         if buoyDetection:
 
