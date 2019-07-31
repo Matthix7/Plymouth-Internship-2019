@@ -27,7 +27,7 @@ def run():
     mastsDetection = False
     buoyDetection = True
     markerDetection = True
-    outputImage = True
+    outputImage = False
 
     buoySize = 0.5 #meters
 
