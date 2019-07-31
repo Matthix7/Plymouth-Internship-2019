@@ -213,8 +213,13 @@ def run():
 
     pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 0) for i in connected]
 
+    pub_send_line_begin = [rospy.Publisher("xbee_send_line_begin_"+str(i), Pose2D(), queue_size = 0) for i in connected]
+
+    pub_send_line_end = [rospy.Publisher("xbee_send_line_end_"+str(i), Pose2D(), queue_size = 0) for i in connected]
+
     GPSdata = GPSFix()
     eulerAnglesData = Vector3()
+    lineStartData, lineEndData = Pose2D(), Pose2D()
 
 
 ###################################################################################################
@@ -239,7 +244,7 @@ def run():
     emission = -1
 
     #Data storing structure
-    received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
+    received = ['ID_nothing_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
 
     while not rospy.is_shutdown():
@@ -250,7 +255,7 @@ def run():
 ####################################################################################################
 # Receive useful data from the sailboats
 # Frame received:
-# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_posString=====\n"
+# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_lineBeginString_lineEndString=====\n"
 ####################################################################################################
 
         #If available, read a line from the XBee
@@ -287,6 +292,16 @@ def run():
             eulerAnglesData.x = float(tmpEuler[0])
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
+
+            tmpStartLine = data[5].split(',')
+            lineStartData.x = float(tmpStartLine[0])
+            lineStartData.y = float(tmpStartLine[1])
+            lineStartData.theta = float(tmpStartLine[2])
+
+            tmpEndLine = data[6].split(',')
+            lineEndData.x = float(tmpEndLine[0])
+            lineEndData.y = float(tmpEndLine[1])
+            lineEndData.theta = float(tmpEndLine[2])
 
 	    data = GPSframe.split(',')
             if GPSframe != "nothing" and data[0] == '$GPGGA' and data[2] != '':
@@ -341,6 +356,12 @@ def run():
             if eulerAnglesData.x != -999:
                 pub_send_euler_angles[linkDict[IDboat]].publish(eulerAnglesData)
 
+            if lineStartData.x != -999:
+                pub_send_euler_angles[linkDict[IDboat]].publish(lineStartData)
+
+            if lineBeginData.x != -999:
+                pub_send_euler_angles[linkDict[IDboat]].publish(lineBeginData)
+
 
 
 
@@ -358,7 +379,7 @@ def run():
 ##########################################################################################################################################
 # Send useful data to the sailboats
 # Frame emitted:
-# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_posString1_ID2_..._targetString_modeString=====\n"
+# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_lineBeginString1_lineEndString1_ID2_..._targetString_modeString=====\n"
 ##########################################################################################################################################
 
             #Collect the data from each boat and the operator and gather them in one string
@@ -380,7 +401,7 @@ def run():
             ser.write(msg)
 #            rospy.loginfo("Emitted\n|" + msg + '|')
 
-            received = ['ID_nothing_nothing_nothing_nothing_nothing']*fleetSize
+            received = ['ID_nothing_nothing_nothing_nothing_nothing_nothing']*fleetSize
 
 
 #            rospy.loginfo("Emission " + str(emission//fleetSize))

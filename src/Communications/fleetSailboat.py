@@ -79,9 +79,13 @@ def sub_EULER_ANGLES(data):
     global eulerAnglesString
     eulerAnglesString = str(data.x)+','+str(data.y)+','+str(data.z)
 
-def sub_POS(data):
-    global posString
-    posString = str(data.x)+','+str(data.y)+','+str(data.theta)
+def sub_lineBegin(data):
+    global beginString
+    beginString = str(data.x)+','+str(data.y)+','+str(data.theta)
+
+def sub_lineEnd(data):
+    global endString
+    endString = str(data.x)+','+str(data.y)+','+str(data.theta)
 
 
 ###################################################################################################
@@ -143,7 +147,9 @@ def run():
     rospy.init_node('endPoint', anonymous=True)
 
     # Data coming from the sailboats
-    windForceData, windDirectionData, GPSdata, eulerAnglesData, posData = Float32(), Float32(), String(), Vector3(), Pose2D()
+    windForceData, windDirectionData, GPSdata, eulerAnglesData, lineStartData, lineEndData = Float32(), Float32(), String(), Vector3(), Pose2D(), Pose2D()
+
+
     # Commands coming from the operator (for keyboard control and other control modes)
     rudder, sail, mode = Float32(data = 0.), Float32(data = np.pi*2), Float32(data=0.)
 
@@ -239,13 +245,14 @@ def run():
 #    Receives the euler_angles
     rospy.Subscriber('ardu_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
-#    Receives the cartesain position of the sailboat
-    rospy.Subscriber('pos', Pose2D, sub_POS) #topic name to change
+#    Receive the data relative to line following
+    rospy.Subscriber('regulator_send_lineBegin', Pose2D, sub_lineBegin)
+    rospy.Subscriber('regulator_send_lineEnd', Pose2D, sub_linesEnd)
 
 
 
 ###################################################################################################
-#Subscribe to the topics that send the data to communicate to the sailboat's controllers.
+#Publish in the topics that send the data to communicate to the sailboat's controllers.
 #This data comes from the other sailboats' measuring systems.
 ###################################################################################################
 
@@ -266,12 +273,14 @@ def run():
         pubWindDirName = "xbee_send_wind_direction_"+str(fleetIDs[boat])
         pubGPSName = "xbee_send_gps_"+str(fleetIDs[boat])
         pubEulerName = "xbee_send_euler_"+str(fleetIDs[boat])
-        pubPosName = "xbee_send_pos_"+str(fleetIDs[boat])
+        pubLineBeginName = "xbee_send_line_begin_"+str(fleetIDs[boat])
+        pubLineEndName = "xbee_send_line_end_"+str(fleetIDs[boat])
         boatsPublishers.append([ rospy.Publisher(pubWindForceName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubWindDirName, Float32, queue_size = 2),\
                                  rospy.Publisher(pubGPSName, String, queue_size = 2),\
                                  rospy.Publisher(pubEulerName, Vector3, queue_size = 2),\
-                                 rospy.Publisher(pubPosName, Pose2D, queue_size = 2)])
+                                 rospy.Publisher(pubLineBeginName, Pose2D, queue_size = 2),\
+                                 rospy.Publisher(pubLineEndName, Pose2D, queue_size = 2)])
 
 
 
@@ -296,12 +305,12 @@ def run():
         loopTime = time()
 
 
-        windForceString, windDirectionString ,gpsString, eulerAnglesString, posString = "-999", "-999", "nothing", "-999,-999,-999", "-999,-999,-999"
+        windForceString, windDirectionString ,gpsString, eulerAnglesString, beginString, endString = "-999", "-999", "nothing", "-999,-999,-999", "-999,-999,-999", "-999,-999,-999"
 
 ##########################################################################################################################################
 # Receive useful data from the coordinator
 # Frame received:
-# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_posString1_ID2_..._targetString_modeString=====\n"
+# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_lineBeginString1_lineEndString1_ID2_..._targetString_modeString=====\n"
 ##########################################################################################################################################
 
         # Read what is in the buffer, start and stop with specific signals.
@@ -356,10 +365,15 @@ def run():
                         eulerAnglesData.y = float(tmpEuler[1])
                         eulerAnglesData.z = float(tmpEuler[2])
 
-                        tmpPos = data[cursor+5].split(',')
-                        posData.x = float(tmpPos[0])
-                        posData.y = float(tmpPos[1])
-                        posData.theta = float(tmpPos[2])
+                        tmpStartLine = data[cursor+5].split(',')
+                        lineStartData.x = float(tmpStartLine[0])
+                        lineStartData.y = float(tmpStartLine[1])
+                        lineStartData.theta = float(tmpStartLine[2])
+
+                        tmpEndLine = data[cursor+6].split(',')
+                        lineEndData.x = float(tmpEndLine[0])
+                        lineEndData.y = float(tmpEndLine[1])
+                        lineEndData.theta = float(tmpEndLine[2])
 
                         if windForceData.data != -999:
                             boatsPublishers[dictLink[IDboat]][0].publish(windForceData) #Wind force
@@ -373,14 +387,18 @@ def run():
                         if eulerAnglesData.x != -999:
                             boatsPublishers[dictLink[IDboat]][3].publish(eulerAnglesData)  #Euler angles
 
-                        if posData.x != -999:
-                            boatsPublishers[dictLink[IDboat]][4].publish(posData)  #Position
+                        if lineStartData.x != -999:
+                            boatsPublishers[dictLink[IDboat]][4].publish(lineStartData)  #Line start point
+
+                        if lineEndData.x != -999:
+                            boatsPublishers[dictLink[IDboat]][4].publish(lineEndData)  #Line end point
+
 
 
                 except:
                     rospy.loginfo("Oops! "+str(sys.exc_info()[0])+'\n====>'+str(sys.exc_info()[1]))
                 #Go to next data set (next boat or operator)
-                cursor += 6
+                cursor += 7
 
 
             #Collect the data from the operator and store it the corresponding variables
@@ -414,11 +432,11 @@ def run():
 ####################################################################################################
 # Send useful data to the coordinator
 # Frame emitted:
-# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_posString=====\n"
+# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_lineBeginString_lineEndString=====\n"
 ####################################################################################################
 
         #Creating the core message
-        msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+posString
+        msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+beginString+'_'+endString
 
         #Generating the checkSum message control
         size = str(len(msg)+5)
