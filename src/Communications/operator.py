@@ -25,7 +25,10 @@ import os
 
 
 def callback(data):
-    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand, timeLastMove
+
+    if data.angular.z != 0:
+        timeLastMove = time.time()
 
     rudder -= sensibilite1 * sign(data.angular.z)
     sail -= sensibilite2 * sign(data.linear.x)
@@ -39,7 +42,7 @@ def callback(data):
     commands = String(data=str(rudder)+','+str(sail))
     pubCommand.publish(commands)
 
-    if time.time()-timeLastCommand > 0.1:
+    if time.time()-timeLastMove > 0.3:
         rudder = initRudder
 
     timeLastCommand = time.time()
