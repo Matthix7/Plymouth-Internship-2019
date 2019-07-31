@@ -155,6 +155,7 @@ def detectBuoy(image, resultImage, colorRange):
 
     else:
         center1 = None
+        radius1 = None
 
     return center1, radius1, resultImage
 
