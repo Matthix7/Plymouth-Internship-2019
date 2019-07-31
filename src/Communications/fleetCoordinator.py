@@ -293,12 +293,12 @@ def run():
             eulerAnglesData.y = float(tmpEuler[1])
             eulerAnglesData.z = float(tmpEuler[2])
 
-            tmpStartLine = data[5].split(',')
+            tmpStartLine = msgData[5].split(',')
             lineStartData.x = float(tmpStartLine[0])
             lineStartData.y = float(tmpStartLine[1])
             lineStartData.theta = float(tmpStartLine[2])
 
-            tmpEndLine = data[6].split(',')
+            tmpEndLine = msgData[6].split(',')
             lineEndData.x = float(tmpEndLine[0])
             lineEndData.y = float(tmpEndLine[1])
             lineEndData.theta = float(tmpEndLine[2])
@@ -359,8 +359,8 @@ def run():
             if lineStartData.x != -999:
                 pub_send_euler_angles[linkDict[IDboat]].publish(lineStartData)
 
-            if lineBeginData.x != -999:
-                pub_send_euler_angles[linkDict[IDboat]].publish(lineBeginData)
+            if lineEndData.x != -999:
+                pub_send_euler_angles[linkDict[IDboat]].publish(lineEndData)
 
 
 

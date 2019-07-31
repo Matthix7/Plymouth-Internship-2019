@@ -36,7 +36,8 @@ def run():
     pub_send_EULER_ANGLES = rospy.Publisher('euler_angles', Vector3, queue_size = 2)
 
 #    Publishes the direction of the wind
-    pub_send_POS = rospy.Publisher('pos', Pose2D, queue_size = 2)
+    pub_send_lineBegin = rospy.Publisher('regulator_send_lineBegin', Pose2D, queue_size = 2)
+    pub_send_lineEnd = rospy.Publisher('regulator_send_lineEnd', Pose2D, queue_size = 2)
 
 
 
@@ -64,7 +65,8 @@ def run():
         pub_send_WIND_DIRECTION.publish(direction)
         pub_send_GPS.publish(gps)
         pub_send_EULER_ANGLES.publish(euler)
-        pub_send_POS.publish(pos)
+        pub_send_lineBegin.publish(pos)
+        pub_send_lineEnd.publish(pos)
 
         rate.sleep()
 
