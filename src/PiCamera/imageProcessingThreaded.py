@@ -12,7 +12,7 @@ import cv2
 from cv2 import aruco
 import numpy as np
 from math import atan2
-from numpy import pi, cos, sin, array, shape
+from numpy import pi, cos, sin, tan, array, shape
 
 
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest, getColorRangeTest2
