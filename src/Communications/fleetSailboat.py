@@ -138,7 +138,7 @@ def run():
 #    Initialisation
 ###################################################################################################
     #Variables storing the data received by the subscribers
-    global windForceString, windDirectionString, gpsString, eulerAnglesString, posString
+    global windForceString, windDirectionString, gpsString, eulerAnglesString, posString, beginString, endString
 
     line = 'init' #Will store the string from serial read, ie coming from XBee
 
