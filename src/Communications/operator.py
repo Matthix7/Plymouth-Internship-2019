@@ -42,7 +42,7 @@ def callback(data):
     commands = String(data=str(rudder)+','+str(sail))
     pubCommand.publish(commands)
 
-    if time.time()-timeLastMove > 0.3:
+    if time.time()-timeLastMove > 0.1:
         rudder = initRudder
 
     timeLastCommand = time.time()
@@ -62,12 +62,12 @@ def run():
 #    Initialisation
 ###################################################################
 
-    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand
+    global rudder, sail, sensibilite1, sensibilite2, pubCommand, initRudder, initSail, keyboardActive, timeLastCommand, timeLastMove
 
-    initRudder = 0
+    initRudder = 0.0
     initSail = pi/2
     keyboardActive = False
-    keyboardWindow = True
+    keyboardWindow = False
 
     rudder = initRudder
     sail = initSail
@@ -75,6 +75,7 @@ def run():
     sensibilite2 = pi/100
 
     timeLastCommand = time.time()
+    timeLastMove = time.time()
 
 
     rospy.init_node('testGenerator', anonymous=True)
@@ -104,16 +105,17 @@ def run():
             controlMode.data = "1"
         else:
             controlMode.data = "0"
-            if keyboardWindow == False:
-                os.system("gnome-terminal --  rosrun key_teleop key_teleop.py")
-                rudder = initRudder
-                sail = initSail
-                keyboardWindow = True
-                timeLastCommand = time.time()
+
+        if not keyboardWindow:
+            os.system("gnome-terminal --  rosrun key_teleop key_teleop.py")
+            rudder = initRudder
+            sail = initSail
+            timeLastCommand = time.time()
+            keyboardWindow = True
 
         pubControlMode.publish(controlMode)
 
-        if (time.time()-timeLastCommand) > 2:
+        if (time.time()-timeLastCommand) > 1:
             keyboardActive = False
             keyboardWindow = False
             rudder = initRudder
