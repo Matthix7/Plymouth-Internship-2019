@@ -247,7 +247,7 @@ def run():
 
 #    Receive the data relative to line following
     rospy.Subscriber('regulator_send_lineBegin', Pose2D, sub_lineBegin)
-    rospy.Subscriber('regulator_send_lineEnd', Pose2D, sub_linesEnd)
+    rospy.Subscriber('regulator_send_lineEnd', Pose2D, sub_lineEnd)
 
 
 

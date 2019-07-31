@@ -213,9 +213,9 @@ def run():
 
     pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 0) for i in connected]
 
-    pub_send_line_begin = [rospy.Publisher("xbee_send_line_begin_"+str(i), Pose2D(), queue_size = 0) for i in connected]
+    pub_send_line_begin = [rospy.Publisher("xbee_send_line_begin_"+str(i), Pose2D, queue_size = 0) for i in connected]
 
-    pub_send_line_end = [rospy.Publisher("xbee_send_line_end_"+str(i), Pose2D(), queue_size = 0) for i in connected]
+    pub_send_line_end = [rospy.Publisher("xbee_send_line_end_"+str(i), Pose2D, queue_size = 0) for i in connected]
 
     GPSdata = GPSFix()
     eulerAnglesData = Vector3()
