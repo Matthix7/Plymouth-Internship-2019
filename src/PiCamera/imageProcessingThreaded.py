@@ -29,6 +29,8 @@ def run():
     markerDetection = True
     outputImage = True
 
+    buoySize = 0.5 #meters
+
     if mastsDetection:
         horizonDetection = True
 
@@ -53,7 +55,7 @@ def run():
     headings_arucos_msg = Float32()
 
 
-###################    Code initialisation    #######################
+###################    Code initialisation    ######################
 ####################################################################
 
     t0 = time.time()
@@ -194,12 +196,15 @@ def run():
 ##      Check if the color range corresponds to what you look for!
 
             t3 = time.time()
-#           colorRange = getColorRangeTest() #For test target
-            colorRange = getColorRange() #For real buoys
-            center, frame_markers = detectBuoy(image, image.copy(), colorRange)
+           colorRange = getColorRangeTest2() #For test target
+#            colorRange = getColorRange() #For real buoys
+            center, radius, frame_markers = detectBuoy(image, image.copy(), colorRange)
             if center is not None:
                 xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
                 headingBuoy = (xBuoy-resolution[0]/2)*Sf
+
+                distBuoy = buoySize/tan(2*radius*Sf)
+                print(distBuoy)
             else:
                 headingBuoy = -999
             heading_buoy_msg.data = headingBuoy

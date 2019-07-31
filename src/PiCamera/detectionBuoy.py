@@ -106,6 +106,22 @@ def getColorRangeTest():
 
     return (lower, upper)
 
+def getColorRangeTest2():
+    # define range of buoy color in HSV
+    # voir https://www.google.com/search?client=firefox-b&q=%23D9E80F
+
+    hue_min = 345
+    hue_max = 354
+    sat_min = 48
+    sat_max = 96
+    val_min = 21
+    val_max = 70
+
+    lower = np.array([int(hue_min/2),int(sat_min*255/100),int(val_min*255/100)])
+    upper = np.array([int(hue_max/2),int(sat_max*255/100),int(val_max*255/100)])
+
+    return (lower, upper)
+
 
 
 def detectBuoy(image, resultImage, colorRange):
@@ -135,10 +151,12 @@ def detectBuoy(image, resultImage, colorRange):
 
         cv2.circle(resultImage,center1,radius1,(255,0,0),1)
         cv2.circle(resultImage,center1,1,(255,0,0),2)
+
+
     else:
         center1 = None
 
-    return center1, resultImage
+    return center1, radius1, resultImage
 
 
 
