@@ -15,7 +15,7 @@ from math import atan2
 from numpy import pi, cos, sin, array, shape
 
 
-from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest
+from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest, getColorRangeTest2
 from detectionHorizonMast2 import horizonArea, detectMast
 from detectionAruco import detectAruco
 from camThread import PiVideoStream
