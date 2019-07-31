@@ -344,23 +344,17 @@ def run():
                 GPSdata.time = gps_time
                 GPSdata.hdop = hdop
 
-                if IDboat == 2:
-                    rospy.loginfo("Accepted GPS data\n|" +str(data)+'|\n')
-
                 pub_send_gps[linkDict[IDboat]].publish(GPSdata)
 
-            else:
-                if IDboat == 2:
-                    rospy.loginfo("Rejected GPS data\n|" +str(data)+'|\n')
 
             if eulerAnglesData.x != -999:
                 pub_send_euler_angles[linkDict[IDboat]].publish(eulerAnglesData)
 
             if lineStartData.x != -999:
-                pub_send_euler_angles[linkDict[IDboat]].publish(lineStartData)
+                pub_send_line_begin[linkDict[IDboat]].publish(lineStartData)
 
             if lineEndData.x != -999:
-                pub_send_euler_angles[linkDict[IDboat]].publish(lineEndData)
+                pub_send_line_end[linkDict[IDboat]].publish(lineEndData)
 
 
 
