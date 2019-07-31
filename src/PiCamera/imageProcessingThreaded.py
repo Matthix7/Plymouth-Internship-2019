@@ -196,7 +196,7 @@ def run():
 ##      Check if the color range corresponds to what you look for!
 
             t3 = time.time()
-           colorRange = getColorRangeTest2() #For test target
+            colorRange = getColorRangeTest2() #For test target
 #            colorRange = getColorRange() #For real buoys
             center, radius, frame_markers = detectBuoy(image, image.copy(), colorRange)
             if center is not None:
