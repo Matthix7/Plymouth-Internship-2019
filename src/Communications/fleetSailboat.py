@@ -391,7 +391,7 @@ def run():
                             boatsPublishers[dictLink[IDboat]][4].publish(lineStartData)  #Line start point
 
                         if lineEndData.x != -999:
-                            boatsPublishers[dictLink[IDboat]][4].publish(lineEndData)  #Line end point
+                            boatsPublishers[dictLink[IDboat]][5].publish(lineEndData)  #Line end point
 
 
 
