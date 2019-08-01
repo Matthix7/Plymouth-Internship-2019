@@ -1,2 +1,1 @@
-Folder where the videos of the missions are gathered, stamped in their names.
-Standard : 1 Mo/min of recording
+Folder where the image of detected April Tags are gathered, stamped in their names.

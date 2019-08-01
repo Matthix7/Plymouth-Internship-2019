@@ -111,7 +111,7 @@ def is_valid(line):
 
 
 def run():
-    expected_fleet_size = 1
+    expected_fleet_size = 2
     receiving_freq = 10. #Set the speed of the transmission loops
 
 ###################################################################################################

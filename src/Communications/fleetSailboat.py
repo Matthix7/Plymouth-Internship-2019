@@ -340,7 +340,7 @@ def run():
 
             data_log = "Read\n"
             for boat in range(fleetSize):
-                data_log += str(data[6*boat:6*(boat+1)])+'\n'
+                data_log += str(data[7*boat:7*(boat+1)])+'\n'
             data_log += str(data[-2:])
             rospy.loginfo(data_log+'\n')
 
