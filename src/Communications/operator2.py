@@ -36,194 +36,194 @@ import subprocess as s
 
 
 def on_press(key):
-
-###################################################################
-#    Program executed each time a key is pressed on the keyboard.
-###################################################################
-
-
-###################################################################
-#    Useful variables
-###################################################################
-
     global dictMode, dictCommands, controlled, connected, padsUseDict, keyboardMode, dictLastMove, end
-    if end:
-        return False
+    if connected != []:
+    ###################################################################
+    #    Program executed each time a key is pressed on the keyboard.
+    ###################################################################
 
-    fList = [Key.f1, Key.f2, Key.f3, Key.f4, Key.f5, Key.f6, Key.f7, Key.f8, Key.f9, Key.f10, Key.f11, Key.f12]
 
-##################################################################################################
-# Create a common variable type for all pads (WASD (ZQSD if French), Arrows, maybe more incoming)
-##################################################################################################
+    ###################################################################
+    #    Useful variables
+    ###################################################################
+        if end:
+            return False
 
-    try:
-        if key == Key.up:
-            keyString = 'up'
-        elif key == Key.down:
-            keyString = 'down'
-        elif key == Key.left:
-            keyString = 'left'
-        elif key == Key.right:
-            keyString = 'right'
+        fList = [Key.f1, Key.f2, Key.f3, Key.f4, Key.f5, Key.f6, Key.f7, Key.f8, Key.f9, Key.f10, Key.f11, Key.f12]
+
+    ##################################################################################################
+    # Create a common variable type for all pads (WASD (ZQSD if French), Arrows, maybe more incoming)
+    ##################################################################################################
+
+        try:
+            if key == Key.up:
+                keyString = 'up'
+            elif key == Key.down:
+                keyString = 'down'
+            elif key == Key.left:
+                keyString = 'left'
+            elif key == Key.right:
+                keyString = 'right'
+            else:
+                keyString = key.char
+        except:
+            keyString = None
+
+
+    ##################################################################################################
+    # Set the pads in accordance with keyboard used
+    ##################################################################################################
+
+        if keyboardMode == 'azerty':
+            WASD = ['z', 'q', 's', 'd']
         else:
-            keyString = key.char
-    except:
-        keyString = None
+            WASD = ['w', 'a', 's', 'd']
+
+        ARROWS = ['up', 'left', 'down', 'right']
+
+        padComponents = {'WASD':WASD, 'Arrows':ARROWS}
 
 
-##################################################################################################
-# Set the pads in accordance with keyboard used
-##################################################################################################
+    ##################################################################################################
+    # Reset command = press Esc
+    ##################################################################################################
 
-    if keyboardMode == 'azerty':
-        WASD = ['z', 'q', 's', 'd']
-    else:
-        WASD = ['w', 'a', 's', 'd']
-
-    ARROWS = ['up', 'left', 'down', 'right']
-
-    padComponents = {'WASD':WASD, 'Arrows':ARROWS}
-
-
-##################################################################################################
-# Reset command = press Esc
-##################################################################################################
-
-    if key == Key.esc:
-            rospy.loginfo("Reinitialising all sailboats to automatic mode.")
-            dictMode = {boat:0 for boat in connected}
-            dictLastMove = {boat:time() for boat in connected}
-            dictCommands = {boat:(initRudder,initSail) for boat in connected}
-            padsUseDict = {boat:None for boat in connected}
-            padsUseDict['WASD']=0
-            padsUseDict['Arrows']=0
-            controlled = []
+        if key == Key.esc:
+                rospy.loginfo("Reinitialising all sailboats to automatic mode.")
+                dictMode = {boat:0 for boat in connected}
+                dictLastMove = {boat:time() for boat in connected}
+                dictCommands = {boat:(initRudder,initSail) for boat in connected}
+                padsUseDict = {boat:None for boat in connected}
+                padsUseDict['WASD']=0
+                padsUseDict['Arrows']=0
+                controlled = []
 
 
-##################################################################################################
-# Pressing insert will allow you to type a terminal command for the sailboat.
-# Ex: Press Insert, then type 'roslaunch plymouth_internship_2019 imageProcessing'
-# to launch the corresponding node.
-##################################################################################################
+    ##################################################################################################
+    # Pressing insert will allow you to type a terminal command for the sailboat.
+    # Ex: Press Insert, then type 'roslaunch plymouth_internship_2019 imageProcessing'
+    # to launch the corresponding node.
+    ##################################################################################################
 
-    if key == Key.insert:
-            rospy.loginfo("Type a command to execute. \n'all [command]' to apply to all sailboats, else '[id] [command]'.")
-            userInput = pg.prompt(text='Command', title='User input' , default='all roslaunch ')
-            rospy.loginfo("You typed '"+userInput+"'.")
+        if key == Key.insert:
+                rospy.loginfo("Type a command to execute. \n'all [command]' to apply to all sailboats, else '[id] [command]'.")
+                userInput = pg.prompt(text='Command', title='User input' , default='all roslaunch ')
+                rospy.loginfo("You typed '"+userInput+"'.")
 
-            try:
-                if userInput is not None:
-                    if userInput.split()[0] == 'all':
-                        toLaunch = connected
+                try:
+                    if userInput is not None:
+                        if userInput.split()[0] == 'all':
+                            toLaunch = connected
+                        else:
+                            toLaunch = [eval(userInput.split()[0])]
+
+                        for boat in toLaunch:
+                            dictMode[boat] = 2
+                            dictCommands[boat] = userInput[userInput.index(' ')+1:]
+
+                        sleep(10)
+
+                        for boat in toLaunch:
+                            dictMode[boat] = 0
+                            dictCommands[boat] = (initRudder,initSail)
+                            if boat in controlled:
+                                controlled.remove(boat)
+                            pad = padsUseDict[boat]
+                            if pad is not None:
+                                padsUseDict[pad] = 0
+                                padsUseDict[boat] = None
+
+                except Exception as e:
+                    rospy.loginfo('Error input: {0}'.format(e))
+
+
+
+    ##################################################################################################
+    # Connection of a boat to a pad.
+    # Press f1, f2, ..., f[id] to connect and control with pad.
+    # First connected will be controlled with arrows, second with WASD, but you will have
+    # to disconnect one boat before controlling another.
+    # IDs used are those of XBees.
+    ##################################################################################################
+
+        try:
+            if key in fList:
+                id = fList.index(key)+1
+
+                if id in connected:
+                    if dictMode[id] != 1:
+
+                        if len(controlled) <= 2:
+                            rospy.loginfo('Take control of boat '+str(id))
+                            dictMode[id] = 1
+                            controlled.append(id)
+
+                            for pad in padsUseDict:
+                                if padsUseDict[pad] == 0:
+                                    padsUseDict[pad] = id
+                                    padsUseDict[id] = pad
+                                    rospy.loginfo('You can use '+pad+' to control boat '+str(id))
+                                    break
+                        else:
+                            rospy.loginfo("You already control 2 sailoats, remove 1 of them !")
+
                     else:
-                        toLaunch = [eval(userInput.split()[0])]
-
-                    for boat in toLaunch:
-                        dictMode[boat] = 2
-                        dictCommands[boat] = userInput[userInput.index(' ')+1:]
-
-                    sleep(10)
-
-                    for boat in toLaunch:
-                        dictMode[boat] = 0
-                        dictCommands[boat] = (initRudder,initSail)
-                        if boat in controlled:
-                            controlled.remove(boat)
-                        pad = padsUseDict[boat]
-                        if pad is not None:
-                            padsUseDict[pad] = 0
-                            padsUseDict[boat] = None
-
-            except Exception as e:
-                rospy.loginfo('Error input: {0}'.format(e))
-
-
-
-##################################################################################################
-# Connection of a boat to a pad.
-# Press f1, f2, ..., f[id] to connect and control with pad.
-# First connected will be controlled with arrows, second with WASD, but you will have
-# to disconnect one boat before controlling another.
-# IDs used are those of XBees.
-##################################################################################################
-
-    try:
-        if key in fList:
-            id = fList.index(key)+1
-
-            if id in connected:
-                if dictMode[id] != 1:
-
-                    if len(controlled) <= 2:
-                        rospy.loginfo('Take control of boat '+str(id))
-                        dictMode[id] = 1
-                        controlled.append(id)
-
-                        for pad in padsUseDict:
-                            if padsUseDict[pad] == 0:
-                                padsUseDict[pad] = id
-                                padsUseDict[id] = pad
-                                rospy.loginfo('You can use '+pad+' to control boat '+str(id))
-                                break
-                    else:
-                        rospy.loginfo("You already control 2 sailoats, remove 1 of them !")
+                        rospy.loginfo('Back to autonomy for boat '+str(id))
+                        dictMode[id] = 0
+                        dictCommands[id] = (initRudder,initSail)
+                        controlled.remove(id)
+                        pad = padsUseDict[id]
+                        padsUseDict[pad] = 0
+                        padsUseDict[id] = None
 
                 else:
-                    rospy.loginfo('Back to autonomy for boat '+str(id))
-                    dictMode[id] = 0
-                    dictCommands[id] = (initRudder,initSail)
-                    controlled.remove(id)
-                    pad = padsUseDict[id]
-                    padsUseDict[pad] = 0
-                    padsUseDict[id] = None
+                    rospy.loginfo('This boat is not part of the current fleet')
 
-            else:
-                rospy.loginfo('This boat is not part of the current fleet')
-
-    except Exception as e:
-        rospy.loginfo('Error2: {0}'.format(e))
+        except Exception as e:
+            rospy.loginfo('Error2: {0}'.format(e))
 
 
-##################################################################################################
-# Control of connected sailboats.
-# Commands for rudder and sail. 'Move forward' will close the sail.
-# Default is full open, rudder straight.
-# Rudder comes back straight if no command is issued for 0.1s .
-##################################################################################################
+    ##################################################################################################
+    # Control of connected sailboats.
+    # Commands for rudder and sail. 'Move forward' will close the sail.
+    # Default is full open, rudder straight.
+    # Rudder comes back straight if no command is issued for 0.1s .
+    ##################################################################################################
 
-    try:
-        if keyString is not None:
-            for pad in padComponents:  #ie WASD or Arrows
-                if keyString in padComponents[pad] and padsUseDict[pad]!=0:  #key is part of a pad and the pad is connected to a boat
-                    id = padsUseDict[pad]
-                    rospy.loginfo("Controlling boat "+str(id))
-                    (rudder, sail) = dictCommands[id]
+        try:
+            if keyString is not None:
+                for pad in padComponents:  #ie WASD or Arrows
+                    if keyString in padComponents[pad] and padsUseDict[pad]!=0:  #key is part of a pad and the pad is connected to a boat
+                        id = padsUseDict[pad]
+                        rospy.loginfo("Controlling boat "+str(id))
+                        (rudder, sail) = dictCommands[id]
 
-                    if keyString in (padComponents[pad][1], padComponents[pad][3]): #action on rudder
-                        dictLastMove[id] = time()
+                        if keyString in (padComponents[pad][1], padComponents[pad][3]): #action on rudder
+                            dictLastMove[id] = time()
 
-                    rudder -= sensibilite1 * (1 if keyString == padComponents[pad][3] else -1 if keyString == padComponents[pad][1] else 0)
-                    sail -= sensibilite2 * (1 if keyString == padComponents[pad][0] else -1 if keyString == padComponents[pad][2] else 0)
+                        rudder -= sensibilite1 * (1 if keyString == padComponents[pad][3] else -1 if keyString == padComponents[pad][1] else 0)
+                        sail -= sensibilite2 * (1 if keyString == padComponents[pad][0] else -1 if keyString == padComponents[pad][2] else 0)
 
-                    sail = max(0, min(sail, pi/2))        #Security checks
-                    rudder = max(-pi/4, min(rudder, pi/4))
+                        sail = max(0, min(sail, pi/2))        #Security checks
+                        rudder = max(-pi/4, min(rudder, pi/4))
 
-                    dictCommands[id] = (rudder, sail)
+                        dictCommands[id] = (rudder, sail)
 
 
 
-    except AttributeError:
-        rospy.loginfo('Wrong key: {0}'.format(e))
+        except AttributeError:
+            rospy.loginfo('Wrong key: {0}'.format(e))
 
-    except Exception as e:
-        rospy.loginfo('Error3: {0}'.format(e))
+        except Exception as e:
+            rospy.loginfo('Error3: {0}'.format(e))
 
 
 
 
 def connected_callback(data):
     global connected
-    connected = eval(data.data[1:])
+    connected = eval(data.data)  # eval(data.data[1:]) if running on test launch file
+    rospy.loginfo("Received connection")
 
 
 
@@ -257,6 +257,7 @@ def run():
     keyboardListener = keyboard.Listener(
         on_press=on_press)
     keyboardListener.start()
+    end = False
 
 ###################################################################
 #    initialisation of variables
@@ -295,8 +296,9 @@ def run():
 
     rate = rospy.Rate(20)
 
-    while connected == []:
+    while connected == [] and not rospy.is_shutdown():
         sleep(1)
+        rospy.loginfo("Waiting...")
     rospy.loginfo("Connected : "+str(connected))
 
 ###################################################################

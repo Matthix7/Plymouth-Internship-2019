@@ -443,7 +443,9 @@ def run():
                                     killCommand = "rosnode kill "+node
                                     killProcess = s.Popen(killCommand.split())
 
-                        process = s.Popen(userInput.split())
+                    rospy.loginfo("Launched command "+userInput)
+                    process = s.Popen(userInput.split())
+                    rospy.loginfo("Success")
 
                 except Exception as e:
                     rospy.loginfo('Error launching command: \n{0}'.format(e))

@@ -211,8 +211,10 @@ def run():
 
     compteur = 0
 
-    pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 0)
-    pub_send_connected.publish(String(data = str(connected)))
+    pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 1)
+    for i in range(10):
+        pub_send_connected.publish(String(data = str(connected)))
+        sleep(2)
 
     pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 0) for i in connected]
 
