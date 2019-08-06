@@ -211,8 +211,8 @@ def run():
 
     compteur = 0
 
-#    pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 0)
-#    pub_send_connected.publish(String(data = str(connected)))
+    pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 0)
+    pub_send_connected.publish(String(data = str(connected)))
 
     pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 0) for i in connected]
 
@@ -276,7 +276,7 @@ def run():
         if "Hello" in line:
             continue
 
-        rospy.loginfo('Line:\n|'+line+'|')
+#        rospy.loginfo('Line:\n|'+line+'|')
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)
