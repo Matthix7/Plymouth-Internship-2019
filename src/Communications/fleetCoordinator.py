@@ -85,7 +85,7 @@ def is_valid(line):
             msg = msg.replace('=','')
 
             try :
-                size = int(msg.split('_')[0])
+                size = int(msg.split('@')[0])
 
                 if size == len(msg):
                     msg = msg[5:]
@@ -190,7 +190,7 @@ def run():
     #link each ID to a minimal line number in the data storing structure
     linkDict = {connected[i]:i for i in range(fleetSize)}
 
-    ser.write(str(fleetSize)+'_'+str(connected)+'_Connected'+ '\n')
+    ser.write(str(fleetSize)+'@'+str(connected)+'@Connected'+ '\n')
     rospy.loginfo("Got boats " + str(connected)+' connected\n')
 
     sleep(5)
@@ -251,7 +251,7 @@ def run():
     emission = -1
 
     #Data storing structure
-    received = ['ID_nothing_nothing_nothing_nothing_nothing_nothing']*fleetSize
+    received = ['ID@nothing@nothing@nothing@nothing@nothing@nothing']*fleetSize
 
 
     while not rospy.is_shutdown():
@@ -262,7 +262,7 @@ def run():
 ####################################################################################################
 # Receive useful data from the sailboats
 # Frame received:
-# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_lineBeginString_lineEndString=====\n"
+# "#####msgSize@ID@windForceString@windDirectionString@gpsString@eulerAnglesString@lineBeginString@lineEndString=====\n"
 ####################################################################################################
 
         #If available, read a line from the XBee
@@ -288,7 +288,7 @@ def run():
             compteur += 1
 
             #Organise the incoming data in the storing structure
-            msgData = msgReceived.split('_')
+            msgData = msgReceived.split('@')
 
             IDboat = int(msgData[0])
             received[linkDict[IDboat]-1] = msgReceived
@@ -380,29 +380,29 @@ def run():
 ##########################################################################################################################################
 # Send useful data to the sailboats
 # Frame emitted:
-# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_lineBeginString1_lineEndString1_ID2_..._targetString_modeString=====\n"
+# "#####msgSize@ID1@windForceString1@windDirectionString1@gpsString1@eulerAnglesString1@lineBeginString1@lineEndString1@ID2@...@targetString@modeString=====\n"
 ##########################################################################################################################################
 
             #Collect the data from each boat and the operator and gather them in one string
             #Creating the core message
             receivedLines = ''
             for line in received:
-                receivedLines += line+'_'
+                receivedLines += line+'@'
 
-            msg = receivedLines+targetString+'_'+modeString
+            msg = receivedLines+targetString+'@'+modeString
 
             #Generating the checkSum message control
             size = str(len(msg)+5)
             for i in range(len(size),4):
                 size = '0'+size
 
-            msg = "#####"+size+'_'+msg+"=====\n"
+            msg = "#####"+size+'@'+msg+"=====\n"
 
             #Emit the message
             ser.write(msg)
 #            rospy.loginfo("Emitted\n|" + msg + '|')
 
-            received = ['ID_nothing_nothing_nothing_nothing_nothing_nothing']*fleetSize
+            received = ['ID@nothing@nothing@nothing@nothing@nothing@nothing']*fleetSize
 
 
 #            rospy.loginfo("Emission " + str(emission//fleetSize))

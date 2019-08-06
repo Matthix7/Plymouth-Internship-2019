@@ -105,7 +105,7 @@ def is_valid(line):
             msg = msg.replace('=','')
 
             try :
-                size = int(msg.split('_')[0])
+                size = int(msg.split('@')[0])
 
                 if size == len(msg):
                     msg = msg[5:]
@@ -208,13 +208,13 @@ def run():
         for i in range(len(size),4):
             size = '0'+size
 
-        msg = "#####"+size+'_'+msg+"====="
+        msg = "#####"+size+'@'+msg+"====="
         ser.write(msg)
         fleetInitMessage = ser.readline()
 
     #Every sailboat is connected, Coordinator sent the message
-    fleetSize = int(fleetInitMessage.split('_')[0])
-    fleetIDs = eval(fleetInitMessage.split('_')[1])
+    fleetSize = int(fleetInitMessage.split('@')[0])
+    fleetIDs = eval(fleetInitMessage.split('@')[1])
 
     #Organise data to create a link between topics names and boats IDs
     #By doing this, you can be sure that the data relative to one boat
@@ -316,7 +316,7 @@ def run():
 ##########################################################################################################################################
 # Receive useful data from the coordinator
 # Frame received:
-# "#####msgSize_ID1_windForceString1_windDirectionString1_gpsString1_eulerAnglesString1_lineBeginString1_lineEndString1_ID2_..._targetString_modeString=====\n"
+# "#####msgSize@ID1@windForceString1@windDirectionString1@gpsString1@eulerAnglesString1@lineBeginString1@lineEndString1@ID2@...@targetString@modeString=====\n"
 ##########################################################################################################################################
 
         # Read what is in the buffer, start and stop with specific signals.
@@ -342,7 +342,7 @@ def run():
 
             #Organise the data by separating the data from each boat and the data from the operator
 
-            data = msgReceived.split('_')
+            data = msgReceived.split('@')
 
             data_log = "Read\n"
             for boat in range(fleetSize):
@@ -470,18 +470,18 @@ def run():
 ####################################################################################################
 # Send useful data to the coordinator
 # Frame emitted:
-# "#####msgSize_ID_windForceString_windDirectionString_gpsString_eulerAnglesString_lineBeginString_lineEndString=====\n"
+# "#####msgSize@ID@windForceString@windDirectionString@gpsString@eulerAnglesString@lineBeginString@lineEndString=====\n"
 ####################################################################################################
 
         #Creating the core message
-        msg = str(ID)+'_'+windForceString+'_'+windDirectionString+'_'+gpsString+'_'+eulerAnglesString+'_'+beginString+'_'+endString
+        msg = str(ID)+'@'+windForceString+'@'+windDirectionString+'@'+gpsString+'@'+eulerAnglesString+'@'+beginString+'@'+endString
 
         #Generating the checkSum message control
         size = str(len(msg)+5)
         for i in range(len(size),4):
             size = '0'+size
 
-        msg = "#####"+size+'_'+msg+"=====\n"
+        msg = "#####"+size+'@'+msg+"=====\n"
 
 
         #Sleep while others are talking
