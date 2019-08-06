@@ -51,6 +51,7 @@ from gps_common.msg import GPSFix
 
 import serial
 from time import time, sleep
+import numpy
 
 import pyudev
 
@@ -200,7 +201,8 @@ def run():
 ###################################################################################################
     #Variables storing the data received by the subscribers
     global targetString, modeString
-    targetString, modeString = 'nan, nan', '0'
+    targetString = str({boat:(0,numpy.pi/2) for boat in connected})
+    modeString = str({boat:0 for boat in connected})
 
 
     emission_freq = receiving_freq/fleetSize #Frequency of emission for the Coordinator
@@ -328,7 +330,7 @@ def run():
                 frame_type = float(data[6])
                 nbSat = float(data[7])
 		if data[8] != '':                
-		 hdop = float(data[8])
+                    hdop = float(data[8])
                 altitude = float(data[9].split(',')[0])
 
 

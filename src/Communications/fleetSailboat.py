@@ -451,9 +451,8 @@ def run():
 
             else:
                 #Publish the data for internal use (controllers, kalman filters, ...)
-                targetData = userInput.split(',')
-                rudder.data = float(targetData[0])
-                sail.data = float(targetData[1])
+                rudder.data = userInput[0]
+                sail.data = userInput[1]
 
                 pub_send_control_mode.publish(mode)
                 pub_send_u_rudder.publish(rudder)

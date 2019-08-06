@@ -46,7 +46,9 @@ def on_press(key):
 #    Useful variables
 ###################################################################
 
-    global dictMode, dictCommands, controlled, connected, padsUseDict, keyboardMode, dictLastMove
+    global dictMode, dictCommands, controlled, connected, padsUseDict, keyboardMode, dictLastMove, end
+    if end:
+        return False
 
     fList = [Key.f1, Key.f2, Key.f3, Key.f4, Key.f5, Key.f6, Key.f7, Key.f8, Key.f9, Key.f10, Key.f11, Key.f12]
 
@@ -240,7 +242,7 @@ def run():
 ###################################################################
 
     global sensibilite1, sensibilite2, pubCommand, initRudder, initSail
-    global dictLastMove
+    global dictLastMove, end
     global controlMode, commands, connected, dictMode, dictCommands
     global controlled, padsUseDict, keyboardMode
 
@@ -333,6 +335,7 @@ def run():
 
         rate.sleep()
 
+    end = True
 
 
 
