@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="rostopic" type="rostopic" name="connectedTest" args="pub -1 /xbee_send_connected std_msgs/String -- a[2,1]" />
+    <node name="operator" pkg="plymouth_internship_2019" type="operator" output='screen'/>
+</launch>

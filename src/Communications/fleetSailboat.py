@@ -58,6 +58,7 @@ import numpy as np
 
 import pyudev
 import sys
+import subprocess as s
 
 ###################################################################################################
 #    To execute when a message to transmit is received by the subscribers.
@@ -144,7 +145,7 @@ def run():
 
 
     #Initialisation of the ROS node, endPoint refers to XBee network structure
-    rospy.init_node('endPoint', anonymous=True)
+    rospy.init_node('fleetSailboat', anonymous=True)
 
     # Data coming from the sailboats
     windForceData, windDirectionData, GPSdata, eulerAnglesData, lineStartData, lineEndData = Float32(), Float32(), String(), Vector3(), Pose2D(), Pose2D()
@@ -214,6 +215,11 @@ def run():
     #Every sailboat is connected, Coordinator sent the message
     fleetSize = int(fleetInitMessage.split('_')[0])
     fleetIDs = eval(fleetInitMessage.split('_')[1])
+
+    #Organise data to create a link between topics names and boats IDs
+    #By doing this, you can be sure that the data relative to one boat
+    #will always be published in the same publishers, allowing therefore
+    #to keep a track of each boat.
     dictLink = {fleetIDs[i]:(i) for i in range(len(fleetIDs))} #give local minimal IDs to the connected boats
     rospy.loginfo("DICT = "+str(dictLink))
 
@@ -404,26 +410,57 @@ def run():
             #Collect the data from the operator and store it the corresponding variables
             #that will be sent by the publishers.
 
-            targetString = data[cursor]
-            targetData = targetString.split(',')
-            rudder.data = float(targetData[0])
-            sail.data = float(targetData[1])
+## BEGIN UPDATE   (+ import subprocess as s) +(initMode => fleetSailboat)
 
-            mode.data = int(data[cursor+1])
+            userInputDict = eval(data[cursor])
+            userInput = userInputDict[ID]
 
-            #Organise data to create a link between topics names and boats IDs
-            #By doing this, you can be sure that the data relative to one boat
-            #will always be published in the same publishers, allowing therefore
-            #to keep a track of each boat.
+            modeDict = eval(data[cursor+1])
+            mode.data = modeDict[ID]
+
+            if mode.data == 2:
+                try:
+
+                    if userInput.split()[0] in ["kill", "Kill"]:
+                        runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
+
+                        if userInput.split()[1] in ["-a", "--all"]:
+                            for node in runningNodes:
+                                if node != '' and "ros" not in node and "fleetSailboat" not in node:
+                                    killCommand = "rosnode kill "+node
+                                    killProcess = s.Popen(killCommand.split())
+                        else:
+                            for node in runningNodes:
+                                if userInput.split()[1] in node:
+                                    killCommand = "rosnode kill "+node
+                                    killProcess = s.Popen(killCommand.split())
+
+                    else:
+                        if userInput.split()[-1] == "--relaunch":
+                            userInput = userInput[:userInput.index(" --relaunch")]
+                            for node in runningNodes:
+                                if node != '' and "ros" not in node and "fleetSailboat" not in node:
+                                    killCommand = "rosnode kill "+node
+                                    killProcess = s.Popen(killCommand.split())
+
+                        process = s.Popen(userInput.split())
+
+                except Exception as e:
+                    rospy.loginfo('Error launching command: \n{0}'.format(e))
 
 
-            #Publish the data for internal use (controllers, kalman filters, ...)
+            else:
+                #Publish the data for internal use (controllers, kalman filters, ...)
+                targetData = userInput.split(',')
+                rudder.data = float(targetData[0])
+                sail.data = float(targetData[1])
 
-            pub_send_control_mode.publish(mode)
-            pub_send_u_rudder.publish(rudder)
-            pub_send_u_sail.publish(sail)
+                pub_send_control_mode.publish(mode)
+                pub_send_u_rudder.publish(rudder)
+                pub_send_u_sail.publish(sail)
 
 
+## END UPDATE
 
         elif not check:
             rospy.loginfo("Could not read\n"+ '|'+line+'|\n')

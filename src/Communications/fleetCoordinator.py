@@ -111,13 +111,13 @@ def is_valid(line):
 
 
 def run():
-    expected_fleet_size = 2
+    expected_fleet_size = 1
     receiving_freq = 10. #Set the speed of the transmission loops
 
 ###################################################################################################
 #    Look for XBee USB port, to avoid conflicts with other USB devices
 ###################################################################################################
-    rospy.init_node('coordinator', anonymous=True)
+    rospy.init_node('fleetCoordinator', anonymous=True)
     rospy.loginfo("Looking for XBee...")
 
     context = pyudev.Context()
@@ -209,6 +209,9 @@ def run():
 
     compteur = 0
 
+#    pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 0)
+#    pub_send_connected.publish(String(data = str(connected)))
+
     pub_send_gps = [rospy.Publisher("xbee_send_gps_"+str(i), GPSFix, queue_size = 0) for i in connected]
 
     pub_send_euler_angles = [rospy.Publisher("xbee_send_euler_angles_"+str(i), Vector3, queue_size = 0) for i in connected]
@@ -271,7 +274,7 @@ def run():
         if "Hello" in line:
             continue
 
-#        rospy.loginfo('Line:\n|'+line+'|')
+        rospy.loginfo('Line:\n|'+line+'|')
 
         # Check message syntax and checkSum and clean the message to use only the useful data
         check, msgReceived = is_valid(line)

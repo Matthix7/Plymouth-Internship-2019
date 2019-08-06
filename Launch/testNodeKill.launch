@@ -1,0 +1,5 @@
+<launch>
+
+    <node pkg="rostopic" type="rostopic" name="node_to_kill" args="pub /node_to_kill geometry_msgs/Vector3 -- 50.375471 -4.138836 0" output="screen"/>
+
+</launch>
