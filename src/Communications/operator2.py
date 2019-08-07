@@ -108,10 +108,10 @@ def on_press(key):
         if key == Key.insert:
                 rospy.loginfo("Type a command to execute. \n  'all [command]' to apply to all sailboats, else '[id] [command]'.")
                 userInput = pg.prompt(text='Command', title='User input' , default='all roslaunch ')
-                rospy.loginfo("You typed '"+userInput+"'.")
 
                 try:
                     if userInput is not None:
+                        rospy.loginfo("You typed '"+userInput+"'.")
                         if userInput.split()[0] == 'all':
                             toLaunch = connected
                         else:
