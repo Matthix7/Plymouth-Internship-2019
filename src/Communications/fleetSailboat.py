@@ -345,11 +345,11 @@ def run():
 
             data = msgReceived.split('@')
 
-            data_log = "Read\n"
-            for boat in range(fleetSize):
-                data_log += str(data[7*boat:7*(boat+1)])+'\n'
-            data_log += str(data[-2:])
-            rospy.loginfo(data_log+'\n')
+#            data_log = "Read\n"
+#            for boat in range(fleetSize):
+#                data_log += str(data[7*boat:7*(boat+1)])+'\n'
+#            data_log += str(data[-2:])
+#            rospy.loginfo(data_log+'\n')
 
 
             #Collect the data from boats and store it the corresponding variables
@@ -466,8 +466,8 @@ def run():
 
 ## END UPDATE
 
-        elif not check:
-            rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
+#        elif not check:
+#            rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
 
 
 ####################################################################################################
