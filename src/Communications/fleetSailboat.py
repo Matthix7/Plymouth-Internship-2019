@@ -430,12 +430,16 @@ def run():
                                 for node in runningNodes:
                                     if node != '' and "ros" not in node and "fleetSailboat" not in node:
                                         killCommand = "rosnode kill "+node
+                                        rospy.loginfo("Launched command "+killCommand)
                                         killProcess = s.Popen(killCommand.split())
+                                        rospy.loginfo("Success")
                             else:
                                 for node in runningNodes:
                                     if userInput.split()[1] in node:
                                         killCommand = "rosnode kill "+node
+                                        rospy.loginfo("Launched command "+killCommand)
                                         killProcess = s.Popen(killCommand.split())
+                                        rospy.loginfo("Success")
 
                         else:
                             if userInput.split()[-1] == "--relaunch":
@@ -443,7 +447,9 @@ def run():
                                 for node in runningNodes:
                                     if node != '' and "ros" not in node and "fleetSailboat" not in node:
                                         killCommand = "rosnode kill "+node
+                                        rospy.loginfo("Launched command "+killCommand)
                                         killProcess = s.Popen(killCommand.split())
+                                        rospy.loginfo("Success")
 
                         rospy.loginfo("Launched command "+userInput)
                         process = s.Popen(userInput.split())
@@ -502,7 +508,7 @@ def run():
         #Clean the line to check wether it corresponds to the shutdown signal.
         line = line.replace('#','')
         line = line.replace('=','')
-        rospy.loginfo("processFreq = "+str(1/(time()-loopTime)))
+#        rospy.loginfo("processFreq = "+str(1/(time()-loopTime)))
 
 
 
