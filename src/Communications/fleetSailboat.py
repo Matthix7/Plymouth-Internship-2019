@@ -443,6 +443,7 @@ def run():
 
                         else:
                             if userInput.split()[-1] == "--relaunch":
+                                runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
                                 userInput = userInput[:userInput.index("--relaunch")]
                                 for node in runningNodes:
                                     if node != '' and "ros" not in node and "fleetSailboat" not in node:

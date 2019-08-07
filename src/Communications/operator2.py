@@ -114,8 +114,11 @@ def on_press(key):
                         rospy.loginfo("You typed '"+userInput+"'.")
                         if userInput.split()[0] == 'all':
                             toLaunch = connected
-                        else:
+                        elif userInput.split()[0] in connected:
                             toLaunch = [eval(userInput.split()[0])]
+                        else:
+                            toLaunch = []
+                            rospy.loginfo("You tried to send a command to a boat that is not part of the fleet.")
 
                         for boat in toLaunch:
                             dictMode[boat] = 2
