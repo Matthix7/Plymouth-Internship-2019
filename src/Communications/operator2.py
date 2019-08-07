@@ -127,7 +127,7 @@ def on_press(key):
         if key == Key.insert:
                 rospy.loginfo("Type a command to execute. \n  'all [command]' to apply to all sailboats, else '[id] [command]'.")
                 userInput = pg.prompt(text='Usage: "[receiver] [terminal-style command] [--option] \n \
-                Example1: "1 roslaunch myPackageName myLaunchFile --relaunch\
+                \nExample1: "1 roslaunch myPackage myFile.launch --relaunch\
                 \nExample2: "all kill partOfMyNodeName"', title='User input' , default='all roslaunch ')
 
                 try:
