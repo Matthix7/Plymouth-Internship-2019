@@ -212,7 +212,7 @@ def run():
     compteur = 0
 
     pub_send_connected = rospy.Publisher("xbee_send_connected", String, queue_size = 1)
-    for i in range(10):
+    for i in range(2):
         pub_send_connected.publish(String(data = str(connected)))
         sleep(2)
 

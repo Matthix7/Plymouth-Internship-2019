@@ -419,37 +419,38 @@ def run():
             modeDict = eval(data[cursor+1])
             mode.data = modeDict[ID]
 
-            if mode.data == 2 and not commandMode:
-                try:
-                    commandMode = True
-                    if userInput.split()[0] in ["kill", "Kill"]:
-                        runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
+            if mode.data == 2:
+                if not commandMode:
+                    try:
+                        commandMode = True
+                        if userInput.split()[0] in ["kill", "Kill"]:
+                            runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
 
-                        if userInput.split()[1] in ["-a", "--all"]:
-                            for node in runningNodes:
-                                if node != '' and "ros" not in node and "fleetSailboat" not in node:
-                                    killCommand = "rosnode kill "+node
-                                    killProcess = s.Popen(killCommand.split())
+                            if userInput.split()[1] in ["-a", "--all"]:
+                                for node in runningNodes:
+                                    if node != '' and "ros" not in node and "fleetSailboat" not in node:
+                                        killCommand = "rosnode kill "+node
+                                        killProcess = s.Popen(killCommand.split())
+                            else:
+                                for node in runningNodes:
+                                    if userInput.split()[1] in node:
+                                        killCommand = "rosnode kill "+node
+                                        killProcess = s.Popen(killCommand.split())
+
                         else:
-                            for node in runningNodes:
-                                if userInput.split()[1] in node:
-                                    killCommand = "rosnode kill "+node
-                                    killProcess = s.Popen(killCommand.split())
+                            if userInput.split()[-1] == "--relaunch":
+                                userInput = userInput[:userInput.index("--relaunch")]
+                                for node in runningNodes:
+                                    if node != '' and "ros" not in node and "fleetSailboat" not in node:
+                                        killCommand = "rosnode kill "+node
+                                        killProcess = s.Popen(killCommand.split())
 
-                    else:
-                        if userInput.split()[-1] == "--relaunch":
-                            userInput = userInput[:userInput.index("--relaunch")]
-                            for node in runningNodes:
-                                if node != '' and "ros" not in node and "fleetSailboat" not in node:
-                                    killCommand = "rosnode kill "+node
-                                    killProcess = s.Popen(killCommand.split())
+                        rospy.loginfo("Launched command "+userInput)
+                        process = s.Popen(userInput.split())
+                        rospy.loginfo("Success")
 
-                    rospy.loginfo("Launched command "+userInput)
-                    process = s.Popen(userInput.split())
-                    rospy.loginfo("Success")
-
-                except Exception as e:
-                    rospy.loginfo('Error launching command: \n{0}'.format(e))
+                    except Exception as e:
+                        rospy.loginfo('Error launching command: \n{0}'.format(e))
 
 
             else:
