@@ -132,6 +132,8 @@ def on_press(key):
                             if pad is not None:
                                 padsUseDict[pad] = 0
                                 padsUseDict[boat] = None
+                    else:
+                        rospy.loginfo("Command cancelled.")
 
                 except Exception as e:
                     rospy.loginfo('Error input: {0}'.format(e))
