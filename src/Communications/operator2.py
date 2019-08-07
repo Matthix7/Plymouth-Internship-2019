@@ -106,7 +106,7 @@ def on_press(key):
     ##################################################################################################
 
         if key == Key.insert:
-                rospy.loginfo("Type a command to execute. \n'all [command]' to apply to all sailboats, else '[id] [command]'.")
+                rospy.loginfo("Type a command to execute. \n  'all [command]' to apply to all sailboats, else '[id] [command]'.")
                 userInput = pg.prompt(text='Command', title='User input' , default='all roslaunch ')
                 rospy.loginfo("You typed '"+userInput+"'.")
 
@@ -121,7 +121,7 @@ def on_press(key):
                             dictMode[boat] = 2
                             dictCommands[boat] = userInput[userInput.index(' ')+1:]
 
-                        sleep(10)
+                        sleep(2)
 
                         for boat in toLaunch:
                             dictMode[boat] = 0

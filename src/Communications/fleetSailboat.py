@@ -298,6 +298,7 @@ def run():
     #For statistics
     compteur = 0
     emission = 0
+    commandMode = False
 
     #Message begin signal: '#####'
     #Message end signal: '=====\n'
@@ -410,7 +411,7 @@ def run():
             #Collect the data from the operator and store it the corresponding variables
             #that will be sent by the publishers.
 
-## BEGIN UPDATE   (+ import subprocess as s) +(initMode => fleetSailboat)
+## BEGIN UPDATE   (+ import subprocess as s) +(initMode => fleetSailboat) +( _ => @ )
 
             userInputDict = eval(data[cursor])
             userInput = userInputDict[ID]
@@ -418,9 +419,9 @@ def run():
             modeDict = eval(data[cursor+1])
             mode.data = modeDict[ID]
 
-            if mode.data == 2:
+            if mode.data == 2 and not commandMode:
                 try:
-
+                    commandMode = True
                     if userInput.split()[0] in ["kill", "Kill"]:
                         runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
 
@@ -437,7 +438,7 @@ def run():
 
                     else:
                         if userInput.split()[-1] == "--relaunch":
-                            userInput = userInput[:userInput.index(" --relaunch")]
+                            userInput = userInput[:userInput.index("--relaunch")]
                             for node in runningNodes:
                                 if node != '' and "ros" not in node and "fleetSailboat" not in node:
                                     killCommand = "rosnode kill "+node
@@ -452,6 +453,7 @@ def run():
 
 
             else:
+                commandMode = False
                 #Publish the data for internal use (controllers, kalman filters, ...)
                 rudder.data = userInput[0]
                 sail.data = userInput[1]
