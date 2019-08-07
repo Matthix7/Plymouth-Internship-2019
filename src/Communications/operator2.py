@@ -11,6 +11,25 @@
 # You can control up to 2 sailboats at a time using
 # WASD and Arrows.
 
+# Press Esc to have all boats back to automatic mode,
+# or f[id] to stop control of a remote-controlled boat.
+
+# Command lines: you can send command lines to a specific boat
+# or as broadcast command.
+# To do so, press "insert". A window will pop up, in which you can
+# prompt your command line.
+# 1st param should be the receiver: id of the boat or 'all'.
+# then the command line you want to be executed as if in the
+# terminal of the receiver.
+# Finally you can specify a '--relaunch' param that will close
+# every running node (expect ros specific ones and fleetSailboat)
+# before running your command.
+
+# There is also a 'kill' command to close specific nodes.
+# Use: "[receiver] kill [nodeName]"
+# Program will close nodes containing nodeName as a substring.
+# use '-a' to close all (expect ros specific ones and fleetSailboat)
+
 # WARNING: ONLY ONE KEY CAN BE DETECTED AT A TIME.
 
 # Special dependencies: rospy, pynput, pyautogui
@@ -107,7 +126,9 @@ def on_press(key):
 
         if key == Key.insert:
                 rospy.loginfo("Type a command to execute. \n  'all [command]' to apply to all sailboats, else '[id] [command]'.")
-                userInput = pg.prompt(text='Command', title='User input' , default='all roslaunch ')
+                userInput = pg.prompt(text='Usage: "[receiver] [terminal-style command] [--option] \n \
+                Example1: "1 roslaunch myPackageName myLaunchFile --relaunch\
+                \nExample2: "all kill partOfMyNodeName"', title='User input' , default='all roslaunch ')
 
                 try:
                     if userInput is not None:
