@@ -232,7 +232,7 @@ def on_press(key):
                         if keyString in (padComponents[pad][1], padComponents[pad][3]): #action on rudder
                             dictLastMove[id] = time()
 
-                        rudder -= sensibilite1 * (1 if keyString == padComponents[pad][3] else -1 if keyString == padComponents[pad][1] else 0)
+                        rudder += sensibilite1 * (1 if keyString == padComponents[pad][3] else -1 if keyString == padComponents[pad][1] else 0)
                         sail -= sensibilite2 * (1 if keyString == padComponents[pad][0] else -1 if keyString == padComponents[pad][2] else 0)
 
                         sail = max(0, min(sail, pi/2))        #Security checks

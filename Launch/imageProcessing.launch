@@ -2,4 +2,64 @@
 
     <node name="imageProcessing" pkg="plymouth_internship_2019" type="imageProcessing" output='screen'/>
 
+
+<!-- Decide wether you want horizon detection or not -->
+
+    <group if="$(arg horizon)">
+      <param name="horizonDetection" type="bool" value="$(arg horizon)" />
+    </group>
+
+    <param name="horizonDetection" type="bool" value="false" unless="$(arg horizon)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
+
+<!-- Decide wether you want masts detection or not (if so, horizon detection required)-->
+
+    <group if="$(arg mast)">
+      <param name="mastsDetection" type="bool" value="$(arg mast)" />
+    </group>
+
+    <param name="mastsDetection" type="bool" value="false" unless="$(arg mast)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
+
+<!-- Decide wether you want buoy detection or not (better if horizon detection)-->
+
+    <group if="$(arg buoy)">
+      <param name="buoyDetection" type="bool" value="$(arg buoy)" />
+    </group>
+
+    <param name="buoyDetection" type="bool" value="true" unless="$(arg buoy)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
+
+<!-- Decide wether you want aruco markers (April tags) detection or not (better if horizon detection)-->
+
+    <group if="$(arg aruco)">
+      <param name="markerDetection" type="bool" value="$(arg aruco)" />
+    </group>
+
+    <param name="markerDetection" type="bool" value="true" unless="$(arg aruco)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
+
+<!-- Set the size of the buoy you want to detect in order to assess the distance -->
+
+    <group if="$(arg size)">
+      <param name="buoySize" type="double" value="$(arg size)" />
+    </group>
+
+    <param name="buoySize" type="double" value="1" unless="$(arg size)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
+
+<!-- Decide wether you want output images displayed-->
+
+    <group if="$(arg output)">
+      <param name="outputImage" type="bool" value="$(arg output)" />
+    </group>
+
+    <param name="outputImage" type="bool" value="true" unless="$(arg output)" />  <!-- This param won't be set when "unless" condition is met -->
+
+
 </launch>

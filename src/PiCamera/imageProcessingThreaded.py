@@ -23,22 +23,30 @@ from camThread import PiVideoStream
 
 def run():
 
-    horizonDetection = False
-    mastsDetection = False
-    buoyDetection = True
-    markerDetection = True
-    outputImage = False
+    horizonDetection = rospy.get_param('horizonDetection', False)
+    mastsDetection = rospy.get_param('mastsDetection', False)
+    buoyDetection = rospy.get_param('buoyDetection', True)
+    markerDetection = rospy.get_param('markerDetection', True)
+    outputImage = rospy.get_param('outputImage', False)
 
-    buoySize = 0.5 #meters
+    buoySize = rospy.get_param('buoySize', 1) #meters
 
     if mastsDetection:
         horizonDetection = True
+
 
 
 ####################    ROS initialisation     #########################
 ######################################################################
 
     rospy.init_node('imageProcessing', anonymous=True)
+
+    rospy.loginfo("Configuration :\nhorizonDetection "+str(horizonDetection)+"\
+    \nmastsDetection :"+str(mastsDetection)+ "\nbuoyDetection :"+str(buoyDetection)+"\
+    \nmarkerDetection :" + str(markerDetection)+ "\noutputImage :"+str(outputImage)+"\
+    \nbuoySize :"+str(buoySize))
+
+
     r = rospkg.RosPack()
     package_path = r.get_path('plymouth_internship_2019')
 
