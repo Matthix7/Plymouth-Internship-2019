@@ -1,6 +1,11 @@
 <launch>
 
-
+    <arg name="horizon" value="True" />
+    <arg name="masts" value="True" />
+    <arg name="buoy" value="True" />
+    <arg name="marker" value="True" />
+     <arg name="output" value="True" />
+     <arg name="size" value="2" />
     <include file="$(find plymouth_internship_2019)/Launch/imageProcessing.launch" />
 
 </launch>
