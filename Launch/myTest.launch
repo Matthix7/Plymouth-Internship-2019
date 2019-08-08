@@ -1,0 +1,6 @@
+<launch>
+
+
+    <include file="$(find plymouth_internship_2019)/Launch/imageProcessing.launch" />
+
+</launch>
