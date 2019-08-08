@@ -16,6 +16,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 * https://github.com/corentin-j/wrsc_plymouth_2019/
 * https://github.com/AlexandreCourjaud/Stage2APlymouth
 * https://github.com/AlexandreArgento/Plymouth-AutonomousSailboat-Catamaran
+* https://github.com/Plymouth-Sailboat/SailBoatROS
 
 ## Infos Utiles
 Ne pas faire de bêtises sous git: https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git.    
