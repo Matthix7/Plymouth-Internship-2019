@@ -9,13 +9,13 @@
 
 
 <!-- Decide wether you want masts detection or not (if yes, horizon detection required)-->
-    <arg name="mast" default="False" />
-    <param name="mastsDetection" type="bool" value="$(arg mast)" />
+    <arg name="masts" default="False" />
+    <param name="mastsDetection" type="bool" value="$(arg masts)" />
 
 
 <!-- Decide wether you want buoy detection or not (better with horizon detection)-->
     <arg name="buoy" default="True" />
-    <param name="buoyDetection" type="bool" value="$(arg mast)" />
+    <param name="buoyDetection" type="bool" value="$(arg buoy)" />
 
 
 <!-- Decide wether you want masts detection or not (better with horizon detection)-->
