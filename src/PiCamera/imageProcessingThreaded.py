@@ -23,7 +23,7 @@ from camThread import PiVideoStream
 
 def run():
 
-    horizonDetection = rospy.get_param('horizonDetection', False)
+    horizonDetection = rospy.get_param('horizon', False)
     mastsDetection = rospy.get_param('mastsDetection', False)
     buoyDetection = rospy.get_param('buoyDetection', True)
     markerDetection = rospy.get_param('markerDetection', True)
