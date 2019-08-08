@@ -1,1 +1,2 @@
-Folder where the image of detected April Tags are gathered, stamped in their names.
+Folder where the video of missions are gathered, stamped in their names.
+Approx 1 Mo / min of recording

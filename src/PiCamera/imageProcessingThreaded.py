@@ -58,6 +58,10 @@ def run():
     pub_send_heading_buoy = rospy.Publisher('camera_send_heading_buoy', Float32, queue_size = 2)
     heading_buoy_msg = Float32()
 
+#    Publishes the distance to the biggest detected buoy
+    pub_send_distance_buoy = rospy.Publisher('camera_send_distance_buoy', Float32, queue_size = 2)
+    distance_buoy_msg = Float32()
+
 #    Publishes a list with the headings leading to the detected ArUco codes (April Tags)
     pub_send_headings_arucos = rospy.Publisher('camera_send_headings_arucos', Float32, queue_size = 2)
     headings_arucos_msg = Float32()
@@ -218,6 +222,9 @@ def run():
 #                print(distBuoy)
             else:
                 headingBuoy = -999
+
+            distance_buoy_msg.data = distBuoy
+            pub_send_distance_buoy.publish(distance_buoy_msg)
             heading_buoy_msg.data = headingBuoy
             pub_send_heading_buoy.publish(heading_buoy_msg)
             T3.append(time.time()-t3)
