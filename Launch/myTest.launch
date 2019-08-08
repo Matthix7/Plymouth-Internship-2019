@@ -2,12 +2,12 @@
 
 
 <!-- Set the parameters for image processing -->
-    <arg name="horizon" value="False" />
-    <arg name="masts" value="False" />
-    <arg name="buoy" value="False" />
-    <arg name="marker" value="False" />
-    <arg name="output" value="False" />
-    <arg name="size" value="0.5" />
+    <arg name="horizon" default="False" />
+    <arg name="masts" default="False" />
+    <arg name="buoy" default="False" />
+    <arg name="marker" default="False" />
+    <arg name="output" default="False" />
+    <arg name="size" default="0.5" />
     <include file="$(find plymouth_internship_2019)/Launch/imageProcessing.launch" pass_all_args="true"/>
 
 </launch>
