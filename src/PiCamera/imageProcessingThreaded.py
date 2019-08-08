@@ -211,8 +211,11 @@ def run():
                 xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
                 headingBuoy = (xBuoy-resolution[0]/2)*Sf
 
-                distBuoy = buoySize/tan(2*radius*Sf)
-                print(distBuoy)
+                if radius > 5:
+                    distBuoy = buoySize/tan(2*radius*Sf) #### ADD PUBLISHER
+                else:
+                    distBuoy = -999
+#                print(distBuoy)
             else:
                 headingBuoy = -999
             heading_buoy_msg.data = headingBuoy

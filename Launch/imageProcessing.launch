@@ -4,8 +4,7 @@
 
 
 <!-- Decide wether you want horizon detection or not -->
-
-    <arg name="horizon" default="false" />
-
+    <arg name="horizon" default="/dev/ttyACM0" />
+    <param name="horizonDetection" type="bool" value="$(arg horizon)" />
 
 </launch>
