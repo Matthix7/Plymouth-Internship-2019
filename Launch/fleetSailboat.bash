@@ -1,7 +1,6 @@
 #!/bin/bash
 
-source /home/sailboats/workspaceRos/devel/setup.bash
 source /opt/ros/melodic/setup.bash
+source /home/sailboats/workspaceRos/devel/setup.bash
 
-roscore &
-rosrun plymouth_internship_2019 fleetSailboat
+roslaunch plymouth_internship_2019 sailboatBoot.launch
