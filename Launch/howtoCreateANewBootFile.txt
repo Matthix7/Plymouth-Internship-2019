@@ -5,3 +5,5 @@ In Raspberry
 4/ In a terminal, type "crontab -e".
 5/ Type "@reboot [path to package]/plymouth_internship_2019/Launch/yourBootFile.bash"
 6/ Exit and reboot to see if it works.
+
+Boot process should last approx. 1min20s.
