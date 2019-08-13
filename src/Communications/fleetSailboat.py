@@ -414,7 +414,7 @@ def run():
 ## COMMAND MODE
 
             userInputDict = eval(data[cursor])
-            userInput = userInputDict[ID]
+            userInput = userInputDict[ID].replace(':', ':=')
 
             modeDict = eval(data[cursor+1])
             mode.data = modeDict[ID]
@@ -423,7 +423,6 @@ def run():
                 if not commandMode:
                     try:
                         commandMode = True
-                        userInput.replace(':', ':=')
                         if userInput.split()[0] in ["kill", "Kill"]:
                             runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
 
