@@ -423,7 +423,7 @@ def run():
                 if not commandMode:
                     try:
                         commandMode = True
-                        unserInput.replace(':', ':=')
+                        userInput.replace(':', ':=')
                         if userInput.split()[0] in ["kill", "Kill"]:
                             runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
 
