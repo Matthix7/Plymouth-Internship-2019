@@ -5,6 +5,7 @@ import rospy
 import rospkg
 
 from std_msgs.msg import Float32, String
+from geometry_msgs.msg import Pose2D, Vector3
 
 # import the necessary packages
 import time
