@@ -3,7 +3,7 @@
 
 <!-- Set the parameters for image processing -->
 
-    <include file="$(find plymouth_internship_2019)/Launch/imageProcessing.launch">
+    <include file="$(find plymouth_internship_2019)/Launch/systemLaunch/imageProcessing.launch">
         <arg name="horizon" default="False" />
         <arg name="masts" default="False" />
         <arg name="buoy" default="True" />
