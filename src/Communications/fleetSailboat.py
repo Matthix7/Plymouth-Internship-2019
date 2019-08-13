@@ -414,12 +414,13 @@ def run():
 ## COMMAND MODE
 
             userInputDict = eval(data[cursor])
-            userInput = userInputDict[ID].replace(':', ':=')
+            userInput = userInputDict[ID]
 
             modeDict = eval(data[cursor+1])
             mode.data = modeDict[ID]
 
             if mode.data == 2:
+                userInput = userInput.replace(':', ':=')
                 if not commandMode:
                     try:
                         commandMode = True
