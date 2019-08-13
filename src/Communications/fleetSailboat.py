@@ -411,7 +411,7 @@ def run():
             #Collect the data from the operator and store it the corresponding variables
             #that will be sent by the publishers.
 
-## BEGIN UPDATE   (+ import subprocess as s) +(initMode => fleetSailboat) +( _ => @ )
+## COMMAND MODE
 
             userInputDict = eval(data[cursor])
             userInput = userInputDict[ID]
@@ -423,6 +423,7 @@ def run():
                 if not commandMode:
                     try:
                         commandMode = True
+                        unserInput.replace(':', ':=')
                         if userInput.split()[0] in ["kill", "Kill"]:
                             runningNodes = s.check_output("rosnode list".split()).split('\n')[:-1]
 
@@ -471,7 +472,7 @@ def run():
                 pub_send_u_sail.publish(sail)
 
 
-## END UPDATE
+## END COMMAND MODE
 
 #        elif not check:
 #            rospy.loginfo("Could not read\n"+ '|'+line+'|\n')
