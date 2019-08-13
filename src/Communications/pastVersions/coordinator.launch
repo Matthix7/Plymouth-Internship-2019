@@ -1,0 +1,7 @@
+<launch>
+
+    <node name="keyboardController" pkg="key_teleop" type="key_teleop.py" output='screen' launch-prefix="gnome-terminal --  "/>
+    <node name="operator" pkg="plymouth_internship_2019" type="operator" output='screen'/>
+    <node name="coordinator" pkg="plymouth_internship_2019" type="coordinator" output='screen'/>
+
+</launch>

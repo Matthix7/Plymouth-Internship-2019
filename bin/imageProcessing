@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import PiCamera.imageProcessingThreaded
+
+
+if __name__ == '__main__':
+    PiCamera.imageProcessingThreaded.run()

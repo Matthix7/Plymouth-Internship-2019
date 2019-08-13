@@ -1,0 +1,35 @@
+<launch>
+
+    <node name="imageProcessing" pkg="plymouth_internship_2019" type="imageProcessing" output='screen'/>
+
+
+<!-- Decide wether you want horizon detection or not -->
+    <arg name="horizon" default="False" />
+    <param name="horizonDetection" type="bool" value="$(arg horizon)" />
+
+
+<!-- Decide wether you want masts detection or not (if yes, horizon detection required)-->
+    <arg name="masts" default="False" />
+    <param name="mastsDetection" type="bool" value="$(arg masts)" />
+
+
+<!-- Decide wether you want buoy detection or not (better with horizon detection)-->
+    <arg name="buoy" default="True" />
+    <param name="buoyDetection" type="bool" value="$(arg buoy)" />
+
+
+<!-- Decide wether you want masts detection or not (better with horizon detection)-->
+    <arg name="marker" default="True" />
+    <param name="markerDetection" type="bool" value="$(arg marker)" />
+
+
+<!-- Decide wether you want output images displayed-->
+    <arg name="output" default="False" />
+    <param name="outputImage" type="bool" value="$(arg output)" />
+
+
+<!-- Set the size of the buoy/target you want to detect in order to assess the distance-->
+    <arg name="size" default="1" />
+    <param name="buoySize" type="double" value="$(arg size)" />
+
+</launch>

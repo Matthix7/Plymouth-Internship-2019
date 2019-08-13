@@ -1,0 +1,9 @@
+In Raspberry
+1/ Create a new bash file and copy-paste the lines of bootSailboats.bash.
+2/ Change the paths so that it corresponds to your system.
+3/ Make the bash file executable.
+4/ In a terminal, type "crontab -e".
+5/ Type "@reboot [path to package]/plymouth_internship_2019/Launch/yourBootFile.bash"
+6/ Exit and reboot to see if it works.
+
+Boot process should last approx. 1min20s.

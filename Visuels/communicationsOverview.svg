@@ -14,7 +14,7 @@
    viewBox="0 0 297 210"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="communicationsOverview.svg">
   <defs
      id="defs2">
@@ -129,16 +129,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="355.63108"
-     inkscape:cy="436.36076"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="543.897"
+     inkscape:cy="377.53141"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-width="1299"
+     inkscape:window-height="713"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -148,7 +148,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -339,18 +339,18 @@
            style="fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999"
            y="226.46758"
            x="141.55122"
-           id="tspan3743"
-           sodipodi:role="line">(xBoat1, yBoat1, headingBoat1, speedBoat1, headingWindBoat1),</tspan><tspan
-           id="tspan4251"
+           sodipodi:role="line"
+           id="tspan97">(WindForce1, WindDirection1, GPSframe1, eulerAngles1, Pose2D(x2)),</tspan><tspan
            style="fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999"
            y="230.43633"
            x="141.55122"
-           sodipodi:role="line">(xBoat2, yBoat2, headingBoat2, speedBoat2, headingWindBoat2),</tspan><tspan
-           id="tspan4253"
+           sodipodi:role="line"
+           id="tspan101">(WindForce2, WindDirection2, GPSframe2, eulerAngles2, Pose2D(x2)),</tspan><tspan
            style="fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999"
            y="234.40508"
            x="141.55122"
-           sodipodi:role="line">(xBoat3, yBoat3, headingBoat3, speedBoat3, headingWindBoat3),</tspan><tspan
+           sodipodi:role="line"
+           id="tspan105">(WindForce3, WindDirection3, GPSframe3, eulerAngles3, Pose2D(x2)),</tspan><tspan
            id="tspan4255"
            style="fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999"
            y="238.37383"
@@ -361,7 +361,7 @@
            y="242.34258"
            x="141.55122"
            sodipodi:role="line">(controlMode)</tspan><tspan
-           style="fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999;-inkscape-font-specification:'Garamond Italic';font-family:Garamond;font-weight:normal;font-style:italic;font-stretch:normal;font-variant:normal"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Garamond;-inkscape-font-specification:'Garamond Italic';fill:#ff0a0a;fill-opacity:0.96470588;stroke-width:0.26499999"
            y="246.31133"
            x="141.55122"
            sodipodi:role="line"
@@ -375,59 +375,59 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.17499995px;line-height:1.25;font-family:Garamond;-inkscape-font-specification:Garamond;text-align:center;text-anchor:middle;fill:#00b904;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="216.27727"
-       y="185.30528"
+       x="220.39322"
+       y="192.97592"
        id="text4261"
        inkscape:export-filename="D:\Users\Matthieu\Documents\Devoirs Matthieu\ENSTA BZH\Année 2\Stage_Plymouth\plymouth_internship_2019\Visuels\Communications.png"
        inkscape:export-xdpi="200"
        inkscape:export-ydpi="200"><tspan
          sodipodi:role="line"
          id="tspan4259"
-         x="216.67415"
-         y="185.30528"
-         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999">(xBoat1, yBoat1, headingBoat1, </tspan><tspan
+         x="220.89862"
+         y="192.97592"
+         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999">(WindForce1, WindDirection1, GPSframe1, </tspan><tspan
          sodipodi:role="line"
-         x="216.27727"
-         y="189.27403"
+         x="220.39322"
+         y="196.94467"
          style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999"
-         id="tspan4263">speedBoat1, headingWindBoat1)</tspan></text>
+         id="tspan4263">eulerAngles1, Pose2D(x2) )</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.17499995px;line-height:1.25;font-family:Garamond;-inkscape-font-specification:Garamond;text-align:center;text-anchor:middle;fill:#00b904;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;"
-       x="165.38638"
-       y="157.61894"
-       id="text4267"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.17499995px;line-height:1.25;font-family:Garamond;-inkscape-font-specification:Garamond;text-align:center;text-anchor:middle;fill:#00b904;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="176.847"
+       y="155.15569"
+       id="text4261-3"
        inkscape:export-filename="D:\Users\Matthieu\Documents\Devoirs Matthieu\ENSTA BZH\Année 2\Stage_Plymouth\plymouth_internship_2019\Visuels\Communications.png"
        inkscape:export-xdpi="200"
        inkscape:export-ydpi="200"><tspan
          sodipodi:role="line"
-         id="tspan4265"
-         x="165.78326"
-         y="157.61894"
-         style="stroke-width:0.26499999;fill:#00b904;fill-opacity:1;">(xBoat2, yBoat2, headingBoat2, </tspan><tspan
+         id="tspan4259-6"
+         x="177.3524"
+         y="155.15569"
+         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999">(WindForce2, WindDirection2, GPSframe2, </tspan><tspan
          sodipodi:role="line"
-         x="165.38638"
-         y="161.58769"
-         style="stroke-width:0.26499999;fill:#00b904;fill-opacity:1;"
-         id="tspan4269">speedBoat2, headingWindBoat2)</tspan></text>
+         x="176.847"
+         y="159.12444"
+         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999"
+         id="tspan4263-7">eulerAngles2, Pose2D(x2) )</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.17499995px;line-height:1.25;font-family:Garamond;-inkscape-font-specification:Garamond;text-align:center;text-anchor:middle;fill:#00b904;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;"
-       x="94.327576"
-       y="165.06335"
-       id="text4267-8"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.17499995px;line-height:1.25;font-family:Garamond;-inkscape-font-specification:Garamond;text-align:center;text-anchor:middle;fill:#00b904;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="102.53276"
+       y="166.48782"
+       id="text4261-5"
        inkscape:export-filename="D:\Users\Matthieu\Documents\Devoirs Matthieu\ENSTA BZH\Année 2\Stage_Plymouth\plymouth_internship_2019\Visuels\Communications.png"
        inkscape:export-xdpi="200"
        inkscape:export-ydpi="200"><tspan
          sodipodi:role="line"
-         id="tspan4265-8"
-         x="94.724449"
-         y="165.06335"
-         style="stroke-width:0.26499999;fill:#00b904;fill-opacity:1;">(xBoat3, yBoat3, headingBoat3, </tspan><tspan
+         id="tspan4259-3"
+         x="103.03815"
+         y="166.48782"
+         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999">(WindForce3, WindDirection3, GPSframe3, </tspan><tspan
          sodipodi:role="line"
-         x="94.327576"
-         y="169.0321"
-         style="stroke-width:0.26499999;fill:#00b904;fill-opacity:1;"
-         id="tspan4269-2">speedBoat3, headingWindBoat3)</tspan></text>
+         x="102.53276"
+         y="170.45657"
+         style="fill:#00b904;fill-opacity:1;stroke-width:0.26499999"
+         id="tspan4263-5">eulerAngles3, Pose2D(x2) )</tspan></text>
   </g>
 </svg>

@@ -1,0 +1,25 @@
+XBee Connection
+===============
+roslaunch plymouth_internship_2019 fleetCoordinator.launch
+Allumer les bateaux de la flotte => check connection
+
+
+Camera setup
+============
+SSH -X REQUIRED
+roslaunch plymouth_internship_2019 imageProcessing.launch output:=True
+
+Vérifier l'enregistrement des arucos
+
+sur l'eau en ssh:
+roslaunch plymouth_internship_2019 imageProcessing.launch horizon:=True
+et vérifier la détection d'horizon.
+
+
+Camera pour autres launch
+=========================
+roslaunch plymouth_internship_2019 imageProcessing.launch horizon:=True (size:= ?)
+
+
+
+Occasionnellement keyboard control
