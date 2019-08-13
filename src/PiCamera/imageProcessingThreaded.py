@@ -56,7 +56,7 @@ def run():
     headings_boats_msg = String()
 
 #    Publishes the heading leading to the biggest detected buoy
-    pub_send_heading_buoy = rospy.Publisher('camera_send_buoy', Vector3, queue_size = 2)
+    pub_send_buoy = rospy.Publisher('camera_send_buoy', Vector3, queue_size = 2)
     buoy_msg = Vector3()
 
 #    Publishes a list with the headings leading to the detected ArUco codes (April Tags)
