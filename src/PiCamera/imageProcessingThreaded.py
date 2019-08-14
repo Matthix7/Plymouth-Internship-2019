@@ -132,7 +132,7 @@ def run():
 
     while not rospy.is_shutdown():
 
-        image = vs.read()[0.05*resolution[1]:0.95*resolution[1], 0.05*resolution[0]:0.95*resolution[0]]
+        image = vs.read()[int(0.05*resolution[1]):int(0.95*resolution[1]), int(0.05*resolution[0]):int(0.95*resolution[0])]
 
 
 
