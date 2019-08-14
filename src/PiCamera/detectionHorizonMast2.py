@@ -88,8 +88,10 @@ def run():
 
 def horizonArea(image, horizon_prev, init = False):
 
-
-    grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    try:
+        grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    except:
+        return None, None, None
     rows,cols = grey.shape
     rows_origin,cols_origin = rows,cols
     top_grey, rotation_prev = 0, 0

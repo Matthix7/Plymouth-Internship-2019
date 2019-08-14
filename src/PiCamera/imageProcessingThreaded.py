@@ -82,25 +82,27 @@ def run():
 
     c = 0
     loopPeriod = 0.5
-    r = rospy.Rate(1/loopPeriod)
+    rate = rospy.Rate(1/loopPeriod)
 
 ###############          VIDEO           #############################
 ######################################################################
 ##    Running on test video
-#    cap = cv2.VideoCapture('testImages/PlymouthSound.mp4')
+#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/ENSTA_X.mp4')
 
 #    t0 = time.time()
 
-#    dodo = 0.05
+#    dodo = 0.
 
-#    Sf, resolution = 0.398/203.55, (640,480)
+#    Sf, resolution = 0.398/203.55, (320, 240)
 
-#    horizon_prev = (0, 320, 240)
+#    horizon_prev = (0, 160, 120)
+#    rotation_prev = -999
 #    ret, image = cap.read()
 #    image = cv2.resize(image, resolution)
 #    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
+#    newInit = False
 
-#    while(cap.isOpened()) and not rospy.is_shutdown()::
+#    while(cap.isOpened()) and not rospy.is_shutdown():
 
 #        # Capture frame-by-frame
 #        ret, image = cap.read()
@@ -108,7 +110,7 @@ def run():
 #        if not ret:
 #            break
 
-#        image = cv2.resize(image, (640,480))
+#        image = cv2.resize(image, (320, 240))
 
 
 
@@ -265,7 +267,7 @@ def run():
         T5.append(time.time()-t5)
 
         dodo = max(0, loopPeriod - (time.time()-tframe))
-        r.sleep()
+        rate.sleep()
 
 #####################################################################
 #############        INTERACTION          ###########################
