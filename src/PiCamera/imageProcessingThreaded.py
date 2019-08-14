@@ -81,6 +81,7 @@ def run():
     aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
 
     c = 0
+    r = rospy.Rate(4)
 
 ###############          VIDEO           #############################
 ######################################################################
@@ -114,7 +115,7 @@ def run():
 #####################################################################
 #    Running with the camera
 
-    vs = PiVideoStream(record = True).start()
+    vs = PiVideoStream(resolution=(320, 240), framerate=5, mode = 'sports', record = True).start()
     time.sleep(2)
 
     Sf, resolution = vs.getScaleFactor()
@@ -262,11 +263,8 @@ def run():
             cv2.imshow('Global', frame_markers)
         T5.append(time.time()-t5)
 
-
-        time.sleep(dodo)
-
-        if time.time()-tframe < 0.1:
-            time.sleep(0.1)
+        dodo = max(0, loopPeriod - (time.time()-tframe))
+        r.sleep()
 
 #####################################################################
 #############        INTERACTION          ###########################
@@ -295,7 +293,7 @@ def run():
     cv2.destroyAllWindows()
     print("Total time : ",time.time()-t0)
     print("Computed frames : ", c)
-    print("Global time per frame : ", (time.time()-t0)/c - dodo)
+    print("Global time per frame : ", (time.time()-t0)/c)
 
     if horizonDetection:
         print("Time horizon : ", np.mean(T1))
