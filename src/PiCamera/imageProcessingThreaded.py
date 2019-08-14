@@ -81,7 +81,8 @@ def run():
     aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
 
     c = 0
-    r = rospy.Rate(4)
+    loopPeriod = 0.25
+    r = rospy.Rate(1/loopPeriod)
 
 ###############          VIDEO           #############################
 ######################################################################
