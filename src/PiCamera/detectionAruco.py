@@ -92,7 +92,7 @@ def detectAruco(image, resultImage, dictionary):
 
     if ids is not None:
         cv2.imwrite(package_path+'/arucoDetected/aruco_frame_'+time.strftime('%c')+'.png', frame_markers)
-        print('Saved')
+#        print('Saved')
 
 #        markerLength = 3.8
 #        camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])

@@ -42,7 +42,7 @@ def run():
 
     rospy.init_node('imageProcessing', anonymous=True)
 
-    rospy.loginfo("Configuration :\nhorizonDetection "+str(horizonDetection)+"\
+    rospy.loginfo("Configuration :\nhorizonDetection :"+str(horizonDetection)+"\
     \nmastsDetection :"+str(mastsDetection)+ "\nbuoyDetection :"+str(buoyDetection)+"\
     \nmarkerDetection :" + str(markerDetection)+ "\noutputImage :"+str(outputImage)+"\
     \nbuoySize :"+str(buoySize))

@@ -54,7 +54,7 @@ class PiVideoStream:
         if record:
             # Define the codec and create VideoWriter object
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.out = cv2.VideoWriter(package_path+'/missionRecord/Mission_'+time.strftime('%F')+'_'+time.strftime('%a')+'(without calibration).avi',self.fourcc, framerate, resolution)
+            self.out = cv2.VideoWriter(package_path+'/missionRecord/Mission_'+time.strftime('%F')+'_'+time.strftime('%a')+'_'+time.strftime('%H')+'_'+time.strftime('%M')+'(without calibration).avi',self.fourcc, framerate, resolution)
 
 
     def start(self):

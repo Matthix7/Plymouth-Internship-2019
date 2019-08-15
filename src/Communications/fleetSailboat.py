@@ -252,8 +252,8 @@ def run():
     rospy.Subscriber('ardu_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
 #    Receive the data relative to line following
-    rospy.Subscriber('regulator_send_lineBegin', Pose2D, sub_lineBegin)
-    rospy.Subscriber('regulator_send_lineEnd', Pose2D, sub_lineEnd)
+    rospy.Subscriber('control_send_line_begin', Pose2D, sub_lineBegin)
+    rospy.Subscriber('control_send_line_end', Pose2D, sub_lineEnd)
 
 
 
