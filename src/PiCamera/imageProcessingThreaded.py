@@ -100,7 +100,7 @@ def run():
 ###############          VIDEO           #############################
 ######################################################################
 ##    Running on test video
-#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/ENSTA_X.mp4')
+#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/video1.avi')
 
 #    t0 = time.time()
 
@@ -114,6 +114,8 @@ def run():
 #    image = cv2.resize(image, resolution)
 #    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
 #    newInit = False
+
+#    outputImage = True
 
 #    while(cap.isOpened()) and not rospy.is_shutdown():
 
@@ -218,22 +220,21 @@ def run():
 
         if buoyDetection:
 
-##      Find the buoy in the original cropped image and highlight them in the result image
+##      Find the buoy in the original cropped image and highlight it in the result image
 ##      Check if the color range corresponds to what you look for!
 
             t3 = time.time()
-            colorRange = getColorRangeTest2() #For test target
-#            colorRange = getColorRange() #For real buoys
+#            colorRange = getColorRangeTest2() #For test target
+            colorRange = getColorRange() #For real buoys
             center, radius, frame_markers = detectBuoy(image, image.copy(), colorRange)
             if center is not None:
                 xBuoy = center[0]*cos(rotation*pi/180)+center[1]*sin(rotation*pi/180)
                 headingBuoy = (xBuoy-resolution[0]/2)*Sf
 
                 if radius > 5:
-                    distBuoy = buoySize/tan(2*radius*Sf) #### ADD PUBLISHER
+                    distBuoy = buoySize/tan(2*radius*Sf)
                 else:
                     distBuoy = -999
-#                print(distBuoy)
             else:
                 headingBuoy = -999
                 distBuoy = -999
