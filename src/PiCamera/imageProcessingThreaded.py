@@ -215,6 +215,7 @@ def run():
             rotation = roll*180/pi
 
         rotation_prev = rotation
+        rospy.loginfo("Rotation = "+str(rotation))
 
         if buoyDetection:
 
