@@ -249,7 +249,7 @@ def run():
     rospy.Subscriber('filter_send_wind_direction', Float32, sub_WIND_DIRECTION)
 
 #    Receives the euler_angles
-    rospy.Subscriber('ardu_send_euler_angles', Vector3, sub_EULER_ANGLES)
+    rospy.Subscriber('filter_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
 #    Receive the data relative to line following
     rospy.Subscriber('control_send_line_begin', Pose2D, sub_lineBegin)

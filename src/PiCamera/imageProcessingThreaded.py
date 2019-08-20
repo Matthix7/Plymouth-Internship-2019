@@ -22,7 +22,17 @@ from detectionAruco import detectAruco
 from camThread import PiVideoStream
 
 
+
+
+
+def sub_EULER_ANGLES(data):
+    global roll
+    roll = data.z
+
+
+
 def run():
+    global roll
 
     horizonDetection = rospy.get_param('horizonDetection', False)
     mastsDetection = rospy.get_param('mastsDetection', False)
@@ -63,6 +73,9 @@ def run():
     pub_send_headings_arucos = rospy.Publisher('camera_send_headings_arucos', Float32, queue_size = 2)
     headings_arucos_msg = Float32()
 
+#    Receives the euler_angles  x=yaw y=pitch z=roll
+    rospy.Subscriber('filter_send_euler_angles', Vector3, sub_EULER_ANGLES)
+
 
 ###################    Code initialisation    ######################
 ####################################################################
@@ -76,7 +89,7 @@ def run():
     if outputImage and horizonDetection:
         cv2.namedWindow('Horizon', cv2.WINDOW_NORMAL)
 
-    horizon_prev = (0, 320, 240)
+    roll = 0
 
     aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
 
@@ -199,7 +212,7 @@ def run():
                     rotation = rotation_prev
 
         if not horizonDetection:
-            rotation = 0
+            rotation = roll*180/pi
 
         rotation_prev = rotation
 
