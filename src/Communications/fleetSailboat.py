@@ -243,7 +243,7 @@ def run():
     rospy.Subscriber('filter_send_trame_gps', String, sub_GPS)
 
 #    Receives the speed of the wind
-    rospy.Subscriber('filter_send_wind_force', Float32, sub_WIND_FORCE)
+    rospy.Subscriber('filter_send_wind_speed', Float32, sub_WIND_FORCE)
 
 #    Receives the direction of the wind
     rospy.Subscriber('filter_send_wind_direction', Float32, sub_WIND_DIRECTION)
@@ -323,17 +323,26 @@ def run():
         # Read what is in the buffer, start and stop with specific signals.
         # More reliable than ser.readline() for big message.
 
-        while c != '#' and not rospy.is_shutdown():
-            c = ser.read(1)
-        msgTime = time()
-        if c == '#':
-            while c != '=' and not rospy.is_shutdown():
+        try:
+            while c != '#' and not rospy.is_shutdown():
                 c = ser.read(1)
-                line += c
+            msgTime = time()
+            if c == '#':
+                while c != '=' and not rospy.is_shutdown():
+                    c = ser.read(1)
+                    line += c
+        except Exception as e:
+            rospy.loginfo('Error1: {0}'.format(e))
+            continue
+
 
 
         # Check message syntax and checkSum and clean the message to use only the useful data
-        check, msgReceived = is_valid(line)
+        try:
+            check, msgReceived = is_valid(line)
+        except Exception as e:
+            rospy.loginfo('Error2: {0}'.format(e))
+            continue
 #        rospy.loginfo("Received\n|" + line + '|')
 
         if check:
@@ -412,12 +421,15 @@ def run():
             #that will be sent by the publishers.
 
 ## COMMAND MODE
+            try:
+                userInputDict = eval(data[cursor])
+                userInput = userInputDict[ID]
 
-            userInputDict = eval(data[cursor])
-            userInput = userInputDict[ID]
-
-            modeDict = eval(data[cursor+1])
-            mode.data = modeDict[ID]
+                modeDict = eval(data[cursor+1])
+                mode.data = modeDict[ID]
+            except Exception as e:
+                rospy.loginfo('Error3: {0}'.format(e))
+                continue
 
             if mode.data == 2:
                 userInput = userInput.replace(':', ':=')
@@ -453,23 +465,28 @@ def run():
                                         killProcess = s.Popen(killCommand.split())
                                         rospy.loginfo("Success")
 
-                        rospy.loginfo("Launched command "+userInput)
-                        process = s.Popen(userInput.split())
-                        rospy.loginfo("Success")
+                        if userInput.split()[0] not in ["kill", "Kill"]:
+                            rospy.loginfo("Launched command "+userInput)
+                            process = s.Popen(userInput.split())
+                            rospy.loginfo("Success")
 
                     except Exception as e:
                         rospy.loginfo('Error launching command: \n{0}'.format(e))
 
 
             else:
-                commandMode = False
-                #Publish the data for internal use (controllers, kalman filters, ...)
-                rudder.data = userInput[0]
-                sail.data = userInput[1]
+                try:
+                    commandMode = False
+                    #Publish the data for internal use (controllers, kalman filters, ...)
+                    rudder.data = userInput[0]
+                    sail.data = userInput[1]
 
-                pub_send_control_mode.publish(mode)
-                pub_send_u_rudder.publish(rudder)
-                pub_send_u_sail.publish(sail)
+                    pub_send_control_mode.publish(mode)
+                    pub_send_u_rudder.publish(rudder)
+                    pub_send_u_sail.publish(sail)
+                except Exception as e:
+                    rospy.loginfo('Error4: {0}'.format(e))
+                    continue
 
 
 ## END COMMAND MODE

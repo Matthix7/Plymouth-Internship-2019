@@ -1,0 +1,7 @@
+(SSH required) If you think you cannot control the sailboat from coordinator
+even if the coordinator printed correct connection data, maybe the fleetSailboat
+node failed to properly connect or crashed. In that case, shut down both fleetCoordinator
+and fleetSailboat nodes and relaunch them. This is rare but seems more likely to happen when
+the sailboat is far from the coordinator or the xBee device is close to the actuators.
+You may use the TX and RX LEDs on the coordinator xBee device:
+both should be blinking multiple times per second.
