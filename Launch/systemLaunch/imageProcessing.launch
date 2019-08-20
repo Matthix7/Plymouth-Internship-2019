@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="imageProcessing" pkg="plymouth_internship_2019" type="imageProcessing" output='screen' respawn="true"/>
+    <node name="imageProcessing" pkg="plymouth_internship_2019" type="imageProcessing" output='screen'/>
 
 
 <!-- Decide wether you want horizon detection or not -->

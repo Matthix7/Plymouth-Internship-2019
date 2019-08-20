@@ -19,7 +19,7 @@ from numpy import pi, cos, sin, tan, array, shape
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest, getColorRangeTest2
 from detectionHorizonMast2 import horizonArea, detectMast
 from detectionAruco import detectAruco
-from camThread import PiVideoStream
+#from camThread import PiVideoStream
 
 
 
@@ -97,59 +97,59 @@ def run():
     loopPeriod = 0.5
     rate = rospy.Rate(1/loopPeriod)
 
-###############          VIDEO           #############################
-######################################################################
-##    Running on test video
-#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/video1.avi')
-
-#    t0 = time.time()
-
-#    dodo = 0.
-
-#    Sf, resolution = 0.398/203.55, (320, 240)
-
-#    horizon_prev = (0, 160, 120)
-#    rotation_prev = -999
-#    ret, image = cap.read()
-#    image = cv2.resize(image, resolution)
-#    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
-#    newInit = False
-
-#    outputImage = True
-
-#    while(cap.isOpened()) and not rospy.is_shutdown():
-
-#        # Capture frame-by-frame
-#        ret, image = cap.read()
-
-#        if not ret:
-#            break
-
-#        image = cv2.resize(image, (320, 240))
-
-
-
-#################     CAMERA     ####################################
+##############          VIDEO           #############################
 #####################################################################
-#    Running with the camera
+#    Running on test video
+    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/video1.avi')
 
-    vs = PiVideoStream(resolution=(320, 240), framerate=5, mode = 'sports', record = True).start()
-    time.sleep(2)
+    t0 = time.time()
 
-    Sf, resolution = vs.getScaleFactor()
-    dodo = 0
+    dodo = 0.
 
-    horizon_prev = (0, resolution[0], resolution[1])
+    Sf, resolution = 0.398/203.55, (320, 240)
+
+    horizon_prev = (0, 160, 120)
     rotation_prev = -999
-    image = vs.read()
-
+    ret, image = cap.read()
+    image = cv2.resize(image, resolution)
     horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
     newInit = False
 
+    outputImage = True
 
-    while not rospy.is_shutdown():
+    while(cap.isOpened()) and not rospy.is_shutdown():
 
-        image = vs.read()[int(0.05*resolution[1]):int(0.95*resolution[1]), int(0.05*resolution[0]):int(0.95*resolution[0])]
+        # Capture frame-by-frame
+        ret, image = cap.read()
+
+        if not ret:
+            break
+
+        image = cv2.resize(image, (320, 240))
+
+
+
+##################     CAMERA     ####################################
+######################################################################
+##    Running with the camera
+
+#    vs = PiVideoStream(resolution=(320, 240), framerate=5, mode = 'sports', record = True).start()
+#    time.sleep(2)
+
+#    Sf, resolution = vs.getScaleFactor()
+#    dodo = 0
+
+#    horizon_prev = (0, resolution[0], resolution[1])
+#    rotation_prev = -999
+#    image = vs.read()
+
+#    horizon, horizon_height, horizon_prev = horizonArea(image, horizon_prev, init = True)
+#    newInit = False
+
+
+#    while not rospy.is_shutdown():
+
+#        image = vs.read()[int(0.05*resolution[1]):int(0.95*resolution[1]), int(0.05*resolution[0]):int(0.95*resolution[0])]
 
 
 
