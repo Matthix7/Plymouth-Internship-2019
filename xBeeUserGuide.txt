@@ -38,13 +38,14 @@ To launch a terminal-style command:
 - Press Insert. A window will pop up, asking you to type your command.
 - Your command should begin by the ID of the boat to which you wish to send to send the command. Use "all" to broadcast.
 - After this, type your command as if you were in the terminal of the sailboat.
+Exception: never use signs '@', '=' or '#'. If your command requires ":=", simply type ":". ":" will be replaced automatically.
 - Press enter or click on the confirmation button. Cancel if you want to cancel...obviously.
 
 Specific commands:
 - Use "[receiverID] kill [node]" to kill a node. This will look for every node that contains the typed string and kill it.
 Use "-a" or "--all" instead of [node] to kill all of them.
 - Use "[receiverID] [command] --relaunch" to kill all running nodes (except fleetSailboat and nodes containing 'ros' in their names)
-
+Caution: if you mistype your command while using "--relaunch" option, all nodes will be killed but nothing will be launched.
 
 
 General information:

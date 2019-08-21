@@ -124,7 +124,7 @@ def on_press(key):
     # to launch the corresponding node.
     ##################################################################################################
 
-        if key == Key.insert:
+        if key == Key.insert or key == Key.end:
                 rospy.loginfo("Type a command to execute. \n  'all [command]' to apply to all sailboats, else '[id] [command]'.")
                 userInput = pg.prompt(text='Usage: "[receiver] [terminal-style command] [--option] \n \
                 \nExample1: "1 roslaunch myPackage myFile.launch --relaunch\
@@ -278,7 +278,7 @@ def run():
     global controlled, padsUseDict, keyboardMode
 
 
-    keyboardMode = 'azerty'  # 'qwerty'
+    keyboardMode = 'qwerty' #'azerty'
 
 ###################################################################
 #    keyBoardListener
