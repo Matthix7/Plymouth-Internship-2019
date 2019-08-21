@@ -38,7 +38,10 @@ To launch a terminal-style command:
 - Press Insert. A window will pop up, asking you to type your command.
 - Your command should begin by the ID of the boat to which you wish to send to send the command. Use "all" to broadcast.
 - After this, type your command as if you were in the terminal of the sailboat.
-Exception: never use signs '@', '=' or '#'. If your command requires ":=", simply type ":". ":" will be replaced automatically.
+Exceptions:
+Never use signs '@', '=' or '#'.
+If your command requires ":=", simply type ":". ":" will be replaced automatically.
+Do not use quotations marks (",'), ROS will convert automatically your character strings don't worry.
 - Press enter or click on the confirmation button. Cancel if you want to cancel...obviously.
 
 Specific commands:
