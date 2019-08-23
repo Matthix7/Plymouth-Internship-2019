@@ -6,7 +6,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 ## Quick overview
 ![alt text](https://github.com/Matthix7/plymouth_internship_2019/blob/master/Visuels/Vue%20d'ensemble%201.png "Overview")
 
-## To install and use all the software linked with this work
+## To install and use all the software linked with this work (might not be complete)
 1) Create a ROS workspace (`mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`). Steps to be followed on sailboats and remote computer.
 
 2) In a terminal under workspaceRos/src, 
@@ -30,7 +30,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 
 8) In a terminal under workspaceRos/, type `catkin_make`.
 
-## Practical use of the package
+## Practical use of the package (alone)
 1) Create a ROS workspace (`mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`).
 2) In a terminal under `workspaceRos/src`, type `git clone https://github.com/Matthix7/plymouth_internship_2019`.
 3) Under `workspaceRos/`, type `catkin_make` then `. devel/setup.bash`.
