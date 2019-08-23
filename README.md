@@ -11,8 +11,8 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 
 2) In a terminal under workspaceRos/src, 
  `git clone https://github.com/Matthix7/plymouth_internship_2019`  
- `git clone https://github.com/corentin-j/wrsc_plymouth_2019`  
- `git clone https://github.com/AlexandreCourjaud/Stage2APlymouth`  
+ `git clone https://github.com/corentin-j/wrsc_plymouth_2019` (needed only on sailboat)  
+ `git clone https://github.com/AlexandreCourjaud/Stage2APlymouth` (needed only on sailboat)  
 
 3) `echo "source ~/workspaceRos/devel/setup.bash" >> ~/.bashrc`
 
@@ -22,7 +22,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 
 6) `sudo apt install python-pyudev`  
    `sudo apt install python-rospkg`  
-   `sudo apt install python-picamera (needed only on sailboat)`  
+   `sudo apt install python-picamera` (needed only on sailboat)  
    `sudo apt install ros-melodic-gps-umd`  
 
 7) `sudo pip install pynput (not needed on sailboat)`  
