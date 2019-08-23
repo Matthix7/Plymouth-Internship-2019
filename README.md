@@ -25,8 +25,8 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
    `sudo apt install python-picamera` (needed only on sailboat)  
    `sudo apt install ros-melodic-gps-umd`  
 
-7) `sudo pip install pynput (not needed on sailboat)`  
-   `sudo pip install pyautogui (not needed on sailboat)`
+7) `sudo pip install pynput` (not needed on sailboat)  
+   `sudo pip install pyautogui` (not needed on sailboat)
 
 8) In a terminal under workspaceRos/, type `catkin_make`. You may need several trials.  
 
