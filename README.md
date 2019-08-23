@@ -28,7 +28,7 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 7) `sudo pip install pynput (not needed on sailboat)`  
    `sudo pip install pyautogui (not needed on sailboat)`
 
-8) In a terminal under workspaceRos/, type `catkin_make`.  
+8) In a terminal under workspaceRos/, type `catkin_make`. You may need several trials.  
 
 9) Reboot, just to be sure.
 
