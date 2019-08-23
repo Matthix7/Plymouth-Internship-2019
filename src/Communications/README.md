@@ -4,3 +4,73 @@
 
 
 ![alt text](https://github.com/Matthix7/plymouth_internship_2019/blob/master/Visuels/topicsLinks.png "topics links")
+
+
+
+XBEE USER GUIDE
+---------------
+Communications module for a sailboats fleet.
+
+
+
+1/ Before powering up the sailboats, connect a xBee device stamped "E[id]" to the raspberry of each sailboat that
+will be part of your fleet. Connect the xBee stamped "C" (Coordinator) to the computer you will use for remote control
+and type the command "roslaunch plymouth_internship_2019 fleetCoordinator size:=[yourFleetSize]" in a terminal.
+The ID of the coordinator should be printed quickly, and then the connection process begins ("Waiting...").
+
+
+2/ Power up every sailboat of your fleet. Node "fleetSailboat" should launch automatically so you do not need to connect
+to a terminal on the sailboat. The connection may last about 2 minutes after powering up.
+If you think the connection did not work (message not received, boat already powered, ...), connect via ssh to the
+raspberry of your sailboat, check if the node "fleetSailboat" exists, kill it if yes, then type
+"rosrun plymouth_internship_2019 fleetSailboat" in the terminal of the sailboat.
+
+
+3/ Once you get the expected number of sailboats connected to the network, Coordinator should print
+"Got boats [id1, id2,...] connected". If you monitor the corresponding terminal in a sailboat, a similar message should
+be printed too.
+From this moment you can control each sailboat of your fleet.
+
+
+To control  sailboats with keyboard:
+- Press f[id] to take control of the boat with the corresponding ID (written on the backside of its xBee device).
+A message will be printed to indicate you which pad you may use (2 pads: Arrows or ZQSD/WASD).
+- Tighten the sails with the upper key, shock them with down key.
+- Turn left with left key, right with right key...obviously.
+- Press f[id] again to release the boat so that it comes back to autonomous mode.
+- You can control up to two sailboats at a time, with the two pads. However, keyboard monitor can only detect one
+key at a time, so only try to command one actuator at a time.
+- You may use ESC to release all sailboats.
+
+
+To launch a terminal-style command:
+- Press Insert. A window will pop up, asking you to type your command.
+- Your command should begin by the ID of the boat to which you wish to send to send the command. Use "all" to broadcast.
+- After this, type your command as if you were in the terminal of the sailboat.
+Exceptions:
+Never use signs '@', '=' or '#'.
+If your command requires ":=", simply type ":". ":" will be replaced automatically.
+Do not use quotations marks (",'), ROS will convert automatically your character strings don't worry.
+- Press enter or click on the confirmation button. Cancel if you want to cancel...obviously.
+
+Specific commands:
+- Use "[receiverID] kill [node]" to kill a node. This will look for every node that contains the typed string and kill it.
+Use "-a" or "--all" instead of [node] to kill all of them.
+- Use "[receiverID] [command] --relaunch" to kill all running nodes (except fleetSailboat and nodes containing 'ros' in their names)
+Caution: if you mistype your command while using "--relaunch" option, all nodes will be killed but nothing will be launched.
+
+
+General information:
+
+Connection process will not work if you launch Coordinator after at least one sailboat. Should this happen, kill every xBee-linked
+node and restart procedure.
+
+
+(SSH required) If you think you cannot control the sailboat from coordinator
+even if the coordinator printed correct connection data, maybe the fleetSailboat
+node failed to properly connect or crashed. In that case, shut down both fleetCoordinator
+and fleetSailboat nodes and relaunch them. This is rare but seems more likely to happen when
+the sailboat is far from the coordinator or the xBee device is close to the actuators.
+You may use the TX and RX LEDs on the coordinator xBee device:
+both should be blinking multiple times per second.
+
