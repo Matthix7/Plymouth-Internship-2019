@@ -7,28 +7,28 @@ The goal of this project is to make three sailboats (size ≈ 1m for each) able 
 ![alt text](https://github.com/Matthix7/plymouth_internship_2019/blob/master/Visuels/Vue%20d'ensemble%201.png "Overview")
 
 ## To install and use all the software linked with this work
-1/ Create a ROS workspace (`mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`). Steps to be followed on sailboats and remote computer.
+1) Create a ROS workspace (`mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`). Steps to be followed on sailboats and remote computer.
 
-2/ In a terminal under workspaceRos/src, 
+2) In a terminal under workspaceRos/src, 
  `git clone https://github.com/Matthix7/plymouth_internship_2019`
  `git clone https://github.com/corentin-j/wrsc_plymouth_2019`
  `git clone https://github.com/AlexandreCourjaud/Stage2APlymouth`
 
-3/ `echo "source ~/workspaceRos/devel/setup.bash" >> ~/.bashrc`
+3) `echo "source ~/workspaceRos/devel/setup.bash" >> ~/.bashrc`
 
-4/ `sudo apt update`
+4) `sudo apt update`
 
-5/ `sudo apt install python-pip`
+5) `sudo apt install python-pip`
 
-6/ `sudo apt install python-pyudev`
+6) `sudo apt install python-pyudev`
    `sudo apt install python-rospkg`
    `sudo apt install python-picamera (needed only on sailboat)`
    `sudo apt install ros-melodic-gps-umd`
 
-7/ `sudo pip install pynput (not needed on sailboat)`
+7) `sudo pip install pynput (not needed on sailboat)`
    `sudo pip install pyautogui (not needed on sailboat)`
 
-8/ In a terminal under workspaceRos/, type `catkin_make`.
+8) In a terminal under workspaceRos/, type `catkin_make`.
 
 ## Practical use of the package
 1) Create a ROS workspace (`mkdir -p workspaceRos/src/`, `cd workspaceRos`, `catkin_make`).
