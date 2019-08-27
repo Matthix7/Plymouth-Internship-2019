@@ -6,6 +6,7 @@ import rospy
 
 from std_msgs.msg import Float32, String
 from geometry_msgs.msg import Pose2D, Vector3
+from gps_common.msg import GPSFix
 
 from numpy import pi
 
@@ -25,6 +26,7 @@ def run():
 #    Publishes a GPS standard frame
 #    Contains xBoat, yBoat and others
     pub_send_GPS = rospy.Publisher('filter_send_trame_gps', String, queue_size = 2)
+    pub_send_GPS2 = rospy.Publisher('filter_send_gps', GPSFix, queue_size = 2)
 
 #    Publishes the speed of the wind
     pub_send_WIND_FORCE = rospy.Publisher('wind_force', Float32, queue_size = 2)
@@ -52,6 +54,7 @@ def run():
     direction = Float32(data = 0.1)
 
     gps = String(data = "$GPGGA,085153.000,5022.5187,N,00408.3332,W,2,04,2.4,44.4,M,51.5,M,,0000*73")
+    gps2 = GPSFix(time = 0)
 
     euler = Vector3(x = 0.1, y = 0.2, z = 0.3)
 
@@ -60,10 +63,12 @@ def run():
     while not rospy.is_shutdown():
 
         pos = Pose2D(x = 0.1, y = 0.1, theta = pos.theta+0.01)
+        gps2 = GPSFix(time = gps2.time+0.1)
 
         pub_send_WIND_FORCE.publish(force)
         pub_send_WIND_DIRECTION.publish(direction)
         pub_send_GPS.publish(gps)
+        pub_send_GPS2.publish(gps2)
         pub_send_EULER_ANGLES.publish(euler)
         pub_send_lineBegin.publish(pos)
         pub_send_lineEnd.publish(pos)

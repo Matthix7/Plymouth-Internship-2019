@@ -17,6 +17,7 @@ import cv2
 from cv2 import aruco
 import time
 
+
 def run():
 
     camera = PiCamera()
@@ -47,7 +48,7 @@ def run():
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 
-        frame_markers, corners = detectAruco(image, image, aruco_dict)
+        frame_markers, corners = detectAruco(image, image, aruco_dict, '')
 #        print(corners[0][0])
 
 
@@ -80,7 +81,7 @@ def run():
 
 
 
-def detectAruco(image, resultImage, dictionary):
+def detectAruco(image, resultImage, dictionary, timeString):
     r = rospkg.RosPack()
     package_path = r.get_path('plymouth_internship_2019')
 
@@ -91,8 +92,8 @@ def detectAruco(image, resultImage, dictionary):
     frame_markers = aruco.drawDetectedMarkers(resultImage, corners, ids)
 
     if ids is not None:
-        cv2.imwrite(package_path+'/arucoDetected/aruco_frame_'+time.strftime('%c')+'.png', frame_markers)
-#        print('Saved')
+        cv2.imwrite(package_path+'/arucoDetected/aruco_frame_'+timeString+'.png', frame_markers)
+#        print('Saved '+timeString)
 
 #        markerLength = 3.8
 #        camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])

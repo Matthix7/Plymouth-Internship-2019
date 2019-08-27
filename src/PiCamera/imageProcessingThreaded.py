@@ -6,6 +6,7 @@ import rospkg
 
 from std_msgs.msg import Float32, String
 from geometry_msgs.msg import Pose2D, Vector3
+from gps_common.msg import GPSFix
 
 # import the necessary packages
 import time
@@ -29,10 +30,13 @@ def sub_EULER_ANGLES(data):
     global roll
     roll = data.z
 
+def sub_GPS(data):
+    global timeString
+    timeString = str(data.time).replace('.','_')
 
 
 def run():
-    global roll
+    global roll, timeString
 
     horizonDetection = rospy.get_param('horizonDetection', False)
     mastsDetection = rospy.get_param('mastsDetection', False)
@@ -76,6 +80,8 @@ def run():
 #    Receives the euler_angles  x=yaw y=pitch z=roll
     rospy.Subscriber('filter_send_euler_angles', Vector3, sub_EULER_ANGLES)
 
+    rospy.Subscriber('filter_send_gps', GPSFix, sub_GPS)
+
 
 ###################    Code initialisation    ######################
 ####################################################################
@@ -91,16 +97,20 @@ def run():
 
     roll = 0
 
+    timeString = 'unknownTime'
+
+
     aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
 
     c = 0
     loopPeriod = 0.5
     rate = rospy.Rate(1/loopPeriod)
 
+
 ###############          VIDEO           #############################
 ######################################################################
 ##    Running on test video
-#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/video1.avi')
+#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/Mission_Tue Jul 23 15:40:44 2019(without calibration).avi')
 
 #    t0 = time.time()
 
@@ -251,9 +261,9 @@ def run():
 
             t4 = time.time()
             if buoyDetection:
-                frame_markers, corners = detectAruco(image, frame_markers, aruco_dict)
+                frame_markers, corners = detectAruco(image, frame_markers, aruco_dict, timeString)
             else:
-                frame_markers, corners = detectAruco(image, image, aruco_dict)
+                frame_markers, corners = detectAruco(image, image, aruco_dict, timeString)
     #        headingsMarkers = []
 
     #        for corner in corners:
