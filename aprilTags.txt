@@ -1,0 +1,28 @@
+1/Go to https://github.com/AprilRobotics/apriltag
+
+2/Download and extract zip
+
+3/In folder, delete the files:
+ tagCircle49h12.c
+ tagCircle49h12.h
+ tagCustom48h12.c
+ tagCustom48h12.h
+ tagStandard52h13.c
+ tagStandard52h13.h
+
+4/In terminal in folder, type cmake . 
+
+5/Type sudo make install
+
+
+6/In workspaceRos/src, git clone https://github.com/AprilRobotics/apriltag_ros.git
+
+7/In apriltag_ros/, there is another folder apriltag_ros/.
+Copy the folders and files that are inside and paste them in the first apriltag_ros/.
+Then delete the second apriltag_ros/.
+
+8/In config/settings.yaml, change 'tag36h11' to 'tag25h9'.
+
+10/In workspaceRos, catkin_make and . devel/setup.bash
+
+

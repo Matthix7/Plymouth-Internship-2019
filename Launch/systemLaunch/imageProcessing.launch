@@ -32,4 +32,7 @@
     <arg name="size" default="1" />
     <param name="buoySize" type="double" value="$(arg size)" />
 
+
+    <include file="$(find apriltag_ros)/launch/continuous_detection.launch" />
+
 </launch>

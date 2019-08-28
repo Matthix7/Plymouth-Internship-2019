@@ -13,8 +13,8 @@ from threading import Thread
 import cv2
 import time
 from numpy import array, tan
-from sensor_msgs.msg import Image
-#from cv_bridge import CvBridge, CvBridgeError
+from sensor_msgs.msg import Image, CameraInfo
+from cv_bridge import CvBridge, CvBridgeError
 
 from chessboard_calibration import getCamDistortData
 
@@ -35,8 +35,10 @@ class PiVideoStream:
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
-#        self.image_pub = rospy.Publisher("camera_send_image",Image, queue_size = 0)
-#        self.bridge = CvBridge()
+        self.image_pub = rospy.Publisher("camera_rect/image_rect",Image, queue_size = 0)
+        self.info_pub = rospy.Publisher("camera_rect/camera_info",CameraInfo, queue_size = 0)
+        self.bridge = CvBridge()
+        self.camInfo = CameraInfo()
 
         # Read the camera matrix from calibration file
         self.calibration_matrix, self.calibration_dist = getCamDistortData(package_path+'/src/PiCamera/calibration_data.txt')
@@ -67,14 +69,17 @@ class PiVideoStream:
         for f in self.stream:
             if self.record:
                 self.out.write(f.array)
-#            try:
-#                self.image_pub.publish(self.bridge.cv2_to_imgmsg(f.array, "bgr8"))
-#            except:
-#                pass
+
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = cv2.undistort(f.array, self.calibration_matrix, self.calibration_dist, None)
             self.rawCapture.truncate(0)
+
+            try:
+                self.image_pub.publish(self.bridge.cv2_to_imgmsg(self.frame, "bgr8"))
+                self.info_pub.publish(self.camInfo)
+            except Exception as e:
+                rospy.loginfo('Error cam: {0}'.format(e))
 
             # if the thread indicator variable is set, stop the thread
             # and resource camera resources

@@ -36,7 +36,7 @@ def run():
 
     cv2.namedWindow('Webcam', cv2.WINDOW_NORMAL)
 
-    aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
+    aruco_dict = aruco.Dictionary_get(aruco.DICT_APRILTAG_25h9)
 
     c = 0
 
@@ -93,7 +93,7 @@ def detectAruco(image, resultImage, dictionary, timeString):
 
     if ids is not None:
         cv2.imwrite(package_path+'/arucoDetected/aruco_frame_'+timeString+'.png', frame_markers)
-#        print('Saved '+timeString)
+        print('Saved '+timeString)
 
 #        markerLength = 3.8
 #        camera_matrix = array([[485.36568341, 0, 308.96642615], [0, 486.22575965, 236.66818825], [0, 0, 1]])

@@ -15,6 +15,9 @@ from cv2 import aruco
 import numpy as np
 from math import atan2
 from numpy import pi, cos, sin, tan, array, shape
+from sensor_msgs.msg import Image, CameraInfo
+from apriltag_ros.msg import AprilTagDetectionArray
+from cv_bridge import CvBridge, CvBridgeError
 
 
 from detectionBuoy import detectBuoy, getColorRange, getColorRangeTest, getColorRangeTest2
@@ -35,8 +38,24 @@ def sub_GPS(data):
     timeString = str(data.time).replace('.','_')
 
 
+def sub_april_image(image_message):
+    global aprilFrame, bridge, timeString, package_path, detected
+    aprilFrame = bridge.imgmsg_to_cv2(image_message, desired_encoding="passthrough")
+    try:
+        if detected != []:
+            cv2.imwrite(package_path+'/arucoDetected/aruco_frame_'+timeString+'.png', aprilFrame)
+            print('Saved '+timeString)
+    except Exception as e:
+        rospy.loginfo('Error save: {0}'.format(e))
+
+def sub_april_detection(data):
+    global detected
+    detected = data.detections
+
+
+
 def run():
-    global roll, timeString
+    global roll, timeString, bridge, aprilFrame, package_path, detected
 
     horizonDetection = rospy.get_param('horizonDetection', False)
     mastsDetection = rospy.get_param('mastsDetection', False)
@@ -49,6 +68,8 @@ def run():
     if mastsDetection:
         horizonDetection = True
 
+
+    marker = 'aprilTag'  #aruco
 
 
 ####################    ROS initialisation     #########################
@@ -82,6 +103,9 @@ def run():
 
     rospy.Subscriber('filter_send_gps', GPSFix, sub_GPS)
 
+    rospy.Subscriber('tag_detections_image', Image, sub_april_image)
+    rospy.Subscriber('tag_detections', AprilTagDetectionArray, sub_april_detection)
+
 
 ###################    Code initialisation    ######################
 ####################################################################
@@ -99,8 +123,12 @@ def run():
 
     timeString = 'unknownTime'
 
+    bridge = CvBridge()
+    camInfo = CameraInfo()
+    detected = []
 
-    aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
+    if marker == "aruco":
+        aruco_dict = aruco.Dictionary_get(aruco.DICT_APRILTAG_25h9)
 
     c = 0
     loopPeriod = 0.5
@@ -110,7 +138,10 @@ def run():
 ###############          VIDEO           #############################
 ######################################################################
 ##    Running on test video
-#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/Mission_Tue Jul 23 15:40:44 2019(without calibration).avi')
+#    cap = cv2.VideoCapture(package_path+'/src/PiCamera/testImages/aprilTags.avi')
+
+#    image_pub = rospy.Publisher("camera_rect/image_rect",Image, queue_size = 0)
+#    info_pub = rospy.Publisher("camera_rect/camera_info",CameraInfo, queue_size = 0)
 
 #    t0 = time.time()
 
@@ -137,7 +168,11 @@ def run():
 
 #        image = cv2.resize(image, (320, 240))
 
-
+#        try:
+#            image_pub.publish(bridge.cv2_to_imgmsg(image, "bgr8"))
+#            info_pub.publish(camInfo)
+#        except Exception as e:
+#            rospy.loginfo('Error cam: {0}'.format(e))
 
 #################     CAMERA     ####################################
 #####################################################################
@@ -256,28 +291,32 @@ def run():
 
 
         if markerDetection:
+            if marker == "aruco":
+        ##      Find the aruco in the original-sized image
 
-    ##      Find the April Tags in the original-sized image
+                t4 = time.time()
+                if buoyDetection:
+                    frame_markers, corners = detectAruco(image, frame_markers, aruco_dict, timeString)
+                else:
+                    frame_markers, corners = detectAruco(image, image, aruco_dict, timeString)
+        #        headingsMarkers = []
 
-            t4 = time.time()
-            if buoyDetection:
-                frame_markers, corners = detectAruco(image, frame_markers, aruco_dict, timeString)
-            else:
-                frame_markers, corners = detectAruco(image, image, aruco_dict, timeString)
-    #        headingsMarkers = []
+        #        for corner in corners:
+        #            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
+        #            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
+        #        headings_arucos_msg.data = str(headingsMarkers)
 
-    #        for corner in corners:
-    #            print(corner[0,0,0], corner[0,0,1], rotation, resolution[0], Sf)
-    #            headingsMarkers.append(-((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf)
-    #        headings_arucos_msg.data = str(headingsMarkers)
+                headings_arucos_msg.data = -999
+                if corners != []:
+                    corner = corners[0]
+                    headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
 
-            headings_arucos_msg.data = -999
-            if corners != []:
-                corner = corners[0]
-                headings_arucos_msg.data = -((corner[0,0,0]*cos(rotation*pi/180)+corner[0,0,1]*sin(rotation*pi/180))-resolution[0]/2)*Sf
+                pub_send_headings_arucos.publish(headings_arucos_msg)
+                T4.append(time.time()-t4)
 
-            pub_send_headings_arucos.publish(headings_arucos_msg)
-            T4.append(time.time()-t4)
+            if marker == "aprilTag":
+                T4.append(0)   #all in callback
+
 
 
         t5 = time.time()
