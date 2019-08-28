@@ -104,6 +104,9 @@ def run():
 
     c = 0
     loopPeriod = 0.5
+    if not horizonDetection:
+        loopPeriod = 0.3
+
     rate = rospy.Rate(1/loopPeriod)
 
 
